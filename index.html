@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Soul Breaker">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <title>Soul Breaker</title>
+    <link rel="shortcut icon" href="public/iconMain.ico">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/design/uicons-regular-rounded.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script type="module" src="js/main.js" defer></script>
+</head>
+<body id="system">
+
+<div class="blockLoading" id="blockLoader"></div>
+<div class="blockWelcome" id="blockWelcomer">
+    <svg class="svgWelcome" style="position: absolute; left: 50%" width="558" height="66" viewBox="0 0 372 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.944 17.976C29.152 20.232 32.368 22.632 32.368 28.296C32.368 34.296 28 39.576 18.832 39.576C13.12 39.576 7.12 37.752 5.008 32.424C4.624 31.464 5.104 30.456 6.064 30.12L11.92 28.344C12.64 28.104 13.408 28.392 13.84 29.016C14.608 30.12 16.384 30.888 18.304 30.888C20.176 30.888 21.616 30.12 21.616 28.872C21.616 27.192 19.552 27.096 16.144 26.28C10 24.792 5.536 22.632 5.536 15.72C5.536 9.144 11.296 4.776 18.736 4.776C23.968 4.776 28.768 7.128 30.592 11.736C30.976 12.744 30.448 13.8 29.44 14.04L23.584 15.48C22.96 15.624 22.24 15.432 21.856 14.856C21.232 14.04 20.176 13.512 18.784 13.512C16.864 13.512 15.856 14.328 15.856 15.48C15.856 17.064 18.352 17.256 20.944 17.976Z" fill="url(#paint0_linear_309_12)"/>
+        <path d="M51.787 4.824C61.867 4.824 69.499 12.312 69.499 22.2C69.499 32.136 61.867 39.624 51.787 39.624C41.707 39.624 34.075 32.136 34.075 22.2C34.075 12.312 41.707 4.824 51.787 4.824ZM51.787 29.112C55.771 29.112 58.699 26.28 58.699 22.2C58.699 18.168 55.771 15.288 51.787 15.288C47.803 15.288 44.875 18.168 44.875 22.2C44.875 26.28 47.803 29.112 51.787 29.112Z" fill="url(#paint1_linear_309_12)"/>
+        <path d="M95.0871 5.4H101.615C102.815 5.4 103.775 6.36 103.775 7.512V25.416C103.775 35.4 97.5831 39.576 88.4151 39.576C79.2951 39.576 73.1031 35.4 73.1031 25.416V7.512C73.1031 6.36 74.0631 5.4 75.2631 5.4H81.7911C82.9431 5.4 83.9031 6.36 83.9031 7.512V24.264C83.9031 27.336 85.5351 29.112 88.4151 29.112C91.3431 29.112 92.9751 27.336 92.9751 24.264V7.512C92.9751 6.36 93.9351 5.4 95.0871 5.4Z" fill="url(#paint2_linear_309_12)"/>
+        <path d="M119.341 29.112H129.757C130.957 29.112 131.869 30.072 131.869 31.224V36.84C131.869 38.04 130.957 39 129.757 39H110.701C109.549 39 108.589 38.04 108.589 36.84V7.512C108.589 6.36 109.549 5.4 110.701 5.4H117.229C118.429 5.4 119.341 6.36 119.341 7.512V29.112Z" fill="url(#paint3_linear_309_12)"/>
+        <path d="M171.094 21.384C174.502 22.728 176.566 25.176 176.566 29.016C176.566 35.928 171.862 39 162.598 39H150.262C149.11 39 148.15 38.04 148.15 36.84V7.512C148.15 6.36 149.11 5.4 150.262 5.4H161.302C170.614 5.4 175.27 8.088 175.27 14.424C175.27 17.832 173.734 19.992 171.094 21.288V21.384ZM160.87 13.128H158.902V18.264H160.87C163.126 18.264 164.374 17.496 164.374 15.72C164.374 13.944 163.126 13.128 160.87 13.128ZM162.166 30.84C164.422 30.84 165.622 29.928 165.622 28.2C165.622 26.424 164.422 25.608 162.166 25.608H158.902V30.84H162.166Z" fill="url(#paint4_linear_309_12)"/>
+        <path d="M200.331 39C199.515 39 198.747 38.52 198.411 37.8L193.755 28.584H190.731V36.84C190.731 38.04 189.771 39 188.619 39H182.091C180.891 39 179.931 38.04 179.931 36.84V7.512C179.931 6.36 180.891 5.4 182.091 5.4H194.139C203.451 5.4 208.347 9.672 208.347 17.448C208.347 21.72 206.619 24.648 203.595 26.472L209.643 37.08C210.123 37.944 209.499 39 208.539 39H200.331ZM190.731 14.856V19.992H194.139C196.395 19.992 197.451 19.176 197.451 17.448C197.451 15.672 196.395 14.856 194.139 14.856H190.731Z" fill="url(#paint5_linear_309_12)"/>
+        <path d="M223.919 29.976H234.671C235.871 29.976 236.831 30.936 236.831 32.088V36.84C236.831 38.04 235.871 39 234.671 39H215.279C214.079 39 213.119 38.04 213.119 36.84V7.512C213.119 6.36 214.079 5.4 215.279 5.4H234.239C235.391 5.4 236.351 6.36 236.351 7.512V12.312C236.351 13.464 235.391 14.424 234.239 14.424H223.919V18.168H232.703C233.903 18.168 234.863 19.128 234.863 20.28V23.784C234.863 24.984 233.903 25.944 232.703 25.944H223.919V29.976Z" fill="url(#paint6_linear_309_12)"/>
+        <path d="M263.866 39C262.906 39 262.09 38.376 261.802 37.416L260.794 33.816H251.29L250.282 37.416C250.042 38.376 249.178 39 248.218 39H240.634C239.482 39 238.618 37.848 239.002 36.744L248.89 7.128C249.274 6.12 250.234 5.4 251.338 5.4H260.746C261.85 5.4 262.858 6.12 263.194 7.128L273.082 36.744C273.466 37.848 272.65 39 271.498 39H263.866ZM253.354 26.328H258.73L256.042 16.584L253.354 26.328Z" fill="url(#paint7_linear_309_12)"/>
+        <path d="M306.067 37.032C306.595 37.896 305.971 39 304.963 39H296.371C295.603 39 294.883 38.568 294.499 37.944L287.059 24.936V36.84C287.059 38.04 286.099 39 284.899 39H278.419C277.219 39 276.259 38.04 276.259 36.84V7.512C276.259 6.36 277.219 5.4 278.419 5.4H284.899C286.099 5.4 287.059 6.36 287.059 7.512V19.32L294.163 6.504C294.547 5.832 295.219 5.4 296.035 5.4H304.243C305.203 5.4 305.827 6.504 305.299 7.32L296.659 21.816L306.067 37.032Z" fill="url(#paint8_linear_309_12)"/>
+        <path d="M320.481 29.976H331.233C332.433 29.976 333.393 30.936 333.393 32.088V36.84C333.393 38.04 332.433 39 331.233 39H311.841C310.641 39 309.681 38.04 309.681 36.84V7.512C309.681 6.36 310.641 5.4 311.841 5.4H330.801C331.953 5.4 332.913 6.36 332.913 7.512V12.312C332.913 13.464 331.953 14.424 330.801 14.424H320.481V18.168H329.265C330.465 18.168 331.425 19.128 331.425 20.28V23.784C331.425 24.984 330.465 25.944 329.265 25.944H320.481V29.976Z" fill="url(#paint9_linear_309_12)"/>
+        <path d="M357.597 39C356.781 39 356.013 38.52 355.677 37.8L351.021 28.584H347.997V36.84C347.997 38.04 347.037 39 345.885 39H339.357C338.157 39 337.197 38.04 337.197 36.84V7.512C337.197 6.36 338.157 5.4 339.357 5.4H351.405C360.717 5.4 365.613 9.672 365.613 17.448C365.613 21.72 363.885 24.648 360.861 26.472L366.909 37.08C367.389 37.944 366.765 39 365.805 39H357.597ZM347.997 14.856V19.992H351.405C353.661 19.992 354.717 19.176 354.717 17.448C354.717 15.672 353.661 14.856 351.405 14.856H347.997Z" fill="url(#paint10_linear_309_12)"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.0203 13.5172C18.9426 13.5137 18.8639 13.512 18.784 13.512C16.864 13.512 15.856 14.328 15.856 15.48C15.856 16.5998 17.1034 17.0239 18.7502 17.4307C18.7615 17.4335 18.7727 17.4362 18.784 17.439C18.7872 17.4398 18.7904 17.4406 18.7936 17.4414C18.8113 17.4457 18.8291 17.4501 18.847 17.4545C19.027 17.4985 19.2116 17.5425 19.3996 17.5872C19.8971 17.7058 20.4186 17.8301 20.944 17.976C22.2161 18.3256 23.3682 18.6787 24.4071 19.0469C24.4269 19.0539 24.4466 19.0609 24.4663 19.0679C24.6408 19.1301 24.812 19.1927 24.9801 19.2559C27.2189 20.0965 28.8922 21.0243 30.075 22.1708C30.0851 22.1805 30.0951 22.1902 30.105 22.2C31.6731 23.7357 32.368 25.6632 32.368 28.296C32.368 29.3105 32.2431 30.3044 31.9913 31.2556C30.7537 35.9305 26.4499 39.576 18.832 39.576C13.12 39.576 7.12 37.752 5.008 32.424C4.624 31.464 5.104 30.456 6.064 30.12L11.92 28.344C12.64 28.104 13.408 28.392 13.84 29.016C14.1497 29.4613 14.6235 29.8519 15.2044 30.1595C15.2076 30.1611 15.2108 30.1628 15.2139 30.1645C15.2208 30.1681 15.2277 30.1717 15.2346 30.1753C16.0895 30.6209 17.1717 30.888 18.304 30.888C18.3257 30.888 18.3474 30.8879 18.369 30.8877C18.4536 30.8869 18.5373 30.8845 18.62 30.8806C20.3356 30.7988 21.616 30.0488 21.616 28.872C21.616 27.6712 20.5615 27.2796 18.7155 26.856C18.7112 26.855 18.7069 26.854 18.7025 26.853C18.4183 26.7879 18.1153 26.722 17.7947 26.6522C17.5172 26.5918 17.2264 26.5285 16.9229 26.4603C16.6719 26.4039 16.4121 26.3442 16.144 26.28C14.1647 25.8006 12.3598 25.2515 10.8223 24.4963C7.58713 22.9072 5.536 20.4053 5.536 15.72C5.536 9.144 11.296 4.776 18.736 4.776C23.968 4.776 28.768 7.128 30.592 11.736C30.976 12.744 30.448 13.8 29.44 14.04L23.584 15.48C22.96 15.624 22.24 15.432 21.856 14.856C21.845 14.8416 21.8339 14.8273 21.8226 14.8131C21.8203 14.8102 21.818 14.8073 21.8157 14.8045C21.2239 14.0639 20.2671 13.5723 19.0203 13.5172ZM34.1303 20.7518C34.0937 21.2283 34.075 21.7112 34.075 22.2C34.075 24.3657 34.4376 26.4151 35.1091 28.296C35.4082 29.1338 35.7685 29.9382 36.1855 30.7045C39.1269 36.111 44.8827 39.624 51.787 39.624C60.5321 39.624 67.4347 33.988 69.1095 26.007C69.1505 25.8114 69.1884 25.6144 69.2232 25.416C69.4047 24.3789 69.499 23.3046 69.499 22.2C69.499 20.8797 69.3629 19.6022 69.1031 18.3796C67.4172 10.4458 60.5211 4.824 51.787 4.824C42.2053 4.824 34.8356 11.59 34.1303 20.7518ZM73.1031 25.416C73.1031 25.7315 73.1093 26.0412 73.1216 26.3451C73.4974 35.6598 79.5833 39.576 88.4151 39.576C97.5831 39.576 103.775 35.4 103.775 25.416V7.512C103.775 6.36 102.815 5.4 101.615 5.4H95.0871C93.9351 5.4 92.9751 6.36 92.9751 7.512V24.264C92.9751 27.336 91.3431 29.112 88.4151 29.112C85.5351 29.112 83.9031 27.336 83.9031 24.264V7.512C83.9031 6.36 82.9431 5.4 81.7911 5.4H75.2631C74.0631 5.4 73.1031 6.36 73.1031 7.512V25.416ZM70.4998 33.3275C66.7626 39.5917 59.8735 43.624 51.787 43.624C44.684 43.624 38.5047 40.5128 34.574 35.5107C33.8577 36.8228 32.9211 38.043 31.7541 39.1225C28.6188 42.0224 24.1848 43.576 18.832 43.576C12.7208 43.576 4.36328 41.6451 1.29124 33.9024C0.0453741 30.7764 1.68923 27.4132 4.7426 26.3446L4.8223 26.3167L5.85403 26.0038C3.00929 23.5522 1.536 20.125 1.536 15.72C1.536 6.1789 9.92756 0.776001 18.736 0.776001C24.8081 0.776001 31.2574 3.45891 34.0437 9.63167C37.9369 4.22785 44.3589 0.824003 51.787 0.824003C58.9495 0.824003 65.1766 3.98882 69.1031 9.05984V7.512C69.1031 4.09263 71.9127 1.4 75.2631 1.4H81.7911C85.1523 1.4 87.9031 4.15087 87.9031 7.512V24.264C87.9031 24.7104 87.9634 24.9575 88.0054 25.0745C88.0807 25.0917 88.2125 25.112 88.4151 25.112C88.6472 25.112 88.7942 25.0873 88.8745 25.0675C88.9157 24.9521 88.9751 24.7074 88.9751 24.264V7.512C88.9751 4.15087 91.726 1.4 95.0871 1.4H101.615C103.407 1.4 105.044 2.17027 106.18 3.41001C107.3 2.17715 108.914 1.4 110.701 1.4H117.229C120.697 1.4 123.341 4.21049 123.341 7.512V25.112H129.757C133.225 25.112 135.869 27.9225 135.869 31.224V36.84C135.869 40.1304 133.283 43 129.757 43H110.701C107.281 43 104.589 40.1904 104.589 36.84V36.6099C103.886 37.5924 103.065 38.487 102.125 39.2866C98.4422 42.42 93.5297 43.576 88.4151 43.576C83.3202 43.576 78.4196 42.418 74.7438 39.2837C72.8475 37.6668 71.4363 35.6615 70.4998 33.3275ZM119.341 29.112V7.512C119.341 6.36 118.429 5.4 117.229 5.4H110.701C109.549 5.4 108.589 6.36 108.589 7.512V36.84C108.589 38.04 109.549 39 110.701 39H129.757C130.957 39 131.869 38.04 131.869 36.84V31.224C131.869 30.072 130.957 29.112 129.757 29.112H119.341ZM51.787 25.112C53.5989 25.112 54.699 24.034 54.699 22.2C54.699 20.3956 53.5803 19.288 51.787 19.288C49.9937 19.288 48.875 20.3956 48.875 22.2C48.875 24.034 49.9751 25.112 51.787 25.112ZM179.931 7.512C179.931 6.36 180.891 5.4 182.091 5.4H194.139C203.451 5.4 208.347 9.672 208.347 17.448C208.347 21.72 206.619 24.648 203.595 26.472L208.457 35L208.458 35.0011L209.643 37.08C209.955 37.6411 209.801 38.2831 209.392 38.6644C209.171 38.8702 208.876 39 208.539 39H200.331C199.515 39 198.747 38.52 198.411 37.8L193.755 28.584H190.731V36.84C190.731 38.04 189.771 39 188.619 39H182.091C180.891 39 179.931 38.04 179.931 36.84V7.512ZM176.355 39.0958C176.039 39.3689 175.703 39.6299 175.348 39.8781C172.016 42.2078 167.534 43 162.598 43H150.262C146.843 43 144.15 40.1904 144.15 36.84V7.512C144.15 4.15087 146.901 1.4 150.262 1.4H161.302C166.19 1.4 170.61 2.07658 173.907 4.14991C174.753 4.68155 175.494 5.28457 176.133 5.95099C176.834 3.30781 179.271 1.4 182.091 1.4H194.139C199.336 1.4 203.96 2.58479 207.333 5.46667C208 6.03614 208.595 6.65237 209.122 7.31006C209.23 3.98721 211.995 1.4 215.279 1.4H234.239C237.6 1.4 240.351 4.15086 240.351 7.512V12.312C240.351 14.265 239.422 16.0119 237.984 17.1329C238.541 18.0477 238.863 19.1222 238.863 20.28V23.784C238.863 24.1165 238.837 24.4428 238.786 24.7608L245.123 5.78205L245.152 5.70402C246.082 3.26469 248.45 1.4 251.338 1.4H260.746C263.517 1.4 266.09 3.1699 266.989 5.86125C266.989 5.86186 266.989 5.86247 266.989 5.86309L272.259 21.6483V7.512C272.259 4.09263 275.069 1.4 278.419 1.4H284.899C287.333 1.4 289.481 2.82046 290.475 4.90813L290.678 4.54202L290.69 4.51944C291.733 2.6955 293.678 1.4 296.035 1.4H304.243C305.669 1.4 306.926 1.96659 307.854 2.85646C308.936 1.94519 310.334 1.4 311.841 1.4H330.801C332.452 1.4 333.956 2.06351 335.058 3.13695C336.176 2.05818 337.7 1.4 339.357 1.4H351.405C356.602 1.4 361.226 2.58479 364.599 5.46667C368.077 8.43818 369.613 12.6828 369.613 17.448C369.613 21.5031 368.354 24.8759 366.003 27.4143L370.395 35.1181L370.406 35.1374C372.337 38.6143 369.876 43 365.805 43H357.597C355.307 43 353.117 41.6976 352.086 39.5638L351.687 38.7738C350.887 41.2051 348.618 43 345.885 43H339.357C337.799 43 336.378 42.4255 335.295 41.4761C334.212 42.4255 332.791 43 331.233 43H311.841C310.504 43 309.267 42.5765 308.259 41.8558C307.374 42.5636 306.244 43 304.963 43H296.371C294.144 43 292.167 41.7866 291.093 40.0404L291.059 39.9857L290.6 39.1833C289.68 41.4258 287.478 43 284.899 43H278.419C277.101 43 275.88 42.5883 274.88 41.8861C273.951 42.58 272.792 43 271.498 43H263.866C261.045 43 258.739 41.1247 257.971 38.5654L257.96 38.5301L257.761 37.816H254.324L254.146 38.4536C253.41 41.2637 250.878 43 248.218 43H240.634C239.575 43 238.578 42.7046 237.723 42.1951C236.824 42.7075 235.782 43 234.671 43H215.279C213.971 43 212.76 42.5953 211.765 41.904C210.897 42.5829 209.795 43 208.539 43H200.331C198.04 43 195.851 41.697 194.82 39.5624L194.422 38.7738C193.621 41.2051 191.352 43 188.619 43H182.091C179.479 43 177.253 41.3847 176.355 39.0958ZM175.931 32.9066C174.363 37.094 169.895 39 162.598 39H150.262C149.11 39 148.15 38.04 148.15 36.84V7.512C148.15 6.36 149.11 5.4 150.262 5.4H161.302C170.614 5.4 175.27 8.088 175.27 14.424C175.27 16.0356 174.926 17.3681 174.285 18.4622C173.578 19.6679 172.51 20.584 171.141 21.2648C171.125 21.2725 171.11 21.2803 171.094 21.288V21.384C171.114 21.3917 171.133 21.3995 171.153 21.4073C172.603 21.9872 173.807 22.7693 174.708 23.7759C175.215 24.3418 175.626 24.9787 175.931 25.6905C176.346 26.6574 176.566 27.7625 176.566 29.016C176.566 30.4835 176.354 31.7779 175.931 32.9066ZM213.765 38.3862C214.154 38.7666 214.687 39 215.279 39H234.671C234.836 39 234.996 38.9819 235.15 38.9475C236.116 38.7318 236.831 37.8752 236.831 36.84V32.088C236.831 31.7757 236.76 31.4775 236.633 31.2087C236.293 30.486 235.545 29.976 234.671 29.976H223.919V25.944H232.703C233.903 25.944 234.863 24.984 234.863 23.784V20.28C234.863 19.4867 234.407 18.7844 233.732 18.424C233.427 18.2611 233.076 18.168 232.703 18.168H223.919V14.424H234.239C234.305 14.424 234.37 14.4209 234.434 14.4147C235.497 14.3137 236.351 13.3982 236.351 12.312V7.512C236.351 6.36 235.391 5.4 234.239 5.4H215.279C214.079 5.4 213.119 6.36 213.119 7.512V36.84C213.119 37.4483 213.365 37.995 213.765 38.3862ZM209.119 28.084V26.9834C208.995 27.1296 208.868 27.2732 208.737 27.4143L209.119 28.084ZM237.995 26.9448C238.048 26.8556 238.099 26.7648 238.148 26.6727L238.046 26.9779C238.029 26.9668 238.012 26.9558 237.995 26.9448ZM239.002 36.744C238.991 36.776 238.981 36.808 238.972 36.84C238.686 37.853 239.423 38.877 240.447 38.9898C240.509 38.9965 240.571 39 240.634 39H248.218C249.178 39 250.042 38.376 250.282 37.416L251.29 33.816H260.794L261.802 37.416C262.09 38.376 262.906 39 263.866 39H271.498C271.892 39 272.246 38.8657 272.527 38.6448C273.044 38.2376 273.311 37.5362 273.113 36.84C273.104 36.808 273.093 36.776 273.082 36.744L263.194 7.128C262.858 6.12 261.85 5.4 260.746 5.4H251.338C250.234 5.4 249.274 6.12 248.89 7.128L239.002 36.744ZM276.259 36.84C276.259 37.5181 276.566 38.1195 277.049 38.5144C277.421 38.8184 277.897 39 278.419 39H284.899C286.099 39 287.059 38.04 287.059 36.84V24.936L294.499 37.944C294.883 38.568 295.603 39 296.371 39H304.963C305.359 39 305.696 38.8299 305.926 38.5709C306.284 38.1702 306.388 37.5568 306.067 37.032L296.659 21.816L304.06 9.4L304.063 9.3944L305.299 7.32C305.827 6.504 305.203 5.4 304.243 5.4H296.035C295.219 5.4 294.547 5.832 294.163 6.504L287.059 19.32V7.512C287.059 6.36 286.099 5.4 284.899 5.4H278.419C277.219 5.4 276.259 6.36 276.259 7.512V36.84ZM305.681 14.4921L301.339 21.7779L305.681 28.8014V14.4921ZM309.681 36.84C309.681 37.3988 309.889 37.9055 310.233 38.2875C310.627 38.7259 311.2 39 311.841 39H331.233C332.154 39 332.934 38.4345 333.247 37.629C333.341 37.385 333.393 37.119 333.393 36.84V32.088C333.393 31.7765 333.323 31.479 333.197 31.2107C332.856 30.487 332.109 29.976 331.233 29.976H320.481V25.944H329.265C330.465 25.944 331.425 24.984 331.425 23.784V20.28C331.425 19.4867 330.97 18.7844 330.295 18.424C329.989 18.2611 329.639 18.168 329.265 18.168H320.481V14.424H330.801C330.867 14.424 330.932 14.4209 330.997 14.4147C332.06 14.3137 332.913 13.3982 332.913 12.312V7.512C332.913 6.36 331.953 5.4 330.801 5.4H311.841C310.641 5.4 309.681 6.36 309.681 7.512V36.84ZM337.197 36.84C337.197 37.119 337.249 37.385 337.344 37.629C337.656 38.4345 338.436 39 339.357 39H345.885C347.037 39 347.997 38.04 347.997 36.84V28.584H351.021L355.677 37.8C356.013 38.52 356.781 39 357.597 39H365.805C366.765 39 367.389 37.944 366.909 37.08L365.724 35.0011L365.723 35L360.861 26.472C363.885 24.648 365.613 21.72 365.613 17.448C365.613 9.672 360.717 5.4 351.405 5.4H339.357C338.157 5.4 337.197 6.36 337.197 7.512V36.84ZM162.902 17.9547C162.363 18.1646 161.681 18.264 160.87 18.264H158.902V13.128H160.87C161.681 13.128 162.363 13.2336 162.902 13.4514C163.862 13.8392 164.374 14.5828 164.374 15.72C164.374 16.8572 163.862 17.5811 162.902 17.9547ZM162.166 30.84C162.425 30.84 162.671 30.8279 162.902 30.804C164.682 30.6195 165.622 29.7293 165.622 28.2C165.622 26.6282 164.682 25.8083 162.902 25.6406C162.671 25.6188 162.425 25.608 162.166 25.608H158.902V30.84H162.166ZM194.731 19.9712C194.544 19.9851 194.347 19.992 194.139 19.992H190.731V14.856H194.139C194.347 14.856 194.544 14.8629 194.731 14.8768C196.581 15.0142 197.451 15.8353 197.451 17.448C197.451 19.0171 196.581 19.8342 194.731 19.9712ZM258.73 26.328L256.042 16.584L253.354 26.328H258.73ZM351.997 19.9712C351.81 19.9851 351.612 19.992 351.405 19.992H347.997V14.856H351.405C351.612 14.856 351.81 14.8629 351.997 14.8768C353.846 15.0142 354.717 15.8353 354.717 17.448C354.717 19.0171 353.846 19.8342 351.997 19.9712ZM58.699 22.2C58.699 26.28 55.771 29.112 51.787 29.112C47.803 29.112 44.875 26.28 44.875 22.2C44.875 18.168 47.803 15.288 51.787 15.288C55.771 15.288 58.699 18.168 58.699 22.2Z" fill="var(--bgThird)" fill-opacity="0.8"/>
+        <defs>
+        <linearGradient id="paint0_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint1_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint2_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint3_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint4_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint5_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint6_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint7_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint8_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint9_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="paint10_linear_309_12" x1="186" y1="32" x2="186" y2="3.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="var(--colorMain)"/>
+        <stop offset="1" stop-color="var(--colorMain)" stop-opacity="0"/>
+        </linearGradient>
+        </defs>
+    </svg>
+    <div class="textWelcome">Toque para empezar a jugar</div>
+    <div class="versionPreview">Alpha 1</div>
+</div>
+
+<div class="startMenu" id="home">
+    <div class="backgroundTheme"></div>
+    <div class="separatorHome" id="lineHome"></div>
+    <!--TODO TASKBAR-->
+    <div class="taskBar" id="taskHome">
+        <div class="mainTask" style="position: absolute; bottom: 0px; width: 100%; height: 72px;">
+            <div id="blockTask"></div>
+            <div class="buttonTask onPoint" id="openHome">
+                <svg class="svgAnimation" width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M39.1863 4.63573C45.4347 -1.54524 55.5653 -1.54524 61.8137 4.63572L95.3137 37.7742C98.3143 40.7424 100 44.7682 100 48.9658V84.1727C100 92.9139 92.8366 100 84 100H78C71.3726 100 66 94.6274 66 88V70.3237C66 61.5825 58.8366 54.4963 50 54.4963C41.1634 54.4963 34 61.5825 34 70.3237V88C34 94.6274 28.6274 100 22 100H16C7.16344 100 0 92.9139 0 84.1727V49.9551C0 45.7574 1.68572 41.7317 4.6863 38.7635L39.1863 4.63573Z" fill="var(--colorMain)"/>
+                    <path d="M41.2961 6.76852C46.3756 1.74383 54.6244 1.74383 59.7039 6.76852L93.2039 39.907C95.6384 42.3152 97 45.5744 97 48.9658V84.1727C97 91.2264 91.2105 97 84 97H78C73.0294 97 69 92.9706 69 88V70.3237C69 59.895 60.4626 51.4963 50 51.4963C39.5374 51.4963 31 59.895 31 70.3237V88C31 92.9706 26.9706 97 22 97H16C8.78953 97 3 91.2264 3 84.1727V49.9551C3 46.5636 4.36165 43.3044 6.79608 40.8962L41.2961 6.76852Z" stroke="black" stroke-opacity="0.5" stroke-width="8"/>
+                </svg>
+            </div>
+            <div class="buttonTask onPoint" id="openProfile" style="position: absolute; top: 6px; right: 6px;">
+                <svg class="svgAnimation" width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="path-1-inside-1_255_2" fill="white">
+                        <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z"/>
+                    </mask>
+                    <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z" fill="var(--colorMain)" stroke="black" stroke-opacity="0.5" stroke-width="16" mask="url(#path-1-inside-1_255_2)"/>
+                </svg>
+            </div>
+            <div class="statsTask">
+                <div class="textEnergy" id="textEnergyId">
+                    <div id="infoEnergy">0</div>
+                    <div class="svgResource">
+                        <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM30 50C30 61.0457 38.9543 70 50 70C61.0457 70 70 61.0457 70 50C70 38.9543 61.0457 30 50 30C38.9543 30 30 38.9543 30 50Z" fill="var(--colorMain)"/>
+                            <circle cx="50" cy="50" r="27.5" stroke="var(--bgSecond)" stroke-width="15"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="barProgressTiny" id="barEnergy">
+                    <div class="inBarProgressTiny" id="progressEnergy"></div>
+                </div>
+            </div>
+        </div>
+        <div class="secondTaskBar center" style="color: var(--colorMain);">
+            <div class="buttonTask onPoint" id="openStats">
+                <i class="fi-rr-chart-histogram subIcon" id="svgNextInPerfil"></i>
+            </div>
+            <div class="buttonTask onPoint" id="openTrain">
+                <i class="fi-rr-bullseye-arrow subIcon" id="svgNextInPerfil"></i>
+            </div>
+        </div>
+    </div>
+    <!--TODO STARTMENU-->
+    <div class="mainHome" id="startMenu">
+        <div class="barHome">
+            <div class="titleName" id="titleId">SOUL BREAKER</div>
+            <i class="fi-rr-search subIcon" id="iconSearch" style="color: var(--colorMain); font-size: 22px; min-width: 48px; width: 48px; transition: 0.6s cubic-bezier(0.2, 1.48, 0.4, 1);"></i>
+            <input class="searchBox" type="text" maxlength="32" placeholder="Búsqueda" spellcheck="false" id="textSearch">
+            <div class="boxText" id="resultsSearch" style="position: absolute; padding: 2.5px 9px 3px 9px; max-height: 24px; top: 12px; right: 44px; white-space: nowrap; width: fit-content;">Test</div>
+            <i class="fi-rr-cross boxQuit onPoint" id="buttonEraseSearch"></i>
+        </div>
+        <div class="textHome">
+            <div class="boxIcon" id="iconHome">
+                <svg width="31" height="31" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M39.1863 4.63573C45.4347 -1.54524 55.5653 -1.54524 61.8137 4.63572L95.3137 37.7742C98.3143 40.7424 100 44.7682 100 48.9658V84.1727C100 92.9139 92.8366 100 84 100H78C71.3726 100 66 94.6274 66 88V70.3237C66 61.5825 58.8366 54.4963 50 54.4963C41.1634 54.4963 34 61.5825 34 70.3237V88C34 94.6274 28.6274 100 22 100H16C7.16344 100 0 92.9139 0 84.1727V49.9551C0 45.7574 1.68572 41.7317 4.6863 38.7635L39.1863 4.63573Z" fill="var(--colorMain)"/>
+                    <path d="M41.2961 6.76852C46.3756 1.74383 54.6244 1.74383 59.7039 6.76852L93.2039 39.907C95.6384 42.3152 97 45.5744 97 48.9658V84.1727C97 91.2264 91.2105 97 84 97H78C73.0294 97 69 92.9706 69 88V70.3237C69 59.895 60.4626 51.4963 50 51.4963C39.5374 51.4963 31 59.895 31 70.3237V88C31 92.9706 26.9706 97 22 97H16C8.78953 97 3 91.2264 3 84.1727V49.9551C3 46.5636 4.36165 43.3044 6.79608 40.8962L41.2961 6.76852Z" stroke="black" stroke-opacity="0.5" stroke-width="8"/>
+                </svg>                    
+            </div>
+            <div class="backText onPoint" id="goMain">Inicio</div>
+            <div class="arrowNext" id="goNext"></div>
+            <div class="svgIcon" id="svgNext" style="transform: scale(0) rotateZ(-45deg);">
+                <div class="svgIconIn" id="svgNextIn"></div>
+            </div>
+            <div style="overflow: hidden;">
+                <div id="nextText" style="transition: 0.5s cubic-bezier(0.2, 0.6, 0.4, 1); transform: translateX(-200px);">Configuración</div>
+            </div>
+        </div>
+        <div class="boxSection">
+            <div class="mainScroller grid2Column" id="mainMenu">
+                <div class="buttonHome onPoint" id="goSettings">
+                    <div class="bigSvg" style="background-image: url(css/svg/mainHome.svg);"></div>
+                    <div class="textShow">Configuración</div>
+                </div>
+                <div class="buttonHome onPoint" id="goStats">
+                    <div class="bigSvg" style="background-image: url(css/svg/stats.svg);"></div>
+                    <div class="textShow">Estadísticas</div>
+                </div>
+                <div class="buttonHome onPoint" id="goAward">
+                    <div class="bigSvg" style="background-image: url(css/svg/award.svg);"></div>
+                    <div class="textShow">Logros</div>
+                </div>
+                <div class="buttonHome onPoint" id="goTutorial">
+                    <div class="bigSvg" style="background-image: url(css/svg/tip.svg);"></div>
+                    <div class="textShow">Tutorial</div>
+                </div>
+                <div class="buttonHome onPoint" id="goAbout">
+                    <div class="bigSvg" style="background-image: url(css/svg/about.svg);"></div>
+                    <div class="textShow">Acerca de</div>
+                </div>
+                <div class="buttonHome onPoint" id="goVersions">
+                    <div class="bigSvg" style="background-image: url(css/svg/version.svg);"></div>
+                    <div class="textShow">Versiones</div>
+                </div>
+            </div>
+            <!--TODO CONFIGURACIÓN-->
+            <div class="mainScroller" style="transform: translateX(640px);" id="menuSettings">
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-paintbrush-pencil topIcon"></i>
+                        <div>Apariencia</div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonTheme">
+                        <i class="fi-rr-sun subIcon"></i>
+                        <div class="textSettings">
+                            <div>Tema</div>
+                            <div class="textHighlightInfo">Aspecto temático del juego</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-palette subIcon" style="color: var(--colorMain)"></i>
+                        <div class="textSettings">
+                            <div>Colores</div>
+                            <div class="textHighlightInfo" id="colorText">Indigo</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;" id="groupColors">
+                            <div class="dotColor" style="background: hsl(300, 100%, 70%);"></div>
+                            <div class="dotColor" style="background: hsl(264, 100%, 55%);"></div>
+                            <div class="dotColor" style="background: hsl(200, 100%, 50%);"></div>
+                            <div class="dotColor" style="background: hsl(150, 100%, 50%);"></div>
+                            <div class="dotColor" style="background: hsl(52, 100%, 50%);"></div>
+                            <div class="dotColor" style="background: hsl(30, 100%, 55%);"></div>
+                            <div class="dotColor" style="background: hsl(350, 100%, 65%);"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonGlass">
+                        <i class="fi-rr-sparkles subIcon"></i>
+                        <div class="textSettings">
+                            <div>Efecto aclírico</div>
+                            <div class="textHighlightInfo">Efecto visual de interfaz</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-dice-d20 topIcon"></i>
+                        <div>Gráficos</div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonClickSplash">
+                        <i class="fi-rr-interactive subIcon"></i>
+                        <div class="textSettings">
+                            <div>Efecto táctil</div>
+                            <div class="textHighlightInfo">Efecto gráfico que invoca cuando haces click</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-screen subIcon"></i>
+                        <div class="textSettings">
+                            <div>Resolución</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0.3" max="1.5" step="0.05" class="rangerInput" id="rangeResolution">
+                            </div>
+                            <div class="boxText" id="textResolution" style="width: 40px;"></div>
+                            <i class="fi-rr-rotate-right boxReset onPoint" id="resetResolution"></i>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonAntialias">
+                        <i class="fi-rr-magic-wand subIcon"></i>
+                        <div class="textSettings">
+                            <div>Antialias</div>
+                            <div class="textHighlightInfo">Con antialias, los bordes se vuelven más nítidos</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonRender">
+                        <i class="fi-rr-square-bolt subIcon"></i>
+                        <div class="textSettings">
+                            <div>Trazado de post-procesamiento</div>
+                            <div class="textHighlightInfo">Habilita el trazado de rayos simulado</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonBloom">
+                        <i class="fi-rr-bolt subIcon"></i>
+                        <div class="textSettings">
+                            <div>Trazado de rayos de luz</div>
+                            <div class="textHighlightInfo">Efectos de luz más realistas</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonImage">
+                        <i class="fi-rr-line-width subIcon"></i>
+                        <div class="textSettings">
+                            <div>Trazado de movimientos</div>
+                            <div class="textHighlightInfo">Efectos de cámara con retraso ocular</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonShadow">
+                        <i class="fi-rr-circle-dashed subIcon"></i>
+                        <div class="textSettings">
+                            <div>Sombras</div>
+                            <div class="textHighlightInfo">Proyección de imagen oscura sobre la superficie</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonTerrain">
+                        <i class="fi-rr-square subIcon"></i>
+                        <div class="textSettings">
+                            <div>Estructura de la superficie</div>
+                            <div class="textHighlightInfo">Apariencia de la superficie del suelo</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonTerrainAnimation">
+                        <i class="fi-rr-circle-dashed subIcon"></i>
+                        <div class="textSettings">
+                            <div>Animación del terreno</div>
+                            <div class="textHighlightInfo">Terreno que forma olas animadas</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-gamepad topIcon"></i>
+                        <div>Controles</div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonControl">
+                        <i class="fi-rr-joystick subIcon"></i>
+                        <div class="textSettings">
+                            <div>Limitación de controles</div>
+                            <div class="textHighlightInfo">Limita los controles secundarios para medir su accesibilidad</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonRotation">
+                        <i class="fi-rr-refresh subIcon"></i>
+                        <div class="textSettings">
+                            <div>Autorotación</div>
+                            <div class="textHighlightInfo">Movimiento rotativo de cámara</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-refresh subIcon"></i>
+                        <div class="textSettings">
+                            <div>Rotación de retraso</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0.025" max="1" step="0.025" class="rangerInput" id="rangeRotateDamp">
+                            </div>
+                            <div class="boxText" id="textRotateDamp" style="width: 40px;"></div>
+                            <i class="fi-rr-rotate-right boxReset onPoint" id="resetRotateDamp"></i>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-refresh subIcon"></i>
+                        <div class="textSettings">
+                            <div>Velocidad de rotación</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0.5" max="3" step="0.1" class="rangerInput" id="rangeRotateSpeed">
+                            </div>
+                            <div class="boxText" id="textRotateSpeed" style="width: 40px;"></div>
+                            <i class="fi-rr-rotate-right boxReset onPoint" id="resetRotateSpeed"></i>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-refresh subIcon"></i>
+                        <div class="textSettings">
+                            <div>Velocidad de autorotación</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0.5" max="5" step="0.1" class="rangerInput" id="rangeRotateSpeedAuto">
+                            </div>
+                            <div class="boxText" id="textRotateSpeedAuto" style="width: 40px;"></div>
+                            <i class="fi-rr-rotate-right boxReset onPoint" id="resetRotateSpeedAuto"></i>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-resize subIcon"></i>
+                        <div class="textSettings">
+                            <div>Velocidad de zoom</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0.5" max="4" step="0.1" class="rangerInput" id="rangeZoomSpeed">
+                            </div>
+                            <div class="boxText" id="textZoomSpeed" style="width: 40px;"></div>
+                            <i class="fi-rr-rotate-right boxReset onPoint" id="resetZoomSpeed"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-universal-access topIcon"></i>
+                        <div>Accesibilidad / Otros</div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonSearch">
+                        <i class="fi-rr-search subIcon"></i>
+                        <div class="textSettings">
+                            <div>Búsqueda</div>
+                            <div class="textHighlightInfo">Herramienta para buscar ajustes</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonStatsFPS">
+                        <i class="fi-rr-chart-waterfall subIcon"></i>
+                        <div class="textSettings">
+                            <div>Estadísticas de rendimiento</div>
+                            <div class="textHighlightInfo">Herramienta para ver los FPS y otros datos</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonClickText">
+                        <i class="fi-rr-hundred-points subIcon"></i>
+                        <div class="textSettings">
+                            <div>Números flotantes</div>
+                            <div class="textHighlightInfo">Textos que salen números cuando haces click</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonTool">
+                        <i class="fi-rr-comment-alt subIcon"></i>
+                        <div class="textSettings">
+                            <div>Contextos generales</div>
+                            <div class="textHighlightInfo">Pop-up que navega la información del juego</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonToolWarn">
+                        <i class="fi-rr-square-exclamation subIcon"></i>
+                        <div class="textSettings">
+                            <div>Contextos de aviso</div>
+                            <div class="textHighlightInfo">Pop-up que navega la información parcialmente importante</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonToolTip">
+                        <i class="fi-rr-comment-alt-minus subIcon"></i>
+                        <div class="textSettings">
+                            <div>Textos flotantes</div>
+                            <div class="textHighlightInfo">Pop-up que navega el título sobre los elementos, excepto los del progreso</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-disk topIcon"></i>
+                        <div>Datos del juego</div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="resetConfig">
+                        <i class="fi-rr-settings subIcon"></i>
+                        <div class="textSettings">
+                            <div>Restablecimiento de configuración</div>
+                            <div class="textHighlightInfo">Se aplicarán los ajustes por defecto</div>
+                        </div>
+                        <div class="inboxSettings"></div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="resetAll">
+                        <i class="fi-rr-broom subIcon"></i>
+                        <div class="textSettings">
+                            <div>Eliminar datos del juego</div>
+                            <div class="textHighlightInfo">Empieza el juego como nuevo</div>
+                        </div><div class="inboxSettings"></div>
+                    </div>
+                </div>
+            </div>
+            <!--TODO ESTADÍSTICAS-->
+            <div class="mainScroller" style="transform: translateX(640px);" id="menuStats">
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-dice-d8 topIcon"></i>
+                        <div>Juego general</div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-gamepad subIcon"></i>
+                        <div class="textSettings">
+                            <div>Tiempo jugado</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">---</div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-trophy-star subIcon"></i>
+                        <div class="textSettings">
+                            <div>Logros ganados</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">---</div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-cursor subIcon"></i>
+                        <div class="textSettings">
+                            <div>Clicks totales</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">---</div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-bolt subIcon"></i>
+                        <div class="textSettings">
+                            <div>Energía de todo tipo</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">---</div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-book-circle-arrow-up subIcon"></i>
+                        <div class="textSettings">
+                            <div>Mejoras totales</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">---</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--TODO LOGROS-->
+            <div class="mainScroller" style="transform: translateX(640px);" id="menuAward">
+
+            </div>
+            <!--TODO TUTORIAL-->
+            <div class="mainScroller" style="transform: translateX(640px);" id="menuTutorial">
+
+            </div>
+            <!--TODO ABOUT-->
+            <div class="mainScroller" style="transform: translateX(640px);" id="menuAbout">
+                <div class="boxContainer flex">
+                    <div class="divContainer">
+                        <div class="boxButton">
+                            <i class="fi-rr-gamepad subIcon"></i>
+                            <div class="textSettings">
+                                <div>Nombre del juego</div>
+                            </div>
+                            <div class="inboxSettings">
+                                <div class="textInfoConfig">Soul Breaker</div>
+                            </div>
+                        </div>
+                        <div class="boxButton">
+                            <i class="fi-rr-user subIcon"></i>
+                            <div class="textSettings">
+                                <div>Autor</div>
+                            </div>
+                            <div class="inboxSettings">
+                                <div class="textInfoConfig">Alex Lozano Martín</div>
+                            </div>
+                        </div>
+                        <div class="boxButton">
+                            <i class="fi-rr-sticker subIcon"></i>
+                            <div class="textSettings">
+                                <div>Perfil hobby</div>
+                            </div>
+                            <div class="inboxSettings">
+                                <div class="textInfoConfig">AVALON</div>
+                                <div class="svgAVALON"></div>
+                            </div>
+                        </div>
+                        <div class="boxButton">
+                            <i class="fi-rr-code-compare subIcon"></i>
+                            <div class="textSettings">
+                                <div>Versión</div>
+                            </div>
+                            <div class="inboxSettings">
+                                <div class="textInfoConfig">Alpha 1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--TODO VERSIONES-->
+            <div class="mainScroller" style="transform: translateX(640px); overflow: hidden;" id="menuVersions">
+                <iframe id="frameWeb"></iframe>
+            </div>
+        </div>
+    </div>
+    <!--TODO PROFILEMENU-->
+    <div class="mainHome" id="profileMenu" style="height: calc(100% - 84px - 80px - 72px)">
+        <div class="textHome">
+            <svg width="31" height="31" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <mask id="path-1-inside-1_255_2" fill="white">
+                    <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z"/>
+                </mask>
+                <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z" fill="var(--colorMain)" stroke="black" stroke-opacity="0.5" stroke-width="16" mask="url(#path-1-inside-1_255_2)"/>
+            </svg>
+            <div class="backText">Perfil</div>
+            <div class="arrowNext" style="opacity: 1;"></div>
+            <div class="svgIcon center" id="svgNextPerfil" style="opacity: 1; color: var(--colorMain);">
+                <i class="fi-rr-chart-histogram center" id="svgNextInPerfil"></i>
+            </div>
+            <div id="nextTextPerfil">Estadísticas</div>
+        </div>
+        <div class="mainScroller flex" style="position: relative;">
+            <div class="boxBigText">
+                <svg width="33" height="33" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <mask id="path-1-inside-1_255_2" fill="white">
+                        <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z"/>
+                    </mask>
+                    <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z" fill="var(--colorMain)" stroke="black" stroke-opacity="0.5" stroke-width="16" mask="url(#path-1-inside-1_255_2)"/>
+                </svg>
+                <div>0</div>
+            </div>
+            <div class="gridInline4" style="min-height: 180px;">
+                <div class="cardStats">
+                    <div class="textCardStats" style="background: rgba(255, 1, 77, 0.1);">Potencia</div>
+                    <div class="iconCardStats" style="background-image: url(css/svg/stats/power.svg);"></div>
+                    <div class="numberCardStats" style="color: rgba(255, 1, 77, 1); text-shadow: 0px 0px 8px rgba(255, 1, 77, 1); background: rgba(255, 1, 77, 0.1);">0</div>
+                </div>
+                <div class="cardStats">
+                    <div class="textCardStats" style="background: rgba(1, 255, 118, 0.1);">Vitalidad</div>
+                    <div class="iconCardStats" style="background-image: url(css/svg/stats/cruz.svg);"></div>
+                    <div class="numberCardStats" style="color: rgba(1, 255, 118, 1); text-shadow: 0px 0px 8px rgba(1, 255, 118, 1); background: rgba(1, 255, 118, 0.1);">0</div>
+                </div>
+                <div class="cardStats">
+                    <div class="textCardStats" style="background: rgba(0, 117, 253, 0.1);">Dureza</div>
+                    <div class="iconCardStats" style="background-image: url(css/svg/stats/shield.svg);"></div>
+                    <div class="numberCardStats" style="color: rgba(0, 117, 253, 1); text-shadow: 0px 0px 8px rgba(0, 117, 253, 1); background: rgba(0, 117, 253, 0.1);">0</div>
+                </div>
+                <div class="cardStats">
+                    <div class="textCardStats" style="background: rgba(255, 184, 2, 0.1);">Lealtad</div>
+                    <div class="iconCardStats" style="background-image: url(css/svg/stats/belief.svg);"></div>
+                    <div class="numberCardStats" style="color: rgba(255, 184, 2, 1); text-shadow: 0px 0px 8px rgba(255, 184, 2, 1); background: rgba(255, 184, 2, 0.1);">0</div>
+                </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="boxContainer grid2Row" style="height: 223px;">
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-pharmacy subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Salud</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">8</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-bolt subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Aguante</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">5</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-shield subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Defensa</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">0%</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-sword subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Ataque</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">1</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-sparkles subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Toque</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">1</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-circle-bolt subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Energía</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">1</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-sack-dollar subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Coste</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">x1</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-settings subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Producción</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">0 / 10s</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-up subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Crecimiento</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">0 / 1min</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall">
+                    <i class="fi-rr-users-alt subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Lealtad permanente</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<canvas id="worldGame"></canvas>
+<div id="blockContent"></div>
+
+<div class="toolContent" id="toolMove">
+	<div class="toolBox" id="displayTool">
+		<div class="boxTitleInfo" id="uiToolTip">
+			<div class="svgImporter" id="svgInfo"></div>
+			<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+				<div class="textInfo" id="titleTool"></div>
+				<div class="boxText" id="subtitleTool"></div>
+				<div class="infoParty" id="infoShower">
+					<div class="infoPopUp" id="infoToolA" style="margin-top: 20px;"></div>
+					<div class="infoPopUp" id="infoToolB" style="margin-top: 10px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="tooltip">Inicio</div>
+
+</body>
+</html>

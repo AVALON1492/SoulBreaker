@@ -1,0 +1,48 @@
+.root {
+    --bgText: rgba(0, 0, 0, 0.8);
+    --bgTextSoft: rgba(0, 0, 0, 0.5);
+
+    --colorMain: hsl(264, 100%, 50%);
+    --colorMainOpac: hsla(264, 100%, 50%, 0.15);
+    --colorMainFill: hsla(264, 100%, 50%, 0.3);
+}
+
+html {
+    overflow: hidden;
+}
+
+body {
+    margin: 0 auto;
+    height: 100%;
+    user-select: none;
+    content-visibility: auto;
+    font-family: Rubik;
+    padding: 20px;
+    overflow: auto;
+}
+
+hr {
+    border: 2px solid var(--colorMain);
+    border-radius: 10px;
+}
+
+.boxFaxVersion {
+    width: fit-content;
+    padding-inline: 10px;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--colorMain);
+    box-sizing: border-box;
+}
+
+.boxList {
+    background: var(--colorMainOpac);
+    border-radius: 8px;
+    padding-block: 10px;
+    padding-right: 10px;
+    padding-left: 25px;
+    font-size: 12px;
+    margin-top: 5px;
+}
