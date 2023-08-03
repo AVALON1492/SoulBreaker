@@ -1,40 +1,18 @@
-.root {
-    --bgText: rgba(0, 0, 0, 0.8);
-    --bgTextSoft: rgba(0, 0, 0, 0.5);
-
-    --colorMain: hsl(264, 100%, 50%);
-    --colorMainOpac: hsla(264, 100%, 50%, 0.15);
-    --colorMainFill: hsla(264, 100%, 50%, 0.3);
-}
-
-html {
-    overflow: hidden;
-}
-
-body {
-    margin: 0 auto;
-    height: 100%;
-    user-select: none;
-    content-visibility: auto;
-    font-family: Rubik;
-    padding: 20px;
-    overflow: auto;
-}
-
-hr {
-    border: 2px solid var(--colorMain);
-    border-radius: 10px;
-}
-
 .boxFaxVersion {
     width: fit-content;
     padding-inline: 10px;
     display: flex;
     align-items: center;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 22px;
     color: var(--colorMain);
     box-sizing: border-box;
+}
+
+.boxMisc {
+    font-size: 18px;
+    color: var(--colorMain);
+    font-weight: 500;
 }
 
 .boxList {
@@ -44,5 +22,6 @@ hr {
     padding-right: 10px;
     padding-left: 25px;
     font-size: 12px;
-    margin-top: 5px;
+    margin-top: 6px;
+    margin-bottom: 24px;
 }
