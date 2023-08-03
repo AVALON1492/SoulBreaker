@@ -248,12 +248,12 @@ const goMenu = (idEvent, menu, name, url) => {
     });
 }
 
-goMenu(goSettings, menuSettings, "Configuración", "url(SoulBreaker/css/svg/mainHome.svg)");
-goMenu(goStats, menuStats, "Estadísticas", "url(SoulBreaker/css/svg/stats.svg)");
-goMenu(goAward, menuAward, "Logros", "url(SoulBreaker/css/svg/award.svg)");
-goMenu(goTutorial, menuTutorial, "Tutorial", "url(SoulBreaker/css/svg/tip.svg)");
-goMenu(goAbout, menuAbout, "Acerca de", "url(SoulBreaker/css/svg/about.svg)");
-goMenu(goVersions, menuVersions, "Versiones", "url(SoulBreaker/css/svg/version.svg)");
+goMenu(goSettings, menuSettings, "Configuración", "url(/css/svg/mainHome.svg)");
+goMenu(goStats, menuStats, "Estadísticas", "url(/css/svg/stats.svg)");
+goMenu(goAward, menuAward, "Logros", "url(/css/svg/award.svg)");
+goMenu(goTutorial, menuTutorial, "Tutorial", "url(/css/svg/tip.svg)");
+goMenu(goAbout, menuAbout, "Acerca de", "url(/css/svg/about.svg)");
+goMenu(goVersions, menuVersions, "Versiones", "url(/css/svg/version.svg)");
 
 goMain.addEventListener("click", () => {
     goMain.style.pointerEvents = "none"
