@@ -204,7 +204,6 @@ const changeScene = () => {
 //EFECTO BLOOM
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(2048, 2048));
 
-
 //TODO FUNCTIONS
 const showSearch = () => {
     textSearch.style.opacity = 1;
@@ -270,6 +269,7 @@ goMain.addEventListener("click", () => {
 //MENU SYSTEM
 let auxIdEvent = null;
 let auxGoMenu = null;
+let isOpenMenu = false;
 const closeMenuAnimation = () => {
     auxIdEvent.style.opacity = 1;
     auxIdEvent.style.pointerEvents = "all";
@@ -285,6 +285,7 @@ const closeMenu = (idEvent) => {
         lineHome.style.transform = "translateX(-50%) translateY(0px)"
         home.style.transition = "0.36s cubic-bezier(0.2, 1, 0.4, 1)";
         home.style.height = "84px";
+        isOpenMenu = false;
 
         if (auxIdEvent != null) {
             closeMenuAnimation();
@@ -302,13 +303,17 @@ const goOpen = (idEvent, menu, moreTask = false) => {
     idEvent.addEventListener("click", () => {
         taskHome.style.borderRadius = "12px 12px 36px 36px";
         home.style.transition = "0.44s cubic-bezier(0.2, 1.36, 0.4, 1)";
-        home.style.height = "calc(90px + 100% / 1.3)";
+        home.style.height = "calc(800px)";
+        if (window.innerHeight < 860) {
+            home.style.height = "calc(" + window.innerHeight + "px - 60px)";
+        }
         idEvent.style.opacity = 0;
         idEvent.style.pointerEvents = "none";
         menu.style.opacity = 1;
         menu.style.scale = 1;
         menu.style.pointerEvents = "all";
         blockContent.style.display = "block";
+        isOpenMenu = true;
 
         if (moreTask) {
             taskHome.style.height = "calc(144px)"
@@ -329,6 +334,48 @@ const goOpen = (idEvent, menu, moreTask = false) => {
 
 goOpen(openHome, startMenu);
 goOpen(openProfile, profileMenu, true);
+
+window.addEventListener("resize", () => {
+    if (isOpenMenu) {
+        home.style.height = "calc(800px)";
+        if (window.innerHeight < 860) {
+            home.style.height = "calc(" + window.innerHeight + "px - 60px)";
+        }
+    }
+})
+
+//TODO PAGE
+let page = 1;
+const pageLimit = 2;
+
+const setPage = (page) => {
+    idPage.innerText = page + " / " + pageLimit;
+    switch (page) {
+        case 1:
+            idDescTut.innerText = "Te damos la bienvenida a este tutorial para recomendarte a jugar con experiencias sin problemas. Este juego consiste en una plataforma idle basado de un mundo relajante 3D con colores. Pero hay una manera más divertida y activa para no quedarse aburrido, introduciremos unos nuevos mecanismos del juego, a dificultad incremental. A continuación, veremos las siguientes indicaciones que vamos a aprender.";
+            titleTut.innerText = "Bienvenida del tutorial";
+            imgTut.className = "boxImg tut1Png";
+            break;
+        case 2:
+            idDescTut.innerText = "???";
+            titleTut.innerText = "???";
+            imgTut.className = "boxImg tut2Png";
+    }
+}
+
+setPage(page);
+
+goBackPageTut.addEventListener("click", () => {
+    const isPageOne = page == 1;
+    isPageOne ? page = pageLimit : page--;
+    setPage(page);
+})
+
+goNextPageTut.addEventListener("click", () => {
+    const isPageLimit = page == pageLimit;
+    isPageLimit ? page = 1 : page++;
+    setPage(page);
+})
 
 //TODO SEARCH
 const boxContainer = menuSettings.querySelectorAll(".boxContainer");
@@ -469,6 +516,48 @@ settingClickText.create({
     }
 })
 
+//TODO STATS GENERAL
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["totalTime"]) {
+    } else {
+        localStorage["totalTime"] = 0;
+    }
+}
+
+textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
+setInterval(() => {
+    localStorage["totalTime"] = Number(localStorage["totalTime"]) + 1;
+    textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
+}, 60000);
+
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["totalClicks"]) {
+    } else {
+        localStorage["totalClicks"] = 0;
+    }
+}
+
+textTotalClicks.innerText = Number(localStorage["totalClicks"]);
+const upClick = () => {
+    localStorage["totalClicks"] = Number(localStorage["totalClicks"]) + 1;
+    textTotalClicks.innerText = Number(localStorage["totalClicks"]);
+}
+
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["totalEnergy"]) {
+    } else {
+        localStorage["totalEnergy"] = 0;
+    }
+}
+
+textTotalEnergy.innerText = Number(localStorage["totalEnergy"]);
+const upEnergy = (amount) => {
+    localStorage["totalEnergy"] = Number(localStorage["totalEnergy"]) + amount;
+    textTotalEnergy.innerText = Number(localStorage["totalEnergy"]);
+}
+
+//
+
 if (typeof(Storage) !== "undefined") {
     if (localStorage["valueEnergy"]) {
     } else {
@@ -482,10 +571,13 @@ infoEnergy.innerText = Number(localStorage["valueEnergy"]);
 progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
 
 worldGame.addEventListener("mousedown", (e) => {
+    upClick();
     progress += 1;
     if (progress >= progressTotal) {
         progress = 0;
-        localStorage["valueEnergy"] = Number(localStorage["valueEnergy"]) + 1;
+        const amount = 1;
+        upEnergy(amount);
+        localStorage["valueEnergy"] = Number(localStorage["valueEnergy"]) + amount;
         infoEnergy.innerText = Number(localStorage["valueEnergy"]);
         progressTotal = Number((10 + 10 * (Number(localStorage["valueEnergy"]) ** 1.4)).toFixed(0));
 
@@ -1215,6 +1307,76 @@ getInformation(resetConfig, "warning", null, "¿Seguro?", "Acción no recomendab
 getInformation(resetAll, "important", null, "Hora de despedir...", "Acción no recomendable",
 "Una vez presionado, todos los datos se perderán despúes de reiniciar la página",
 "En efecto, no podrás recuperar los datos que has progresado una vez hecho esta acción"
+);
+
+getInformation(textPower, "context", null, "Potencia", "Atributo",
+"Atributo que aumenta el ataque, la potencia del toque y la producción baja",
+"Cada 25 puntos, +ataque; Cada 10 puntos, +toque y +producción"
+);
+
+getInformation(textVita, "context", null, "Vitalidad", "Atributo",
+"Atributo que aumenta la salud, el coste de la energía y la producción alta",
+"Cada 10 puntos, +salud y ++producción; Cada 100 puntos, -coste"
+);
+
+getInformation(textRes, "context", null, "Dureza", "Atributo",
+"Atributo que aumenta el aguante, la defensa y el impulso de energía",
+"Cada 300 puntos, +aguante; Cada 20 puntos, +energía; La defensa depende de los puntos"
+);
+
+getInformation(textLea, "context", null, "Lealtad", "Atributo",
+"Atributo que aumenta el crecimiento de la lealtad y la lealtad permanente",
+"Cada 15 puntos, +lealtad permanente; Cada 5 puntos; +crecimiento de la lealtad"
+);
+
+getInformation(textHealth, "context", null, "Salud", "Atributo de vitalidad",
+"Atributo que indica cúanta vida tiene el alma",
+"Si su vida es 0, se reiniciará las creencias hasta su lealtad permanente y se perderá la mitad de energía y el progreso"
+);
+
+getInformation(textStamina, "context", null, "Aguante", "Atributo de dureza",
+"Atributo que indica cúanta resistencia tiene el alma",
+"Si su aguante es inferior a 50%, el crecimiento de la lealtad se detendrá; Si su aguante es inferior a 10%, el crecimiento de la lealtad lo declarará como pérdida hasta 5x"
+);
+
+getInformation(textDefen, "context", null, "Defensa", "Atributo de dureza",
+"Atributo que indica cúanta armadura tiene el alma",
+"La armadura máxima llega hasta 85%"
+);
+
+getInformation(textAtk, "context", null, "Ataque", "Atributo de potencia",
+"Atributo que indica cúanto daño puede causar contra los Kurotamas (Almas negras)",
+null
+);
+
+getInformation(textTap, "context", null, "Toque", "Atributo de potencia",
+"Atributo que indica cúanta cantidad de progreso acumula por toque",
+null
+);
+
+getInformation(textEner, "context", null, "Energía", "Atributo de dureza",
+"Atributo que indica cúanta cantidad de energía acumula cuando la barra de progreso está lleno",
+"Nota: cuanto mayor energía tiene, el coste afectará en relación de esa energía almacenada, pues el alma tiene los límites de almacenar energía"
+);
+
+getInformation(textCost, "context", null, "Coste", "Atributo de vitalidad",
+"Atributo que divide el coste de la barra del progreso necesita para acumular la energía",
+null
+);
+
+getInformation(textPro, "context", null, "Producción", "Atributo de vitalidad o potencia",
+"Atributo que acumula progreso por 5 segundos",
+null
+);
+
+getInformation(textLeaP, "context", null, "Lealtad permanente", "Atributo de lealtad",
+"Atributo que fija la cantidad de las creencias sin sufrir pérdidas",
+null
+);
+
+getInformation(textLeaC, "context", null, "Crecimiento", "Atributo de lealtad",
+"Atributo que crece las creencias por 10 segundos",
+null
 );
 
 //TOOLTIP

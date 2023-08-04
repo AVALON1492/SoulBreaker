@@ -46,30 +46,6 @@
     background-size: 100%;
 }
 
-.mainHomeSvg {
-    background-image: url(svg/mainHome.svg);
-}
-
-.statsSvg {
-    background-image: url(svg/stats.svg);
-}
-
-.awardSvg {
-    background-image: url(svg/award.svg);
-}
-
-.tipSvg {
-    background-image: url(svg/tip.svg);
-}
-
-.aboutSvg {
-    background-image: url(svg/about.svg);
-}
-
-.versionSvg {
-    background-image: url(svg/version.svg);
-}
-
 .topIcon {
     display: flex;
     justify-content: center;
@@ -123,4 +99,38 @@
     background-size: 100%;
     background-position: center center;
     pointer-events: none;
+}
+
+.mainHomeSvg {
+    background-image: url(svg/mainHome.svg);
+}
+
+.statsSvg {
+    background-image: url(svg/stats.svg);
+}
+
+.awardSvg {
+    background-image: url(svg/award.svg);
+}
+
+.tipSvg {
+    background-image: url(svg/tip.svg);
+}
+
+.aboutSvg {
+    background-image: url(svg/about.svg);
+}
+
+.versionSvg {
+    background-image: url(svg/version.svg);
+}
+
+/**/
+
+.tut1Png {
+    background-image: url(img/tut1.png);
+}
+
+.tut2Png {
+    background-image: none;
 }

@@ -21,7 +21,7 @@ class VERSION {
         if (this.features) {
             const idFeature = document.createElement("div");
             idFeature.className = "boxMisc"
-            idFeature.innerText = "Mejoras"
+            idFeature.innerText = "Mejoras / Cambios"
             this.listNotes.appendChild(idFeature);
         }
 
@@ -88,6 +88,7 @@ goVersions.addEventListener("click", () => {
     for (let i = 0; i < listParches.length; i++) {
         listParches[i].show();
     }
+    listVersions.lastChild.style.marginBottom = "0px";
 });
 
 goMain.addEventListener("click", () => {

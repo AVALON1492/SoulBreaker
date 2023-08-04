@@ -516,7 +516,7 @@
                             <div>Tiempo jugado</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">---</div>
+                            <div class="textInfoConfig" id="textTimeTotal">0 min</div>
                         </div>
                     </div>
                     <div class="boxButton">
@@ -525,7 +525,7 @@
                             <div>Logros ganados</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">---</div>
+                            <div class="textInfoConfig">0 / 9 completados</div>
                         </div>
                     </div>
                     <div class="boxButton">
@@ -534,7 +534,7 @@
                             <div>Clicks totales</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">---</div>
+                            <div class="textInfoConfig" id="textTotalClicks">0</div>
                         </div>
                     </div>
                     <div class="boxButton">
@@ -543,7 +543,7 @@
                             <div>Energía de todo tipo</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">---</div>
+                            <div class="textInfoConfig" id="textTotalEnergy">0</div>
                         </div>
                     </div>
                     <div class="boxButton">
@@ -552,22 +552,36 @@
                             <div>Mejoras totales</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">---</div>
+                            <div class="textInfoConfig">0</div>
                         </div>
                     </div>
                 </div>
             </div>
             <!--TODO LOGROS-->
             <div class="mainScroller" style="transform: translateX(640px);" id="menuAward">
-
+                
             </div>
             <!--TODO TUTORIAL-->
-            <div class="mainScroller" style="transform: translateX(640px);" id="menuTutorial">
-
+            <div class="mainScroller flex" style="transform: translateX(640px);" id="menuTutorial">
+                <div class="boxContainer flex" style="min-height: 100%;">
+                    <div class="boxTitle">
+                        <i class="fi-rr-book-bookmark topIcon"></i>
+                        <div id="titleTut"></div>
+                    </div>
+                    <div class="boxImg" id="imgTut"></div>
+                    <div class="boxDesc" id="idDescTut"></div>
+                    <div class="boxSlider onPoint" id="goBackPageTut" style="left: 16px;">Anterior</div>
+                    <div class="boxPages" id="idPage">1 / 2</div>
+                    <div class="boxSlider onPoint" id="goNextPageTut" style="right: 16px;">Siguiente</div>
+                </div>
             </div>
             <!--TODO ABOUT-->
             <div class="mainScroller" style="transform: translateX(640px);" id="menuAbout">
                 <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-dice-d6 topIcon"></i>
+                        <div>Sobre el juego</div>
+                    </div>
                     <div class="divContainer">
                         <div class="boxButton">
                             <i class="fi-rr-gamepad subIcon"></i>
@@ -608,6 +622,25 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="separator"></div>
+
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-link-alt topIcon"></i>
+                        <div>Enlaces</div>
+                    </div>
+                    <a class="boxButton isToogle onPoint" style="text-decoration: none;" href="https://github.com/AVALON1492/SoulBreaker/tree/main">
+                        <i class="fi-rr-link subIcon"></i>
+                        <div class="textSettings">
+                            <div>Enlace a Github</div>
+                            <div class="textHighlightInfo">Visita mi repositorio y el historial de lanzamientos</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText">Entrar</div>
+                        </div>
+                    </a>
+                </div>
             </div>
             <!--TODO VERSIONES-->
             <div class="mainScroller" style="transform: translateX(640px);" id="menuVersions">
@@ -643,22 +676,22 @@
             </div>
             <div class="gridInline4" style="min-height: 180px;">
                 <div class="cardStats">
-                    <div class="textCardStats" style="background: rgba(255, 1, 77, 0.1);">Potencia</div>
+                    <div class="textCardStats" id="textPower" style="background: rgba(255, 1, 77, 0.1);">Potencia</div>
                     <div class="iconCardStats" style="background-image: url(css/svg/stats/power.svg);"></div>
                     <div class="numberCardStats" style="color: rgba(255, 1, 77, 1); text-shadow: 0px 0px 8px rgba(255, 1, 77, 1); background: rgba(255, 1, 77, 0.1);">0</div>
                 </div>
                 <div class="cardStats">
-                    <div class="textCardStats" style="background: rgba(1, 255, 118, 0.1);">Vitalidad</div>
+                    <div class="textCardStats" id="textVita" style="background: rgba(1, 255, 118, 0.1);">Vitalidad</div>
                     <div class="iconCardStats" style="background-image: url(css/svg/stats/cruz.svg);"></div>
                     <div class="numberCardStats" style="color: rgba(1, 255, 118, 1); text-shadow: 0px 0px 8px rgba(1, 255, 118, 1); background: rgba(1, 255, 118, 0.1);">0</div>
                 </div>
                 <div class="cardStats">
-                    <div class="textCardStats" style="background: rgba(0, 117, 253, 0.1);">Dureza</div>
+                    <div class="textCardStats" id="textRes" style="background: rgba(0, 117, 253, 0.1);">Dureza</div>
                     <div class="iconCardStats" style="background-image: url(css/svg/stats/shield.svg);"></div>
                     <div class="numberCardStats" style="color: rgba(0, 117, 253, 1); text-shadow: 0px 0px 8px rgba(0, 117, 253, 1); background: rgba(0, 117, 253, 0.1);">0</div>
                 </div>
                 <div class="cardStats">
-                    <div class="textCardStats" style="background: rgba(255, 184, 2, 0.1);">Lealtad</div>
+                    <div class="textCardStats" id="textLea" style="background: rgba(255, 184, 2, 0.1);">Lealtad</div>
                     <div class="iconCardStats" style="background-image: url(css/svg/stats/belief.svg);"></div>
                     <div class="numberCardStats" style="color: rgba(255, 184, 2, 1); text-shadow: 0px 0px 8px rgba(255, 184, 2, 1); background: rgba(255, 184, 2, 0.1);">0</div>
                 </div>
@@ -667,7 +700,7 @@
             <div class="separator"></div>
 
             <div class="boxContainer grid2Row" style="height: 223px;">
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textHealth">
                     <i class="fi-rr-pharmacy subIconSmall"></i>
                     <div class="textSettings">
                         <div>Salud</div>
@@ -676,7 +709,7 @@
                         <div class="textInfoConfig">8</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textStamina">
                     <i class="fi-rr-bolt subIconSmall"></i>
                     <div class="textSettings">
                         <div>Aguante</div>
@@ -685,7 +718,7 @@
                         <div class="textInfoConfig">5</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textDefen">
                     <i class="fi-rr-shield subIconSmall"></i>
                     <div class="textSettings">
                         <div>Defensa</div>
@@ -694,16 +727,16 @@
                         <div class="textInfoConfig">0%</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textAtk">
                     <i class="fi-rr-sword subIconSmall"></i>
                     <div class="textSettings">
                         <div>Ataque</div>
                     </div>
                     <div class="inboxSettings">
-                        <div class="textInfoConfig">1</div>
+                        <div class="textInfoConfig">3</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textTap">
                     <i class="fi-rr-sparkles subIconSmall"></i>
                     <div class="textSettings">
                         <div>Toque</div>
@@ -712,7 +745,7 @@
                         <div class="textInfoConfig">1</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textEner">
                     <i class="fi-rr-circle-bolt subIconSmall"></i>
                     <div class="textSettings">
                         <div>Energía</div>
@@ -721,7 +754,7 @@
                         <div class="textInfoConfig">1</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textCost">
                     <i class="fi-rr-sack-dollar subIconSmall"></i>
                     <div class="textSettings">
                         <div>Coste</div>
@@ -730,31 +763,31 @@
                         <div class="textInfoConfig">x1</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textPro">
                     <i class="fi-rr-settings subIconSmall"></i>
                     <div class="textSettings">
                         <div>Producción</div>
                     </div>
                     <div class="inboxSettings">
-                        <div class="textInfoConfig">0 / 10s</div>
+                        <div class="textInfoConfig">0 / 5s</div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall">
-                    <i class="fi-rr-up subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Crecimiento</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">0 / 1min</div>
-                    </div>
-                </div>
-                <div class="boxButton boxSmall">
+                <div class="boxButton boxSmall" id="textLeaP">
                     <i class="fi-rr-users-alt subIconSmall"></i>
                     <div class="textSettings">
                         <div>Lealtad permanente</div>
                     </div>
                     <div class="inboxSettings">
                         <div class="textInfoConfig">0</div>
+                    </div>
+                </div>
+                <div class="boxButton boxSmall" id="textLeaC">
+                    <i class="fi-rr-up subIconSmall"></i>
+                    <div class="textSettings">
+                        <div>Crecimiento</div>
+                    </div>
+                    <div class="inboxSettings">
+                        <div class="textInfoConfig">0 / 10s</div>
                     </div>
                 </div>
             </div>
