@@ -494,6 +494,23 @@ iframe {
     gap: 6px;
 }
 
+.barBox {
+    width: 100%;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.barProgressAchieve {
+    width: 240px;
+    min-height: 12px;
+    border-radius: 4px;
+    box-shadow: 0px 0px 0px 3px var(--bgSecond),
+                0px 0px 9px 3px var(--colorMain);
+    overflow: hidden;
+}
+
 .barProgressTiny {
     width: 120px;
     min-height: 8px;
@@ -818,13 +835,20 @@ iframe {
 
 .textSettings {
     width: 80%;
-    height: 100%;
+    min-height: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: center;
     flex-direction: column;
     font-weight: 700;
     pointer-events: none;
+    margin-block: 5px;
+}
+
+.boxTitleAdvanced {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .textHighlightInfo {
