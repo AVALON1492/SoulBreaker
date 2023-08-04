@@ -516,6 +516,16 @@ settingClickText.create({
     }
 })
 
+//TODO RESOURCES GENERAL
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["gemSoul"]) {
+    } else {
+        localStorage["gemSoul"] = 0;
+    }
+}
+
+textGemSoul.innerText = Number(localStorage["gemSoul"]);
+
 //TODO STATS GENERAL
 if (typeof(Storage) !== "undefined") {
     if (localStorage["totalTime"]) {
@@ -556,6 +566,57 @@ const upEnergy = (amount) => {
     textTotalEnergy.innerText = Number(localStorage["totalEnergy"]);
 }
 
+//TODO LOGROS
+class ACHIEVE {
+    constructor(data, dataLVL, goals, rewards, idLevel, idBarProgress, idTextProgress, idTextReward, idDesc, desc1, desc2) {
+        this.data = data;
+        this.dataLVL = dataLVL;
+        if (typeof(Storage) !== "undefined") {
+			if (localStorage[dataLVL]) {
+			} else {
+				localStorage[dataLVL] = 0;
+			}
+		}
+        this.goals = goals;
+        this.rewards = rewards;
+        this.idLevel = idLevel;
+        this.idBarProgress = idBarProgress;
+        this.idTextProgress = idTextProgress;
+        this.idTextReward = idTextReward;
+        this.idDesc = idDesc;
+        this.desc1 = desc1;
+        this.desc2 = desc2;
+    }
+
+    update() {
+        const level = Number(localStorage[this.dataLVL]);
+        this.idLevel.innerText = "Nivel " + level;
+        if (level < this.goals.length) {
+            this.idLevel.innerText = "Nivel " + level;
+            this.idDesc.innerText = this.desc1 + this.goals[level] + this.desc2;
+            this.idTextProgress.innerText = Number(localStorage[this.data]) + " / " + this.goals[level];
+            this.idTextReward.innerText = "+" + this.rewards[level];
+            this.idBarProgress.style.width = (Number(localStorage[this.data]) / this.goals[level]) * 100 + "%";
+
+            if(Number(localStorage[this.data]) >= this.goals[level]) {
+                localStorage["gemSoul"] = Number(localStorage["gemSoul"]) + this.rewards[level];
+                textGemSoul.innerText = Number(localStorage["gemSoul"]);
+                localStorage[this.dataLVL] = Number(localStorage[this.dataLVL]) + 1;
+                this.update();
+            }
+        } else {
+            this.idLevel.innerText = "Nivel MÁX";
+            this.idDesc.innerText = "Ya has completado el logro";
+            this.idTextReward.parentElement.remove();
+            this.idBarProgress.parentElement.parentElement.remove();
+        }
+        
+    }
+}
+
+const clickAchieve = new ACHIEVE("totalClicks", "lvlTotalClicks", [100, 400, 1400, 3000, 6000, 12000, 24000, 50000, 100000, 250000], [5, 10, 15, 25, 40, 70, 100, 250, 525, 1600], idTotalClickLVL, barTotalClick, inPTotalClick, rewardClickTotal, descTotalClick, "Haz click ", " veces");
+clickAchieve.update();
+
 //
 
 if (typeof(Storage) !== "undefined") {
@@ -572,6 +633,9 @@ progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
 
 worldGame.addEventListener("mousedown", (e) => {
     upClick();
+    if (idTotalClickLVL != "Nivel MÁX") {
+        clickAchieve.update();
+    }
     progress += 1;
     if (progress >= progressTotal) {
         progress = 0;
@@ -622,7 +686,7 @@ worldGame.addEventListener("mousedown", (e) => {
         }, 300)
     }
     
-})
+});
 
 //
 //TODO THREE JS
@@ -1379,6 +1443,11 @@ getInformation(textLeaC, "context", null, "Crecimiento", "Atributo de lealtad",
 null
 );
 
+getInformation(gemSoulBox, "context", null, "Alma gema", "Recurso valioso",
+"Útil para compras de mejoras permanentes y potenciadores de tiempo",
+null
+);
+
 //TOOLTIP
 let showWord;
 const settingToolTip = new SETTINGSTOOGLE(buttonToolTip, "valueToolTip", true);
@@ -1459,5 +1528,6 @@ blockWelcomer.addEventListener("click", () => {
         blockWelcomer.remove();
         blockLoader.remove();
         home.style.translate = "0px 0px";
+        gemSoulBox.style.translate = "0px 0px";
     }, 310)
 });

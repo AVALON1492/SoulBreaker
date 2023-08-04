@@ -30,6 +30,23 @@
     pointer-events: none;
 }
 
+.mediumSvg {
+    width: 36px;
+    height: 36px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 78%;
+}
+
+.smallSvg {
+    margin-block: 2px;
+    width: 24px;
+    height: 24px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 78%;
+}
+
 .svgIcon {
     width: 32px;
     height: 32px;

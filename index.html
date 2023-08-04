@@ -84,6 +84,14 @@
     <div class="versionPreview" id="vPrev">v</div>
 </div>
 
+<div class="resourceMenu" id="gemSoulBox">
+    <div class="backgroundTheme"></div>
+    <div class="blockBold">
+        <div class="bigText" id="textGemSoul">0</div>
+        <div class="mediumSvg" style="background-image: url(css/svg/gemSoul.svg)"></div>
+    </div>
+</div>
+
 <div class="startMenu" id="home">
     <div class="backgroundTheme"></div>
     <div class="separatorHome" id="lineHome"></div>
@@ -568,7 +576,7 @@
                         <i class="fi-rr-gamepad subIcon"></i>
                         <div class="textSettings" style="padding-left: 12px;">
                             <div class="boxTitleAdvanced">
-                                <div>Es hora de dormir...</div>
+                                <div>Imagina el tiempo que volamos</div>
                                 <div class="boxText"> Nivel 0</div>
                             </div>
                             <div class="textHighlightInfo">Juega 10 minutos</div>
@@ -580,7 +588,10 @@
                             </div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="boxText">+5</div>
+                            <div class="boxText">
+                                <div>+5</div>
+                                <div class="smallSvg" style="background-image: url(css/svg/gemSoul.svg);"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -589,18 +600,21 @@
                         <div class="textSettings" style="padding-left: 12px;">
                             <div class="boxTitleAdvanced">
                                 <div>¡Haz que llueva los clicks!</div>
-                                <div class="boxText"> Nivel 0</div>
+                                <div class="boxText" id="idTotalClickLVL"> Nivel 0</div>
                             </div>
-                            <div class="textHighlightInfo">Haz click 100 veces</div>
+                            <div class="textHighlightInfo" id="descTotalClick">Haz click 100 veces</div>
                             <div class="barBox">
                                 <div class="barProgressAchieve">
-                                    <div class="inBarProgressTiny"></div>
+                                    <div class="inBarProgressTiny" id="barTotalClick"></div>
                                 </div>
-                                <div>0/100</div>
+                                <div id="inPTotalClick">0/100</div>
                             </div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="boxText">+5</div>
+                            <div class="boxText">
+                                <div id="rewardClickTotal">+5</div>
+                                <div class="smallSvg" style="background-image: url(css/svg/gemSoul.svg);"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -620,7 +634,10 @@
                             </div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="boxText">+10</div>
+                            <div class="boxText">
+                                <div>+10</div>
+                                <div class="smallSvg" style="background-image: url(css/svg/gemSoul.svg);"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
