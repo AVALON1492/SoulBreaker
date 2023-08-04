@@ -1,0 +1,126 @@
+.svgWelcome {
+    position: absolute;
+    left: 50%;
+    top: 120px;
+    translate: -50%;
+}
+
+.svgAnimation {
+    pointer-events: none;
+    transition: 0.2s cubic-bezier(.4, 2, .7, 1.5);
+    will-change: transform;
+}
+
+.svgResource {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bigSvg {
+    width: 54px;
+    height: 54px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    will-change: transform;
+    transition: 0.2s cubic-bezier(0.2, 0.6, 0.4, 1);
+    pointer-events: none;
+}
+
+.svgIcon {
+    width: 32px;
+    height: 32px;
+    will-change: transform;
+    transition: 0.6s cubic-bezier(0.2, 0.6, 0.4, 1);
+    pointer-events: none;
+}
+
+.svgIconIn {
+    width: 100%;
+    height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.mainHomeSvg {
+    background-image: url(svg/mainHome.svg);
+}
+
+.statsSvg {
+    background-image: url(svg/stats.svg);
+}
+
+.awardSvg {
+    background-image: url(svg/award.svg);
+}
+
+.tipSvg {
+    background-image: url(svg/tip.svg);
+}
+
+.aboutSvg {
+    background-image: url(svg/about.svg);
+}
+
+.versionSvg {
+    background-image: url(svg/version.svg);
+}
+
+.topIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    filter: drop-shadow(0px 0px 5px var(--colorMain));
+}
+
+.subIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 56px;
+    width: 56px;
+    height: 100%;
+    font-size: 24px;
+    pointer-events: none;
+    transition: 0.2s cubic-bezier(.4, 2, .7, 1.5);
+    will-change: transform;
+}
+
+.subIconSmall {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 30px;
+    width: 30px;
+    height: 100%;
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.2s cubic-bezier(.4, 2, .7, 1.5);
+}
+
+.svgImporter   {
+    width: 30px;
+    height: 30px;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-bottom: 8px;
+}
+
+.svgAVALON {
+    margin-left: 12px;
+    width: 24px;
+    height: 24px;
+    background-image: url(svg/avalon.svg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center center;
+    pointer-events: none;
+}

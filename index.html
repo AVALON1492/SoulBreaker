@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="Soul Breaker">
-    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
     <title>Soul Breaker</title>
     <link rel="shortcut icon" href="public/iconMain.ico">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/svg.css">
     <link rel="stylesheet" href="css/version.css">
     <link rel="stylesheet" href="css/design/uicons-regular-rounded.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,7 +81,7 @@
         </defs>
     </svg>
     <div class="textWelcome">Toque para empezar a jugar</div>
-    <div class="versionPreview">Alpha 1</div>
+    <div class="versionPreview" id="vPrev">v</div>
 </div>
 
 <div class="startMenu" id="home">
@@ -134,17 +135,16 @@
             <div class="titleName" id="titleId">SOUL BREAKER</div>
             <i class="fi-rr-search subIcon" id="iconSearch" style="color: var(--colorMain); font-size: 22px; min-width: 48px; width: 48px; transition: 0.6s cubic-bezier(0.2, 1.48, 0.4, 1);"></i>
             <input class="searchBox" type="text" maxlength="32" placeholder="Búsqueda" spellcheck="false" id="textSearch">
-            <div class="boxText" id="resultsSearch" style="position: absolute; padding: 2.5px 9px 3px 9px; max-height: 24px; top: 12px; right: 44px; white-space: nowrap; width: fit-content;">Test</div>
             <i class="fi-rr-cross boxQuit onPoint" id="buttonEraseSearch"></i>
         </div>
         <div class="textHome">
             <div class="boxIcon" id="iconHome">
-                <svg width="31" height="31" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M39.1863 4.63573C45.4347 -1.54524 55.5653 -1.54524 61.8137 4.63572L95.3137 37.7742C98.3143 40.7424 100 44.7682 100 48.9658V84.1727C100 92.9139 92.8366 100 84 100H78C71.3726 100 66 94.6274 66 88V70.3237C66 61.5825 58.8366 54.4963 50 54.4963C41.1634 54.4963 34 61.5825 34 70.3237V88C34 94.6274 28.6274 100 22 100H16C7.16344 100 0 92.9139 0 84.1727V49.9551C0 45.7574 1.68572 41.7317 4.6863 38.7635L39.1863 4.63573Z" fill="var(--colorMain)"/>
                     <path d="M41.2961 6.76852C46.3756 1.74383 54.6244 1.74383 59.7039 6.76852L93.2039 39.907C95.6384 42.3152 97 45.5744 97 48.9658V84.1727C97 91.2264 91.2105 97 84 97H78C73.0294 97 69 92.9706 69 88V70.3237C69 59.895 60.4626 51.4963 50 51.4963C39.5374 51.4963 31 59.895 31 70.3237V88C31 92.9706 26.9706 97 22 97H16C8.78953 97 3 91.2264 3 84.1727V49.9551C3 46.5636 4.36165 43.3044 6.79608 40.8962L41.2961 6.76852Z" stroke="black" stroke-opacity="0.5" stroke-width="8"/>
                 </svg>                    
             </div>
-            <div class="backText onPoint" id="goMain">Inicio</div>
+            <div class="backText">Inicio</div>
             <div class="arrowNext" id="goNext"></div>
             <div class="svgIcon" id="svgNext" style="transform: scale(0) rotateZ(-45deg);">
                 <div class="svgIconIn" id="svgNextIn"></div>
@@ -152,6 +152,7 @@
             <div style="overflow: hidden;">
                 <div id="nextText" style="transition: 0.5s cubic-bezier(0.2, 0.6, 0.4, 1); transform: translateX(-200px);">Configuración</div>
             </div>
+            <div class="backBox onPoint" id="goMain">Atrás</div>
         </div>
         <div class="boxSection">
             <div class="mainScroller grid2Column" id="mainMenu">
@@ -182,6 +183,7 @@
             </div>
             <!--TODO CONFIGURACIÓN-->
             <div class="mainScroller" style="transform: translateX(640px);" id="menuSettings">
+                <div class="boxResult" id="resultsSearch"></div>
                 <div class="boxContainer flex">
                     <div class="boxTitle">
                         <i class="fi-rr-paintbrush-pencil topIcon"></i>
@@ -601,7 +603,7 @@
                                 <div>Versión</div>
                             </div>
                             <div class="inboxSettings">
-                                <div class="textInfoConfig">Alpha 1</div>
+                                <div class="textInfoConfig" id="vPrev2">Alpha 1</div>
                             </div>
                         </div>
                     </div>
@@ -616,7 +618,7 @@
     <!--TODO PROFILEMENU-->
     <div class="mainHome" id="profileMenu" style="height: calc(100% - 84px - 80px - 72px)">
         <div class="textHome">
-            <svg width="31" height="31" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <mask id="path-1-inside-1_255_2" fill="white">
                     <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z"/>
                 </mask>

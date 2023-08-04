@@ -183,7 +183,7 @@ class SETTINGSARRAY extends SETTINGS {
 }
 
 const settingColor = new SETTINGSARRAY("valueColor", [264, 100, 50]);
-const valueShadersTerrain = new SETTINGSARRAY("valueShaders", [1, 20]);
+const valueShadersTerrain = new SETTINGSARRAY("valueShaders", [0, 20]);
 
 //AUTOSETTINGS
 let colorLight;
@@ -211,7 +211,6 @@ const showSearch = () => {
     textSearch.style.pointerEvents = "all";
     buttonEraseSearch.style.opacity = 1;
     buttonEraseSearch.style.pointerEvents = "all";
-    resultsSearch.style.opacity = 1;
     iconSearch.style.transform = "translateX(0px)";
     titleId.style.opacity = 0;
 }
@@ -221,7 +220,6 @@ const hideSearch = () => {
     textSearch.style.pointerEvents = "none";
     buttonEraseSearch.style.opacity = 0;
     buttonEraseSearch.style.pointerEvents = "none";
-    resultsSearch.style.opacity = 0;
     iconSearch.style.transform = "translateX(-54px)";
     titleId.style.opacity = 1;
     textSearch.value = "";
@@ -229,16 +227,17 @@ const hideSearch = () => {
 }
 
 let auxMenu = null;
-const goMenu = (idEvent, menu, name, url) => {
+const goMenu = (idEvent, menu, name, className) => {
     idEvent.addEventListener("click", () => {
-        goMain.style.pointerEvents = "all"
+        goMain.style.pointerEvents = "all";
+        goMain.style.opacity = 1;
         goNext.style.opacity = 1;
-        svgNextIn.style.backgroundImage = url;
-        svgNext.style.transform = "scale(1) rotateZ(0deg)"
-        nextText.style.transform = "translateX(0px)"
+        svgNextIn.className = "svgIconIn " + className;
+        svgNext.style.transform = "scale(1) rotateZ(0deg)";
+        nextText.style.transform = "translateX(0px)";
         nextText.innerText = name;
-        menu.style.transform = "translateX(0px)"
-        mainMenu.style.transform = "translateX(-640px)"
+        menu.style.transform = "translateX(0px)";
+        mainMenu.style.transform = "translateX(-640px)";
         iconHome.style.opacity = 0.4;
         iconHome.style.scale = 0.8;
         auxMenu = menu;
@@ -248,20 +247,21 @@ const goMenu = (idEvent, menu, name, url) => {
     });
 }
 
-goMenu(goSettings, menuSettings, "Configuración", "url(/SoulBreaker/css/svg/mainHome.svg)");
-goMenu(goStats, menuStats, "Estadísticas", "url(/SoulBreaker/css/svg/stats.svg)");
-goMenu(goAward, menuAward, "Logros", "url(/SoulBreaker/css/svg/award.svg)");
-goMenu(goTutorial, menuTutorial, "Tutorial", "url(/SoulBreaker/css/svg/tip.svg)");
-goMenu(goAbout, menuAbout, "Acerca de", "url(/SoulBreaker/css/svg/about.svg)");
-goMenu(goVersions, menuVersions, "Versiones", "url(/SoulBreaker/css/svg/version.svg)");
+goMenu(goSettings, menuSettings, "Configuración", "mainHomeSvg");
+goMenu(goStats, menuStats, "Estadísticas", "statsSvg");
+goMenu(goAward, menuAward, "Logros", "awardSvg");
+goMenu(goTutorial, menuTutorial, "Tutorial", "tipSvg");
+goMenu(goAbout, menuAbout, "Acerca de", "aboutSvg");
+goMenu(goVersions, menuVersions, "Versiones", "versionSvg");
 
 goMain.addEventListener("click", () => {
-    goMain.style.pointerEvents = "none"
+    goMain.style.pointerEvents = "none";
+    goMain.style.opacity = 0;
     goNext.style.opacity = 0;
-    svgNext.style.transform = "scale(0) rotateZ(-45deg)"
-    nextText.style.transform = "translateX(-200px)"
-    auxMenu.style.transform = "translateX(640px)"
-    mainMenu.style.transform = "translateX(0px)"
+    svgNext.style.transform = "scale(0) rotateZ(-45deg)";
+    nextText.style.transform = "translateX(-200px)";
+    auxMenu.style.transform = "translateX(640px)";
+    mainMenu.style.transform = "translateX(0px)";
     iconHome.style.opacity = 1;
     iconHome.style.scale = 1;
     hideSearch();
@@ -371,10 +371,13 @@ const searchIndex = () => {
         isEmpty ? boxContainer[i].style.display = "none" : boxContainer[i].style.display = "flex";
     }
 
-    const isPlural = searchFoundTotal != 1
+    const isNotWrite = textSearch.value == "";
+    isNotWrite ? resultsSearch.style.display = "none" : resultsSearch.style.display = "flex";
+    const isPlural = searchFoundTotal != 1;
+    const isNotFound = searchFoundTotal != 0;
     let addS;
     isPlural ? addS = "s" : addS = "";
-    resultsSearch.innerText = searchFoundTotal + " ajuste" + addS;
+    isNotFound ? resultsSearch.innerText = "Hay " + searchFoundTotal + " ajuste" + addS + " disponible" + addS : resultsSearch.innerText = "No hay " + " ajuste" + addS + " disponible" + addS;
 
     for (let i = 0; i < separator.length; i++) {
         const isEmptyNext = searchNotFoundBox[i + 1] - listBoxContainerNumber[i + 1] == 0;
@@ -565,6 +568,7 @@ buttonAntialias.addEventListener("click", () => {
     location.reload();
 })
 
+//renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(color);
 renderer.setPixelRatio( window.devicePixelRatio * 1 );
 renderer.setSize( window.innerWidth / 1, window.innerHeight / 1 );
@@ -609,14 +613,14 @@ settingBloom.create({
     on: () => {
         settingBloom.setOnUI();
         composer.insertPass(bloomPass, 1);
-        valueShadersTerrain.changeSettingOnePicker(1, 5);
+        valueShadersTerrain.changeSettingOnePicker(0, 24);
         changeMaterial();
     },
 
     off:() => {
         settingBloom.setOffUI();
         composer.removePass(bloomPass);
-        valueShadersTerrain.changeSettingOnePicker(1, 20);
+        valueShadersTerrain.changeSettingOnePicker(0, 12);
         changeMaterial();
     }
 });
@@ -744,7 +748,7 @@ meshTerrain.position.y = -175;
 meshTerrain.scale.set(2, 2, 2);
 
 //TODO LIGHT and SHADOWS
-const light = new THREE.AmbientLight(0xffffff, 2);
+const light = new THREE.AmbientLight(0xffffff, 2.5);
 scene.add( light );
 
 const lightPointA = new THREE.PointLight( 0x6600ff, 3, 1200 );
@@ -759,7 +763,7 @@ scene.add( lightPointB );
 const pointLightHelper = new THREE.PointLightHelper( lightPointB, sphereSize );
 scene.add( pointLightHelper );*/
 
-const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
 scene.add( directionalLight );
 
 let xLight = 0;
