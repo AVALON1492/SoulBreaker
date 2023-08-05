@@ -21,7 +21,7 @@ class VERSION {
         if (this.features) {
             const idFeature = document.createElement("div");
             idFeature.className = "boxMisc"
-            idFeature.innerText = "Mejoras / Cambios"
+            idFeature.innerText = "Mejoras / Cambios (" + this.textFeatures.length + ")"
             this.listNotes.appendChild(idFeature);
         }
 
@@ -39,7 +39,7 @@ class VERSION {
         if (this.issues) {
             const idIssue = document.createElement("div");
             idIssue.className = "boxMisc"
-            idIssue.innerText = "Errores corregidos"
+            idIssue.innerText = "Errores corregidos (" + this.textIssues.length + ")"
             this.listNotes.appendChild(idIssue);
         }
 

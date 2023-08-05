@@ -535,10 +535,6 @@ if (typeof(Storage) !== "undefined") {
 }
 
 textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
-setInterval(() => {
-    localStorage["totalTime"] = Number(localStorage["totalTime"]) + 1;
-    textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
-}, 60000);
 
 if (typeof(Storage) !== "undefined") {
     if (localStorage["totalClicks"]) {
@@ -589,33 +585,49 @@ class ACHIEVE {
     }
 
     update() {
-        const level = Number(localStorage[this.dataLVL]);
-        this.idLevel.innerText = "Nivel " + level;
-        if (level < this.goals.length) {
+        if (this.idLevel.innerText != "Nivel MÁX") {
+            const level = Number(localStorage[this.dataLVL]);
             this.idLevel.innerText = "Nivel " + level;
-            this.idDesc.innerText = this.desc1 + this.goals[level] + this.desc2;
-            this.idTextProgress.innerText = Number(localStorage[this.data]) + " / " + this.goals[level];
-            this.idTextReward.innerText = "+" + this.rewards[level];
-            this.idBarProgress.style.width = (Number(localStorage[this.data]) / this.goals[level]) * 100 + "%";
+            if (level < this.goals.length) {
+                this.idLevel.innerText = "Nivel " + level;
+                this.idDesc.innerText = this.desc1 + this.goals[level] + this.desc2;
+                this.idTextProgress.innerText = Number(localStorage[this.data]) + " / " + this.goals[level];
+                this.idTextReward.innerText = "+" + this.rewards[level];
+                this.idBarProgress.style.width = (Number(localStorage[this.data]) / this.goals[level]) * 100 + "%";
 
-            if(Number(localStorage[this.data]) >= this.goals[level]) {
-                localStorage["gemSoul"] = Number(localStorage["gemSoul"]) + this.rewards[level];
-                textGemSoul.innerText = Number(localStorage["gemSoul"]);
-                localStorage[this.dataLVL] = Number(localStorage[this.dataLVL]) + 1;
-                this.update();
+                if(Number(localStorage[this.data]) >= this.goals[level]) {
+                    localStorage["gemSoul"] = Number(localStorage["gemSoul"]) + this.rewards[level];
+                    textGemSoul.innerText = Number(localStorage["gemSoul"]);
+                    localStorage[this.dataLVL] = Number(localStorage[this.dataLVL]) + 1;
+                    this.update();
+                }
+            } else {
+                this.idLevel.innerText = "Nivel MÁX";
+                this.idDesc.innerText = "Ya has completado el logro";
+                this.idTextReward.parentElement.remove();
+                this.idBarProgress.parentElement.parentElement.remove();
             }
-        } else {
-            this.idLevel.innerText = "Nivel MÁX";
-            this.idDesc.innerText = "Ya has completado el logro";
-            this.idTextReward.parentElement.remove();
-            this.idBarProgress.parentElement.parentElement.remove();
         }
-        
     }
 }
 
 const clickAchieve = new ACHIEVE("totalClicks", "lvlTotalClicks", [100, 400, 1400, 3000, 6000, 12000, 24000, 50000, 100000, 250000], [5, 10, 15, 25, 40, 70, 100, 250, 525, 1600], idTotalClickLVL, barTotalClick, inPTotalClick, rewardClickTotal, descTotalClick, "Haz click ", " veces");
 clickAchieve.update();
+
+const timeAchieve = new ACHIEVE("totalTime", "lvlTotalTime", [10, 30, 60, 120, 240, 480, 960, 1440, 2880, 5760], [5, 10, 15, 20, 30, 50, 100, 175, 320, 640], idTotalTimeLVL, barTotalTime, inPTotalTime, rewardTimeTotal, descTotalTime, "Juega ", " minutos");
+timeAchieve.update();
+
+const energyAchieve = new ACHIEVE("totalEnergy", "lvlTotalEnergy", [50, 250, 800, 2500, 10000, 30000, 100000, 250000, 750000, 3000000], [10, 20, 40, 70, 115, 225, 450, 800, 1750, 4000], idTotalEnerLVL, barTotalEner, inPTotalEner, rewardEnerTotal, descTotalEner, "Acumula ", " energía total");
+energyAchieve.update();
+
+textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / 30";
+setInterval(() => {
+    localStorage["totalTime"] = Number(localStorage["totalTime"]) + 1;
+    textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
+    timeAchieve.update();
+
+    textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / 30";
+}, 60000);
 
 //
 
@@ -633,9 +645,7 @@ progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
 
 worldGame.addEventListener("mousedown", (e) => {
     upClick();
-    if (idTotalClickLVL != "Nivel MÁX") {
-        clickAchieve.update();
-    }
+    clickAchieve.update();
     progress += 1;
     if (progress >= progressTotal) {
         progress = 0;
@@ -644,6 +654,7 @@ worldGame.addEventListener("mousedown", (e) => {
         localStorage["valueEnergy"] = Number(localStorage["valueEnergy"]) + amount;
         infoEnergy.innerText = Number(localStorage["valueEnergy"]);
         progressTotal = Number((10 + 10 * (Number(localStorage["valueEnergy"]) ** 1.4)).toFixed(0));
+        energyAchieve.update();
 
         //
 
@@ -1051,8 +1062,6 @@ settingZoomSpeed.createRanger(
 settingZoomSpeed.resetRanger(resetZoomSpeed);
 
 //TODO ANIMATION
-const adFov = 6;
-
 scene.matrixWorldAutoUpdate = true;
 const animate = () => {
     requestAnimationFrame(animate);
@@ -1111,6 +1120,9 @@ const animate = () => {
     }
 
     stats.update();
+
+    const isVertical = window.innerWidth < window.innerHeight;
+    isVertical ? blockAspectRatioDetector.style.display = "flex" : blockAspectRatioDetector.style.display = "none";
 }
 
 animate();
