@@ -466,6 +466,52 @@ settingSearch.create({
 
 hideSearch();
 
+//TODO POP-UP WINDOW
+const openWindow = (idWindow) => {
+    tapeWindow.style.display = "block";
+    idWindow.style.display = "flex";
+    setTimeout(() => {
+        tapeWindow.style.opacity = "0.5";
+        idWindow.style.scale = "1";
+        idWindow.style.opacity = "1";
+    }, 10)
+}
+
+const closeWindow = (idWindow) => {
+    tapeWindow.style.opacity = "0";
+    idWindow.style.scale = "0.8";
+    idWindow.style.opacity = "0";
+    setTimeout(() => {
+        tapeWindow.style.display = "none";
+        idWindow.style.display = "none";
+    }, 310);
+}
+
+//TODO NOTIFICATION
+const pushNotification = (desc) => {
+    const createNotif = document.createElement("div");
+    createNotif.className = "popUpNotification";
+
+    const textNotif = document.createElement("div");
+    textNotif.className = "boxDesc";
+    textNotif.innerText = desc;
+
+    createNotif.appendChild(textNotif);
+    document.body.appendChild(createNotif);
+
+    setTimeout(() => {
+        createNotif.style.translate = "-50% 0%";
+    }, 10);
+
+    setTimeout(() => {
+        createNotif.style.translate = "-50% calc(-100% - 60px)";
+    }, 5000);
+
+    setTimeout(() => {
+        createNotif.remove();
+    }, 6000);
+}
+
 //TODO APARIENCIA
 const createLight = document.createElement("div");
 createLight.className = "pointLight";
@@ -596,6 +642,7 @@ class ACHIEVE {
                 this.idBarProgress.style.width = (Number(localStorage[this.data]) / this.goals[level]) * 100 + "%";
 
                 if(Number(localStorage[this.data]) >= this.goals[level]) {
+                    pushNotification("Has completado el logro. Has obtenido " + this.rewards[level] + " almas gemas.");
                     localStorage["gemSoul"] = Number(localStorage["gemSoul"]) + this.rewards[level];
                     textGemSoul.innerText = Number(localStorage["gemSoul"]);
                     localStorage[this.dataLVL] = Number(localStorage[this.dataLVL]) + 1;
@@ -1531,6 +1578,24 @@ resetAll.addEventListener("click", () => {
 //TODO LOADING and WELCOME
 window.addEventListener("load", () => {
     blockLoader.style.animation = "playFade 0.8s forwards ease-in";
+    if (typeof(Storage) !== "undefined") {
+        if (localStorage["popupSec"]) {
+        } else {
+            localStorage["popupSec"] = true;
+        }
+    }
+    
+    setTimeout(() => {
+        if (localStorage["popupSec"] == "true") {
+                openWindow(windowProtection);
+        }
+    }, 300)
+    
+    
+    buttonConfirmProtection.addEventListener("click", () => {
+        closeWindow(windowProtection);
+        localStorage["popupSec"] = "false";
+    })
 });
 
 blockWelcomer.addEventListener("click", () => {

@@ -57,14 +57,31 @@ class VERSION {
     }
 }
 
-const versionActual = "Alpha 3"
+const versionActual = "Alpha 4"
 vPrev.innerText = versionActual;
 vPrev2.innerText = versionActual;
 
 const listParches = [
+    new VERSION("Alpha 4", true, false,
+    ["Funcionamiento en la sección estadísticas agregado.",
+    "Funcionamiento en la sección logros agregado y se han añadido 3 logros incrementales de 10 niveles.",
+    "Funcionamiento en la sección tutorial agregado.",
+    "Enlace Github agregado.",
+    "Sistema de ventanas agregado.",
+    "Sistema de notificaciones agregado.",
+    "Se han añadido más información en la menú de perfil para ver cómo se trabajan los atributos.",
+    "Nuevo recurso valioso: Alma gema.",
+    "Mensaje de datos de protección agregado.",
+    "En los ajustes, se ha ampliado la resolución mínima de 0.3 a 0.2 para el soporte de los móviles de gama baja.",
+    "Mejoras de accesibilidad para el soporte de los móviles.",
+    "Se ha añadido la detección del aspecto de pantalla horizontal para una mejor jugabilidad de los dispositivos.",
+    "Mejoras de UI para móviles.",
+    "Otros cambios de UI."],
+    []
+    ),
     new VERSION("Alpha 3", true, true,
     ["Nuevo botón atrás para volver al inicio. Eso ayuda a evitar la confusión a los usuarios de cómo volver al inicio.",
-    "Nuevas mejoras de UI en la búsqueda de resultados",
+    "Nuevas mejoras de UI en la búsqueda de resultados.",
     "Cambios de la interfaz UI."],
     ["Por razones de seguridad, los iconos estaban encriptados que impiden cargar su petición. Para resolverlo, los iconos se vuelven integrados sin enviar la petición para poder cargar sin problemas.",
     "Se ha corregido los problemas de los trazados de luz por el exceso de brillo y la precisión del color.",

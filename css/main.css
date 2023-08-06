@@ -59,13 +59,16 @@ iframe {
     background: var(--colorMain);
 }
 
-.blockLoading {
+.block {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: var(--bgThird);
     top: 0;
     left: 0;
+}
+
+.fullLoading {
+    background: var(--bgThird);
     pointer-events: none;
     z-index: 1003;
     opacity: 1;
@@ -82,17 +85,12 @@ iframe {
     }
 }
 
-.blockAspectRatio {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+.fullAspectRatio {
     padding: 60px;
     box-sizing: border-box;
     background: var(--colorMain);
-    top: 0;
-    left: 0;
     pointer-events: none;
-    z-index: 1002;
+    z-index: 1050;
 }
 
 .textBlocker {
@@ -102,14 +100,115 @@ iframe {
     text-align: center;
 }
 
-.blockWelcome {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
+.fullWelcome {
     z-index: 1001;
     transition: 0.3s;
+}
+
+.fullWindow {
+    background: var(--bgSecond);
+    opacity: 0;
+    z-index: 1004;
+    transition: 0.3s;
+    display: none;
+    will-change: transform;
+}
+
+.popUpWindow {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    max-width: calc(500px + 10%);
+    background: var(--bgFluent);
+    backdrop-filter: var(--filterGlass);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.5),
+                0px 0px 16px 5px var(--colorMain),
+                0px 0px 0px 5px var(--colorMain);
+    z-index: 1005;
+    display: none;
+    flex-direction: column;
+    padding: 18px;
+    padding-bottom: 78px;
+    box-sizing: border-box;
+    opacity: 0;
+    scale: 0.8;
+    transition: 0.3s;
+    will-change: transform;
+}
+
+.boxButtonLabelWindow {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    width: calc(100% - 12px);
+    height: 60px;
+    background: var(--bgThird);
+    border-radius: 8px 8px 20px 20px;
+    gap: 12px;
+}
+
+.buttonConfirm {
+    min-width: 180px;
+    height: 36px;
+    background-color: var(--colorMain);
+    border-radius: 10px;
+    white-space: nowrap;
+    padding-inline: 16px;
+    font-weight: 500;
+    box-sizing: border-box;
+    color: var(--bgThird);
+    overflow: hidden;
+    transition: 0.2s;
+    will-change: transform;
+}
+
+.buttonConfirm:hover {
+    background-color: var(--colorMainOpacSoft);
+    box-shadow: 0px 0px 0px 1px var(--colorMainFill);
+    color: var(--colorMain);
+}
+
+.buttonConfirm:active {
+    box-shadow: 0px 0px 0px 1px var(--colorMainFill);
+    color: var(--colorMain);
+    background-color: transparent;
+    scale: 0.95;
+}
+
+.popUpNotification {
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    translate: -50% calc(-100% - 60px);
+    max-width: calc(500px + 10%);
+    background: var(--bgThird);
+    backdrop-filter: var(--filterGlass);
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.5),
+                0px 0px 16px 5px var(--colorMain),
+                0px 0px 0px 5px var(--colorMain);
+    z-index: 1006;
+    transition: 0.5s;
+    will-change: transform;
+}
+
+.blockBottom {
+    position: absolute;
+    z-index: 998;
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: calc(30px + 42px);
+    background: linear-gradient(0deg, var(--bgSecond), transparent);
+    opacity: 0.7;
 }
 
 .textWelcome {
@@ -286,6 +385,8 @@ iframe {
 
 .backgroundTheme {
     position: absolute;
+    top: 0px;
+    left: 0px;
     z-index: -1;
     background: var(--colorMainOpac);
     width: 100%;
