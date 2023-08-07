@@ -205,6 +205,33 @@ const changeScene = () => {
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(2048, 2048));
 
 //TODO FUNCTIONS
+document.addEventListener("click", () => {
+    audioAmbient.play();
+
+    audioClick.load();
+    audioClick.play();
+});
+
+audioAmbient.loop = true;
+
+const settingSoundAmbient = new SETTINGSVALUE(rangeSoundAmbient, textSoundAmbient, "valueSoundAmbient", 100);
+settingSoundAmbient.createRanger(
+    (value) => {
+    audioAmbient.volume = value / 100;
+});
+
+const settingSoundInteract = new SETTINGSVALUE(rangeSoundInteract, textSoundInteract, "valueSoundInteract", 100);
+settingSoundInteract.createRanger(
+    (value) => {
+    audioClick.volume = value / 100;
+});
+
+const settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, "valueSoundSystem", 100);
+settingSoundSystem.createRanger(
+    (value) => {
+    audioNotif.volume = value / 100;
+});
+
 const showSearch = () => {
     textSearch.style.opacity = 1;
     textSearch.style.pointerEvents = "all";
@@ -473,6 +500,8 @@ const openWindow = (idWindow) => {
     tapeWindow.style.display = "block";
     idWindow.style.display = "flex";
     setTimeout(() => {
+        audioNotif.load();
+        audioNotif.play();
         tapeWindow.style.opacity = "0.5";
         idWindow.style.scale = "1";
         idWindow.style.opacity = "1";
@@ -503,6 +532,8 @@ const pushNotification = (desc) => {
 
     setTimeout(() => {
         createNotif.style.translate = "-50% 0%";
+        audioNotif.load();
+        audioNotif.play();
     }, 10);
 
     setTimeout(() => {

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="description" content="Soul Breaker">
     <meta name="viewport" content="width=device-width, initial-scale = 0.48, maximum-scale = 1, user-scalable = no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" /> 
     <title>Soul Breaker</title>
     <link rel="shortcut icon" href="public/iconMain.ico">
     <link rel="stylesheet" href="css/main.css">
@@ -17,6 +19,18 @@
     <script type="module" src="js/version.js" defer></script>
 </head>
 <body id="system">
+
+<audio id="audioAmbient">
+    <source src="public/sound/stasis.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audioClick">
+    <source src="public/sound/clickSound.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audioNotif">
+    <source src="public/sound/notificationSound.mp3" type="audio/mpeg">
+</audio>
 
 <div class="block fullLoading" id="blockLoader"></div>
 <div class="block fullAspectRatio center" id="blockAspectRatioDetector">
@@ -211,6 +225,51 @@
             <!--TODO CONFIGURACIÓN-->
             <div class="mainScroller" style="transform: translateX(640px);" id="menuSettings">
                 <div class="boxResult" id="resultsSearch"></div>
+                <div class="boxContainer flex">
+                    <div class="boxTitle">
+                        <i class="fi-rr-speaker topIcon"></i>
+                        <div>Sonido</div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-music subIcon"></i>
+                        <div class="textSettings">
+                            <div>Volumen ambiental</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0" max="100" step="1" class="rangerInput" id="rangeSoundAmbient">
+                            </div>
+                            <div class="boxText" id="textSoundAmbient" style="width: 40px;"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-piano-keyboard subIcon"></i>
+                        <div class="textSettings">
+                            <div>Volumen de interración</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0" max="100" step="1" class="rangerInput" id="rangeSoundInteract">
+                            </div>
+                            <div class="boxText" id="textSoundInteract" style="width: 40px;"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
+                        <i class="fi-rr-circle-waveform-lines subIcon"></i>
+                        <div class="textSettings">
+                            <div>Volumen del sistema</div>
+                        </div>
+                        <div class="inboxSettings" style="pointer-events: all;">
+                            <div class="barInput">
+                                <input type="range" min="0" max="100" step="1" class="rangerInput" id="rangeSoundSystem">
+                            </div>
+                            <div class="boxText" id="textSoundSystem" style="width: 40px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="separator"></div>
+
                 <div class="boxContainer flex">
                     <div class="boxTitle">
                         <i class="fi-rr-paintbrush-pencil topIcon"></i>
