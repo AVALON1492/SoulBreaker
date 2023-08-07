@@ -57,11 +57,19 @@ class VERSION {
     }
 }
 
-const versionActual = "Alpha 4"
+const versionActual = "Alpha 5"
 vPrev.innerText = versionActual;
 vPrev2.innerText = versionActual;
 
 const listParches = [
+    new VERSION("Alpha 5", false, true,
+    [],
+    ["Tras la rotación de los móviles, ya no se reescalará el zoom de forma anormal, facilitándose a los usuarios tener menos interrumpciones.",
+    "Se ha deshabilitado el zoom automático para no provocar problemas de jugabilidad.",
+    "Se han corregido la tasa de resolución mientras cambia de rotación para no causar problemas de rendimiento.",
+    "Se ha corregido un efecto flash de carga y bienvenida para evitar aturdimientos de luz.",
+    "Se ha corregido un error de que el bloquo del menú lo tenía activado inicialmente. Ahora ya puedes tocar y desplazar la cámara del juego sin problemas tras iniciar el juego."]
+    ),
     new VERSION("Alpha 4", true, false,
     ["Funcionamiento en la sección estadísticas agregado.",
     "Funcionamiento en la sección logros agregado y se han añadido 3 logros incrementales de 10 niveles.",

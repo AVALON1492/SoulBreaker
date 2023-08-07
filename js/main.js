@@ -336,6 +336,8 @@ goOpen(openHome, startMenu);
 goOpen(openProfile, profileMenu, true);
 
 window.addEventListener("resize", () => {
+    renderer.setPixelRatio( window.devicePixelRatio * Number(localStorage["valueResolution"]) );
+
     if (isOpenMenu) {
         home.style.height = "calc(800px)";
         if (window.innerHeight < 860) {
@@ -784,7 +786,6 @@ buttonAntialias.addEventListener("click", () => {
 
 //renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(color);
-renderer.setPixelRatio( window.devicePixelRatio * 1 );
 renderer.setSize( window.innerWidth / 1, window.innerHeight / 1 );
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -1148,8 +1149,8 @@ const animate = () => {
 	orb.position.y = moveOrb;
 
     //Update sizes
-	sizes.width = worldGame.clientWidth;
-	sizes.height = worldGame.clientHeight;
+	sizes.width = window.innerWidth;
+	sizes.height = window.innerHeight;
 
     //Update camera
 	camera.aspect = sizes.width / sizes.height;

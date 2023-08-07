@@ -68,9 +68,9 @@ iframe {
 }
 
 .fullLoading {
-    background: var(--bgThird);
+    background: black;
     pointer-events: none;
-    z-index: 1003;
+    z-index: 1051;
     opacity: 1;
     will-change: opacity;
 }
@@ -94,10 +94,11 @@ iframe {
 }
 
 .textBlocker {
-    color: white;
+    color: var(--bgThird);
     font-size: 24px;
     font-weight: 700;
     text-align: center;
+    opacity: 0.7;
 }
 
 .fullWelcome {
@@ -1224,6 +1225,7 @@ canvas {
     width: 100%;
     height: 100%;
     z-index: 10;
+    display: none;
 }
 
 #blockTask {
