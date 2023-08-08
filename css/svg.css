@@ -107,6 +107,37 @@
     margin-bottom: 8px;
 }
 
+.iconCardStats {
+    width: 100%;
+    height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 50% 50%;
+    transition: 0.3s;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.iconCardStats:hover {
+    scale: 1.2;
+}
+
+.iconCardStats:active {
+    transition: 0.1s;
+    scale: 0.9;
+}
+
+.iconStats {
+    width: 32px;
+    height: 32px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 80% 80%;
+    pointer-events: none;
+}
+
+/**/
+
 .svgAVALON {
     margin-left: 12px;
     width: 24px;

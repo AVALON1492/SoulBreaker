@@ -204,7 +204,11 @@ const changeScene = () => {
 //EFECTO BLOOM
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(2048, 2048));
 
+//
 //TODO FUNCTIONS
+//
+
+//TODO AUDIO
 document.addEventListener("click", () => {
     audioAmbient.play();
 
@@ -232,11 +236,13 @@ settingSoundSystem.createRanger(
     audioNotif.volume = value / 100;
 });
 
+//TODO SELECT
+//SELECT SUBMENU MAIN
 const showSearch = () => {
     textSearch.style.opacity = 1;
-    textSearch.style.pointerEvents = "all";
+    textSearch.style.pointerEvents = "inherit";
     buttonEraseSearch.style.opacity = 1;
-    buttonEraseSearch.style.pointerEvents = "all";
+    buttonEraseSearch.style.pointerEvents = "inherit";
     iconSearch.style.transform = "translateX(0px)";
     titleId.style.opacity = 0;
 }
@@ -255,7 +261,7 @@ const hideSearch = () => {
 let auxMenu = null;
 const goMenu = (idEvent, menu, name, className) => {
     idEvent.addEventListener("click", () => {
-        goMain.style.pointerEvents = "all";
+        goMain.style.pointerEvents = "inherit";
         goMain.style.opacity = 1;
         goNext.style.opacity = 1;
         svgNextIn.className = "svgIconIn " + className;
@@ -293,13 +299,79 @@ goMain.addEventListener("click", () => {
     hideSearch();
 });
 
+//SELECT SUBMENU PERFIL
+const inTrainMenu = (toogle) => {
+    if (toogle) {
+        document.querySelectorAll(".iconCardStats").forEach((object) => {
+            console.log(object)
+            object.style.pointerEvents = "inherit";
+        })
+    } else {
+        document.querySelectorAll(".iconCardStats").forEach((object) => {
+            object.style.pointerEvents = "none";
+        })
+    }
+}
+
+let auxMenuPerfil = boxPerfilStats;
+let auxFunc = null;
+let auxOrder = 0;
+const goPerfilMenu = (idEvent, menu, name, className, order, func = null) => {
+    idEvent.addEventListener("click", () => {
+        if (auxOrder != order) {
+            svgNextInPerfil.className = className + " center";
+            nextTextPerfil.innerText = name;
+            if (auxOrder > order) {
+                auxMenuPerfil.style.translate = "calc(100% + 80px)";
+            } else {
+                auxMenuPerfil.style.translate = "calc(-100% - 80px)";
+            }
+
+            const caller = func;
+            if (caller != null) {
+                caller(true);
+            }
+
+            if (auxFunc != null) {
+                auxFunc(false);
+            }
+
+            menu.style.translate = "0px";
+            auxOrder = order;
+            auxFunc = func;
+            auxMenuPerfil = menu;
+        }
+    });
+}
+
+goPerfilMenu(openStats, boxPerfilStats, "Estadísticas", "fi-rr-chart-histogram", 0);
+goPerfilMenu(openTrain, boxPerfilTrain, "Entrenamiento", "fi-rr-bullseye-arrow", 1, inTrainMenu);
+
+let auxMenuTrain = menuNoneTrain;
+const goMenuTrain = (idEvent, menu) => {
+    idEvent.addEventListener("click", () => {
+        if (auxMenuTrain != menu) {
+            auxMenuTrain.style.opacity = 0;
+            auxMenuTrain.style.pointerEvents = "none";
+            menu.style.opacity = 1;
+            menu.style.pointerEvents = "inherit";
+            auxMenuTrain = menu;
+        }
+    })
+}
+
+goMenuTrain(openPower, menuPower);
+goMenuTrain(openVita, menuVita);
+goMenuTrain(openRes, menuRes);
+goMenuTrain(openLea, menuLea);
+
 //MENU SYSTEM
 let auxIdEvent = null;
 let auxGoMenu = null;
 let isOpenMenu = false;
 const closeMenuAnimation = () => {
     auxIdEvent.style.opacity = 1;
-    auxIdEvent.style.pointerEvents = "all";
+    auxIdEvent.style.pointerEvents = "inherit";
     auxGoMenu.style.opacity = 0;
     auxGoMenu.style.scale = 0.8;
     auxGoMenu.style.pointerEvents = "none";
@@ -331,6 +403,7 @@ const goOpen = (idEvent, menu, moreTask = false) => {
         taskHome.style.borderRadius = "12px 12px 36px 36px";
         home.style.transition = "0.44s cubic-bezier(0.2, 1.36, 0.4, 1)";
         home.style.height = "calc(800px)";
+        home.style.width = "640px";
         if (window.innerHeight < 860) {
             home.style.height = "calc(" + window.innerHeight + "px - 60px)";
         }
@@ -338,7 +411,7 @@ const goOpen = (idEvent, menu, moreTask = false) => {
         idEvent.style.pointerEvents = "none";
         menu.style.opacity = 1;
         menu.style.scale = 1;
-        menu.style.pointerEvents = "all";
+        menu.style.pointerEvents = "inherit";
         blockContent.style.display = "block";
         isOpenMenu = true;
 
@@ -361,6 +434,22 @@ const goOpen = (idEvent, menu, moreTask = false) => {
 
 goOpen(openHome, startMenu);
 goOpen(openProfile, profileMenu, true);
+
+closeMenu(goPower);
+closeMenu(goVita);
+closeMenu(goRes);
+closeMenu(goLea);
+
+const startTrain = (idEvent) => {
+    idEvent.addEventListener("mousedown", () => {
+        home.style.width = "300px";
+    });
+}
+
+startTrain(goPower);
+startTrain(goVita);
+startTrain(goRes);
+startTrain(goLea);
 
 window.addEventListener("resize", () => {
     renderer.setPixelRatio( window.devicePixelRatio * Number(localStorage["valueResolution"]) );
@@ -894,8 +983,8 @@ settingRender.create({
         composer.insertPass(renderScene, 0);
         buttonBloom.style.opacity = 1;
         buttonImage.style.opacity = 1;
-        buttonBloom.style.pointerEvents = "all";
-        buttonImage.style.pointerEvents = "all";
+        buttonBloom.style.pointerEvents = "inherit";
+        buttonImage.style.pointerEvents = "inherit";
     },
 
     off:() => {

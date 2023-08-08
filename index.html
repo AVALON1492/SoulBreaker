@@ -163,10 +163,10 @@
         </div>
         <div class="secondTaskBar center" style="color: var(--colorMain);">
             <div class="buttonTask onPoint" id="openStats">
-                <i class="fi-rr-chart-histogram subIcon" id="svgNextInPerfil"></i>
+                <i class="fi-rr-chart-histogram subIcon"></i>
             </div>
             <div class="buttonTask onPoint" id="openTrain">
-                <i class="fi-rr-bullseye-arrow subIcon" id="svgNextInPerfil"></i>
+                <i class="fi-rr-bullseye-arrow subIcon"></i>
             </div>
         </div>
     </div>
@@ -849,118 +849,158 @@
             </div>
             <div class="gridInline4" style="min-height: 180px;">
                 <div class="cardStats">
-                    <div class="textCardStats" id="textPower" style="background: rgba(255, 1, 77, 0.1);">Potencia</div>
-                    <div class="iconCardStats" style="background-image: url(css/svg/stats/power.svg);"></div>
-                    <div class="numberCardStats" style="color: rgba(255, 1, 77, 1); text-shadow: 0px 0px 8px rgba(255, 1, 77, 1); background: rgba(255, 1, 77, 0.1);">0</div>
+                    <div class="textCardStats" id="textPower" style="background: var(--redT);">Potencia</div>
+                    <div class="iconCardStats" id="openPower" style="background-image: url(css/svg/stats/power.svg);"></div>
+                    <div class="numberCardStats" style="color: var(--red); text-shadow: 0px 0px 8px var(--red); background: var(--redT);">0</div>
                 </div>
                 <div class="cardStats">
-                    <div class="textCardStats" id="textVita" style="background: rgba(1, 255, 118, 0.1);">Vitalidad</div>
-                    <div class="iconCardStats" style="background-image: url(css/svg/stats/cruz.svg);"></div>
-                    <div class="numberCardStats" style="color: rgba(1, 255, 118, 1); text-shadow: 0px 0px 8px rgba(1, 255, 118, 1); background: rgba(1, 255, 118, 0.1);">0</div>
+                    <div class="textCardStats" id="textVita" style="background: var(--greenT);">Vitalidad</div>
+                    <div class="iconCardStats" id="openVita" style="background-image: url(css/svg/stats/cruz.svg);"></div>
+                    <div class="numberCardStats" style="color: var(--green); text-shadow: 0px 0px 8px var(--green); background: var(--greenT);">0</div>
                 </div>
                 <div class="cardStats">
-                    <div class="textCardStats" id="textRes" style="background: rgba(0, 117, 253, 0.1);">Dureza</div>
-                    <div class="iconCardStats" style="background-image: url(css/svg/stats/shield.svg);"></div>
-                    <div class="numberCardStats" style="color: rgba(0, 117, 253, 1); text-shadow: 0px 0px 8px rgba(0, 117, 253, 1); background: rgba(0, 117, 253, 0.1);">0</div>
+                    <div class="textCardStats" id="textRes" style="background: var(--blueT);">Dureza</div>
+                    <div class="iconCardStats" id="openRes" style="background-image: url(css/svg/stats/shield.svg);"></div>
+                    <div class="numberCardStats" style="color: var(--blue); text-shadow: 0px 0px 8px var(--blue); background: var(--blueT);">0</div>
                 </div>
                 <div class="cardStats">
-                    <div class="textCardStats" id="textLea" style="background: rgba(255, 184, 2, 0.1);">Lealtad</div>
-                    <div class="iconCardStats" style="background-image: url(css/svg/stats/belief.svg);"></div>
-                    <div class="numberCardStats" style="color: rgba(255, 184, 2, 1); text-shadow: 0px 0px 8px rgba(255, 184, 2, 1); background: rgba(255, 184, 2, 0.1);">0</div>
+                    <div class="textCardStats" id="textLea" style="background: var(--yellowT);">Lealtad</div>
+                    <div class="iconCardStats" id="openLea" style="background-image: url(css/svg/stats/belief.svg);"></div>
+                    <div class="numberCardStats" style="color: var(--yellow); text-shadow: 0px 0px 8px var(--yellow); background: var(--yellowT);">0</div>
                 </div>
             </div>
 
             <div class="separator"></div>
 
-            <div class="boxContainer grid2Row" style="height: 223px;">
-                <div class="boxButton boxSmall" id="textHealth">
-                    <i class="fi-rr-pharmacy subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Salud</div>
+            <div class="groupBoxContainer" style="min-height: 223px;">
+                <div class="boxContainerSelect grid2Row" id="boxPerfilStats">
+                    <div class="boxButton boxSmall" id="textHealth">
+                        <i class="fi-rr-pharmacy subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Salud</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">8</div>
+                        </div>
                     </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">8</div>
+                    <div class="boxButton boxSmall" id="textStamina">
+                        <i class="fi-rr-bolt subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Aguante</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">5</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textDefen">
+                        <i class="fi-rr-shield subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Defensa</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">0%</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textAtk">
+                        <i class="fi-rr-sword subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Ataque</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">3</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textTap">
+                        <i class="fi-rr-sparkles subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Toque</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">1</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textEner">
+                        <i class="fi-rr-circle-bolt subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Energía</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">1</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textCost">
+                        <i class="fi-rr-sack-dollar subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Coste</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">x1</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textPro">
+                        <i class="fi-rr-settings subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Producción</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">0 / 5s</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textLeaP">
+                        <i class="fi-rr-users-alt subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Lealtad permanente</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">0</div>
+                        </div>
+                    </div>
+                    <div class="boxButton boxSmall" id="textLeaC">
+                        <i class="fi-rr-up subIconSmall"></i>
+                        <div class="textSettings">
+                            <div>Crecimiento</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig">0 / 10s</div>
+                        </div>
                     </div>
                 </div>
-                <div class="boxButton boxSmall" id="textStamina">
-                    <i class="fi-rr-bolt subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Aguante</div>
+
+                <div class="boxContainerSelect" id="boxPerfilTrain" style="translate: calc(100% + 30px);">
+                    <div class="boxCard center" id="menuNoneTrain" style="opacity: 1;">
+                        <div class="boxDesc" style="font-weight: 700; opacity: 0.5;">Selecciona un atributo en icono para iniciar el entrenamiento</div>
                     </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">5</div>
+                    <div class="boxCard" id="menuPower">
+                        <div class="boxTitle" style="color: var(--red);">
+                            <div class="iconStats" style="background-image: url(css/svg/stats/power.svg);"></div>
+                            <div>Potencia</div>
+                        </div>
+                        <div class="boxDesc">Toca los discos para sumar el entrenamiento de potencia y alcalza el máximo combo antes de que los discos desaparezcan. Perderás combo si tocas en el espacio por error.</div>
+                        <i class="fi-rr-play boxStart center red" id="goPower"><span>Empezar</span></i>
                     </div>
-                </div>
-                <div class="boxButton boxSmall" id="textDefen">
-                    <i class="fi-rr-shield subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Defensa</div>
+                    <div class="boxCard" id="menuVita">
+                        <div class="boxTitle" style="color: var(--green);">
+                            <div class="iconStats" style="background-image: url(css/svg/stats/cruz.svg);"></div>
+                            <div>Vitalidad</div>
+                        </div>
+                        <div class="boxDesc">Esquiva los objetos para sumar el entrenamiento de vitalidad y alcalza el máximo combo sin golpear los objetos. Perderás combo si mueves muy rápido el cursor saliendo dentro de la área permitida.</div>
+                        <i class="fi-rr-play boxStart center green" id="goVita"><span>Empezar</span></i>
                     </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">0%</div>
+                    <div class="boxCard" id="menuRes">
+                        <div class="boxTitle" style="color: var(--blue);">
+                            <div class="iconStats" style="background-image: url(css/svg/stats/shield.svg);"></div>
+                            <div>Dureza</div>
+                        </div>
+                        <div class="boxDesc">Protege el alma bloqueando los objetos arrojados y alcalza el máximo combo sin ser atacado por los objetos. Poseen 8 dirrecciones para bloquear.</div>
+                        <i class="fi-rr-play boxStart center blue" id="goRes"><span>Empezar</span></i>
                     </div>
-                </div>
-                <div class="boxButton boxSmall" id="textAtk">
-                    <i class="fi-rr-sword subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Ataque</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">3</div>
-                    </div>
-                </div>
-                <div class="boxButton boxSmall" id="textTap">
-                    <i class="fi-rr-sparkles subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Toque</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">1</div>
-                    </div>
-                </div>
-                <div class="boxButton boxSmall" id="textEner">
-                    <i class="fi-rr-circle-bolt subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Energía</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">1</div>
-                    </div>
-                </div>
-                <div class="boxButton boxSmall" id="textCost">
-                    <i class="fi-rr-sack-dollar subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Coste</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">x1</div>
-                    </div>
-                </div>
-                <div class="boxButton boxSmall" id="textPro">
-                    <i class="fi-rr-settings subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Producción</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">0 / 5s</div>
-                    </div>
-                </div>
-                <div class="boxButton boxSmall" id="textLeaP">
-                    <i class="fi-rr-users-alt subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Lealtad permanente</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">0</div>
-                    </div>
-                </div>
-                <div class="boxButton boxSmall" id="textLeaC">
-                    <i class="fi-rr-up subIconSmall"></i>
-                    <div class="textSettings">
-                        <div>Crecimiento</div>
-                    </div>
-                    <div class="inboxSettings">
-                        <div class="textInfoConfig">0 / 10s</div>
+                    <div class="boxCard" id="menuLea">
+                        <div class="boxTitle" style="color: var(--yellow);">
+                            <div class="iconStats" style="background-image: url(css/svg/stats/belief.svg);"></div>
+                            <div>Lealtad</div>
+                        </div>
+                        <div class="boxDesc">Memoriza los discos que aparecen iluminados seguidos en orden y alcalza el máximo combo sin equivocarse.</div>
+                        <i class="fi-rr-play boxStart center yellow" id="goLea"><span>Empezar</span></i>
                     </div>
                 </div>
             </div>

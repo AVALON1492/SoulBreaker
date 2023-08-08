@@ -26,6 +26,15 @@
     --off: rgba(225, 0, 75, 0.2);
     --onText: rgb(0, 200, 75);
     --offText: rgb(225, 0, 75);
+
+    --red: rgba(255, 1, 77, 1);
+    --green: rgba(1, 255, 118, 1);
+    --blue: rgba(0, 117, 253, 1);
+    --yellow: rgba(255, 184, 2, 1);
+    --redT: rgba(255, 1, 77, 0.1);
+    --greenT: rgba(1, 255, 118, 0.1);
+    --blueT: rgba(0, 117, 253, 0.1);
+    --yellowT: rgba(255, 184, 2, 0.1);
 }
 
 html {
@@ -45,13 +54,8 @@ body {
     font-variant-ligatures: no-common-ligatures;
 }
 
-iframe {
-    appearance: none;
-    width: 100%;
-    height: calc(100%);
-    background-color: var(--bgSecond);
-    border: none;
-    box-sizing: border-box;
+span {
+    padding-inline: 8px;
 }
 
 ::selection {
@@ -840,6 +844,7 @@ iframe {
     border-radius: 18px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .textCardStats {
@@ -851,14 +856,7 @@ iframe {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.iconCardStats {
-    width: 100%;
-    height: 100%;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: 50% 50%;
+    z-index: 10;
 }
 
 .numberCardStats {
@@ -872,6 +870,7 @@ iframe {
     font-weight: 900;
     -webkit-text-stroke: 1px var(--bgThird);
     font-size: 18px;
+    z-index: 10;
 }
 
 .boxContainer {
@@ -884,7 +883,106 @@ iframe {
     gap: 8px;
 }
 
+.groupBoxContainer {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.boxContainerSelect {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    padding: 12px;
+    border-radius: 18px;
+    box-sizing: border-box;
+    background: var(--bgSecond);
+    gap: 8px;
+    transition: 0.5s cubic-bezier(0.2, 0.6, 0.4, 1);
+}
+
+.boxCard {
+    position: absolute;
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    transition: 0.2s;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.boxStart {
+    position: absolute;
+    width: 100%;
+    height: 48px;
+    bottom: 0px;
+    border-radius: 10px;
+    transition: 0.2s;
+    color: white;
+    font-style: normal;
+    font-weight: 700;
+    overflow: hidden;
+    will-change: transform;
+}
+
+.boxStart:active {
+    opacity: 0.5;
+    scale: 0.97;
+}
+
+.red {
+    background-color: var(--red);
+    transition: 0.2s;
+}
+
+.green {
+    background-color: var(--green);
+    transition: 0.2s;
+}
+
+.blue {
+    background-color: var(--blue);
+    transition: 0.2s;
+}
+
+.yellow {
+    background-color: var(--yellow);
+    transition: 0.2s;
+}
+
+.red:hover {
+    background-color: var(--redT);
+    box-shadow: inset 0px 0px 0px 3px var(--red),
+                inset 0px 0px 0px 6px var(--redT);
+    color: var(--red);
+}
+
+.green:hover {
+    background-color: var(--greenT);
+    box-shadow: inset 0px 0px 0px 3px var(--green),
+                inset 0px 0px 0px 6px var(--greenT);
+    color: var(--green);
+}
+
+.blue:hover {
+    background-color: var(--blueT);
+    box-shadow: inset 0px 0px 0px 3px var(--blue),
+                inset 0px 0px 0px 6px var(--blueT);
+    color: var(--blue);
+}
+
+.yellow:hover {
+    background-color: var(--yellowT);
+    box-shadow: inset 0px 0px 0px 3px var(--yellow),
+                inset 0px 0px 0px 6px var(--yellowT);
+    color: var(--yellow);
+}
+
+
 .boxTitle {
+    width: fit-content;
     top: -24px;
     padding-inline: 6px;
     padding-block: 6px;
