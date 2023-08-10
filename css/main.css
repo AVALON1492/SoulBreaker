@@ -604,6 +604,8 @@ span {
     height: 60px;
     border-radius: 30px;
     transition: 0.2s;
+    color: var(--colorMain);
+    font-size: 28px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -635,7 +637,7 @@ span {
     position: absolute;
     top: 6px;
     left: 50%;
-    transform: translateX(-50%);
+    translate: -50%;
     padding-inline: 16px;
     box-sizing: border-box;
     height: 60px;
@@ -644,6 +646,14 @@ span {
     align-items: center;
     flex-direction: column;
     gap: 8px;
+    transition: 0.2s;
+    will-change: transform;
+}
+
+.boxTimeBig {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--bgText);
 }
 
 .textEnergy {
@@ -920,7 +930,7 @@ span {
     bottom: 0px;
     border-radius: 10px;
     transition: 0.2s;
-    color: white;
+    color: var(--bgThird);
     font-style: normal;
     font-weight: 700;
     overflow: hidden;

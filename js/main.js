@@ -398,7 +398,7 @@ const closeMenu = (idEvent) => {
 closeMenu(blockContent);
 closeMenu(blockTask);
 
-const goOpen = (idEvent, menu, moreTask = false) => {
+const goOpen = (idEvent, menu, moreTask = false, hasExit = false) => {
     idEvent.addEventListener("click", () => {
         taskHome.style.borderRadius = "12px 12px 36px 36px";
         home.style.transition = "0.44s cubic-bezier(0.2, 1.36, 0.4, 1)";
@@ -407,8 +407,21 @@ const goOpen = (idEvent, menu, moreTask = false) => {
         if (window.innerHeight < 860) {
             home.style.height = "calc(" + window.innerHeight + "px - 60px)";
         }
-        idEvent.style.opacity = 0;
-        idEvent.style.pointerEvents = "none";
+
+        if (!hasExit) {
+            idEvent.style.opacity = 0;
+            idEvent.style.pointerEvents = "none";
+        } else {
+            openHome.style.opacity = 1;
+            openHome.style.pointerEvents = "inherit";
+            exiterTrain.style.opacity = 0;
+            exiterTrain.style.pointerEvents = "none";
+            statsInfoTask.style.opacity = 1;
+            statsInfoTask.style.scale = 1;
+            timeInfoTask.style.opacity = 0;
+            timeInfoTask.style.scale = 0.6;
+        }
+        
         menu.style.opacity = 1;
         menu.style.scale = 1;
         menu.style.pointerEvents = "inherit";
@@ -427,13 +440,19 @@ const goOpen = (idEvent, menu, moreTask = false) => {
             closeMenuAnimation();
         }
 
-        auxGoMenu = menu;
-        auxIdEvent = idEvent;
+        if (!hasExit) {
+            auxGoMenu = menu;
+            auxIdEvent = idEvent;
+        } else {
+            auxGoMenu = profileMenu;
+            auxIdEvent = openProfile;
+        }
     });
 }
 
 goOpen(openHome, startMenu);
 goOpen(openProfile, profileMenu, true);
+goOpen(exiterTrain, profileMenu, true, true);
 
 closeMenu(goPower);
 closeMenu(goVita);
@@ -443,6 +462,16 @@ closeMenu(goLea);
 const startTrain = (idEvent) => {
     idEvent.addEventListener("mousedown", () => {
         home.style.width = "300px";
+        openHome.style.opacity = 0;
+        openHome.style.pointerEvents = "none";
+        openProfile.style.opacity = 0;
+        openProfile.style.pointerEvents = "none";
+        exiterTrain.style.opacity = 1;
+        exiterTrain.style.pointerEvents = "inherit";
+        statsInfoTask.style.opacity = 0;
+        statsInfoTask.style.scale = 0.6;
+        timeInfoTask.style.opacity = 1;
+        timeInfoTask.style.scale = 1;
     });
 }
 

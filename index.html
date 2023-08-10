@@ -146,7 +146,7 @@
                     <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z" fill="var(--colorMain)" stroke="black" stroke-opacity="0.5" stroke-width="16" mask="url(#path-1-inside-1_255_2)"/>
                 </svg>
             </div>
-            <div class="statsTask">
+            <div class="statsTask" id="statsInfoTask">
                 <div class="textEnergy" id="textEnergyId">
                     <div id="infoEnergy">0</div>
                     <div class="svgResource">
@@ -160,6 +160,10 @@
                     <div class="inBarProgressTiny" id="progressEnergy"></div>
                 </div>
             </div>
+            <div class="statsTask" id="timeInfoTask" style="opacity: 0; scale: 0.6;">
+                <div class="boxTimeBig">1:30</div>
+            </div>
+            <i class="fi-rr-sign-out-alt buttonTask onPoint" id="exiterTrain" style="position: absolute; top: 6px; right: 6px; opacity: 0; pointer-events: none;"></i>
         </div>
         <div class="secondTaskBar center" style="color: var(--colorMain);">
             <div class="buttonTask onPoint" id="openStats">
