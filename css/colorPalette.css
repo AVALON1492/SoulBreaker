@@ -1,0 +1,142 @@
+:root {
+    --red: rgba(255, 1, 77, 1);
+    --green: rgba(1, 255, 118, 1);
+    --blue: rgba(0, 117, 253, 1);
+    --yellow: rgba(255, 184, 2, 1);
+    --redT: rgba(255, 1, 77, 0.15);
+    --greenT: rgba(1, 255, 118, 0.15);
+    --blueT: rgba(0, 117, 253, 0.15);
+    --yellowT: rgba(255, 184, 2, 0.15);
+}
+
+.red {
+    background-color: var(--red);
+    transition: 0.2s;
+}
+
+.green {
+    background-color: var(--green);
+    transition: 0.2s;
+}
+
+.blue {
+    background-color: var(--blue);
+    transition: 0.2s;
+}
+
+.yellow {
+    background-color: var(--yellow);
+    transition: 0.2s;
+}
+
+.red:hover {
+    background-color: var(--redT);
+    box-shadow: inset 0px 0px 0px 2px var(--red),
+                inset 0px 0px 0px 6px var(--redT);
+    color: var(--red);
+}
+
+.green:hover {
+    background-color: var(--greenT);
+    box-shadow: inset 0px 0px 0px 2px var(--green),
+                inset 0px 0px 0px 6px var(--greenT);
+    color: var(--green);
+}
+
+.blue:hover {
+    background-color: var(--blueT);
+    box-shadow: inset 0px 0px 0px 2px var(--blue),
+                inset 0px 0px 0px 6px var(--blueT);
+    color: var(--blue);
+}
+
+.yellow:hover {
+    background-color: var(--yellowT);
+    box-shadow: inset 0px 0px 0px 2px var(--yellow),
+                inset 0px 0px 0px 6px var(--yellowT);
+    color: var(--yellow);
+}
+
+.redBarShadow {
+    box-shadow: 0px 0px 0px 4px var(--bgSecond),
+                0px 0px 12px 0px var(--red);
+}
+
+.greenBarShadow {
+    box-shadow: 0px 0px 0px 4px var(--bgSecond),
+                0px 0px 12px 0px var(--green);
+}
+
+.blueBarShadow {
+    box-shadow: 0px 0px 0px 4px var(--bgSecond),
+                0px 0px 12px 0px var(--blue);
+}
+
+.yellowBarShadow {
+    box-shadow: 0px 0px 0px 4px var(--bgSecond),
+                0px 0px 12px 0px var(--yellow);
+}
+
+.redColor {
+    background-color: var(--red);
+}
+
+.greenColor {
+    background-color: var(--green);
+}
+
+.blueColor {
+    background-color: var(--blue);
+}
+
+.yellowColor {
+    background-color: var(--yellow);
+}
+
+.redColorOpac {
+    background-color: var(--redT);
+}
+
+.greenColorOpac {
+    background-color: var(--greenT);
+}
+
+.blueColorOpac {
+    background-color: var(--blueT);
+}
+
+.yellowColorOpac {
+    background-color: var(--yellowT);
+}
+
+.redLetterShadow {
+    text-shadow: 0px 0px 12px var(--red);
+}
+
+.greenLetterShadow {
+    text-shadow: 0px 0px 12px var(--green);
+}
+
+.blueLetterShadow {
+    text-shadow: 0px 0px 12px var(--blue);
+}
+
+.yellowLetterShadow {
+    text-shadow: 0px 0px 12px var(--yellow);
+}
+
+.redLetter {
+    color: var(--red);
+}
+
+.greenLetter {
+    color: var(--green);
+}
+
+.blueLetter {
+    color: var(--blue);
+}
+
+.yellowLetter {
+    color: var(--yellow);
+}

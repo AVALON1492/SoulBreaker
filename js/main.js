@@ -234,6 +234,9 @@ const settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, 
 settingSoundSystem.createRanger(
     (value) => {
     audioNotif.volume = value / 100;
+    audioEye.volume = value / 100;
+    audioScore.volume = value / 100;
+    audioGameOver.volume = value / 100;
 });
 
 //TODO SELECT
@@ -303,7 +306,6 @@ goMain.addEventListener("click", () => {
 const inTrainMenu = (toogle) => {
     if (toogle) {
         document.querySelectorAll(".iconCardStats").forEach((object) => {
-            console.log(object)
             object.style.pointerEvents = "inherit";
         })
     } else {
@@ -416,10 +418,16 @@ const goOpen = (idEvent, menu, moreTask = false, hasExit = false) => {
             openHome.style.pointerEvents = "inherit";
             exiterTrain.style.opacity = 0;
             exiterTrain.style.pointerEvents = "none";
+            statsTrain.style.opacity = 0;
+            statsTrain.style.pointerEvents = "none";
             statsInfoTask.style.opacity = 1;
             statsInfoTask.style.scale = 1;
+            statsInfoTask.style.pointerEvents = "inherit";
             timeInfoTask.style.opacity = 0;
             timeInfoTask.style.scale = 0.6;
+            setTimeout(() => {
+                updateStats();
+            }, 500)
         }
         
         menu.style.opacity = 1;
@@ -461,15 +469,18 @@ closeMenu(goLea);
 
 const startTrain = (idEvent) => {
     idEvent.addEventListener("mousedown", () => {
-        home.style.width = "300px";
+        home.style.width = "400px";
         openHome.style.opacity = 0;
         openHome.style.pointerEvents = "none";
         openProfile.style.opacity = 0;
         openProfile.style.pointerEvents = "none";
         exiterTrain.style.opacity = 1;
         exiterTrain.style.pointerEvents = "inherit";
+        statsTrain.style.opacity = 1;
+        statsTrain.style.pointerEvents = "inherit";
         statsInfoTask.style.opacity = 0;
         statsInfoTask.style.scale = 0.6;
+        statsInfoTask.style.pointerEvents = "none";
         timeInfoTask.style.opacity = 1;
         timeInfoTask.style.scale = 1;
     });
@@ -723,6 +734,55 @@ if (typeof(Storage) !== "undefined") {
 
 textGemSoul.innerText = Number(localStorage["gemSoul"]);
 
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["valuePower"]) {
+    } else {
+        localStorage["valuePower"] = 0;
+    }
+}
+
+numberPower.innerText = Number(localStorage["valuePower"]);
+
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["valueHealth"]) {
+    } else {
+        localStorage["valueHealth"] = 0;
+    }
+}
+
+numberVita.innerText = Number(localStorage["valueHealth"]);
+
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["valueDef"]) {
+    } else {
+        localStorage["valueDef"] = 0;
+    }
+}
+
+numberRes.innerText = Number(localStorage["valueDef"]);
+
+let progressTotal;
+let touchPower;
+let gainEnergy;
+let lowCost;
+let production;
+
+const updateStats = () => {
+    touchPower = 1 + Math.floor(Number(localStorage["valuePower"]) / 10) * 0.1;
+    gainEnergy = 1 + Math.floor(Number(localStorage["valueDef"]) / 20) * 0.05;
+    lowCost = 1 + Math.floor(Number(localStorage["valueHealth"]) / 100) * 0.01;
+    production = 0 + Math.floor(Number(localStorage["valuePower"]) / 10) * 0.05 + Math.floor(Number(localStorage["valueHealth"]) / 10) * 0.15;
+
+    textTouchPower.innerText = Number(touchPower.toFixed(2));
+    textGainEnergy.innerText = Number(gainEnergy.toFixed(2));
+    textLowCost.innerText = "x" + Number(lowCost.toFixed(2));
+    textProduction.innerText = Number(production.toFixed(2)) + " / 5s";
+
+    progressTotal = Number((10 / lowCost + 10 * ((Number(localStorage["valueEnergy"]) / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
+}
+
+updateStats();
+
 //TODO STATS GENERAL
 if (typeof(Storage) !== "undefined") {
     if (localStorage["totalTime"]) {
@@ -759,7 +819,14 @@ const upEnergy = (amount) => {
     textTotalEnergy.innerText = Number(localStorage["totalEnergy"]);
 }
 
-//TODO LOGROS
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["totalTrain"]) {
+    } else {
+        localStorage["totalTrain"] = 0;
+    }
+}
+
+//TODO AWARDS
 class ACHIEVE {
     constructor(data, dataLVL, goals, rewards, idLevel, idBarProgress, idTextProgress, idTextReward, idDesc, desc1, desc2) {
         this.data = data;
@@ -788,7 +855,7 @@ class ACHIEVE {
             if (level < this.goals.length) {
                 this.idLevel.innerText = "Nivel " + level;
                 this.idDesc.innerText = this.desc1 + this.goals[level] + this.desc2;
-                this.idTextProgress.innerText = Number(localStorage[this.data]) + " / " + this.goals[level];
+                this.idTextProgress.innerText = Number(Number(localStorage[this.data]).toFixed(2)) + " / " + this.goals[level];
                 this.idTextReward.innerText = "+" + this.rewards[level];
                 this.idBarProgress.style.width = (Number(localStorage[this.data]) / this.goals[level]) * 100 + "%";
 
@@ -818,13 +885,18 @@ timeAchieve.update();
 const energyAchieve = new ACHIEVE("totalEnergy", "lvlTotalEnergy", [50, 250, 800, 2500, 10000, 30000, 100000, 250000, 750000, 3000000], [10, 20, 40, 70, 115, 225, 450, 800, 1750, 4000], idTotalEnerLVL, barTotalEner, inPTotalEner, rewardEnerTotal, descTotalEner, "Acumula ", " energía total");
 energyAchieve.update();
 
-textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / 30";
+const trainAchieve = new ACHIEVE("totalTrain", "lvlTotalTrain", [4, 16, 48, 120, 240, 480, 1000, 2000, 4000, 8000], [5, 10, 20, 40, 80, 160, 350, 700, 1500, 3000], idTotalTrainLVL, barTotalTrain, inPTotalTrain, rewardTrainTotal, descTotalTrain, "Realiza ", " entrenamientos");
+trainAchieve.update();
+
+const totalAwards = 40;
+textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / " + totalAwards;
 setInterval(() => {
     localStorage["totalTime"] = Number(localStorage["totalTime"]) + 1;
     textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
     timeAchieve.update();
+    trainAchieve.update();
 
-    textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / 30";
+    textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / " + totalAwards;
 }, 60000);
 
 //
@@ -837,21 +909,33 @@ if (typeof(Storage) !== "undefined") {
 }
 
 let progress = 0;
-let progressTotal = Number((10 + 10 * (Number(localStorage["valueEnergy"]) ** 1.4)).toFixed(0));
-infoEnergy.innerText = Number(localStorage["valueEnergy"]);
+infoEnergy.innerText = Number(Number(localStorage["valueEnergy"]).toFixed(2));
 progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
+
+const splashEffect = (e) => {
+    if (localStorage["valueClickSplash"] == "true") {
+        const splash = document.createElement("div");
+        splash.className = "splasher";
+        splash.style.left = (e.clientX - 40) + "px";
+        splash.style.top = (e.clientY - 40) + "px";
+        document.body.appendChild(splash);
+        setTimeout(() => {
+            document.body.removeChild(splash);
+        }, 300)
+    }
+}
 
 worldGame.addEventListener("mousedown", (e) => {
     upClick();
     clickAchieve.update();
-    progress += 1;
+    progress += touchPower;
     if (progress >= progressTotal) {
         progress = 0;
-        const amount = 1;
-        upEnergy(amount);
-        localStorage["valueEnergy"] = Number(localStorage["valueEnergy"]) + amount;
-        infoEnergy.innerText = Number(localStorage["valueEnergy"]);
-        progressTotal = Number((10 + 10 * (Number(localStorage["valueEnergy"]) ** 1.4)).toFixed(0));
+        const amount = gainEnergy;
+        upEnergy(Number(amount.toFixed(2)));
+        localStorage["valueEnergy"] = Number(localStorage["valueEnergy"]) + Number(amount.toFixed(2));
+        infoEnergy.innerText = Number(Number(localStorage["valueEnergy"]).toFixed(2));
+        progressTotal = Number((10 / lowCost + 10 * ((Number(localStorage["valueEnergy"]) / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
         energyAchieve.update();
 
         //
@@ -883,17 +967,7 @@ worldGame.addEventListener("mousedown", (e) => {
     }
 
     progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
-
-    if (localStorage["valueClickSplash"] == "true") {
-        const splash = document.createElement("div");
-        splash.className = "splasher";
-        splash.style.left = (e.clientX - 40) + "px";
-        splash.style.top = (e.clientY - 40) + "px";
-        document.body.appendChild(splash);
-        setTimeout(() => {
-            document.body.removeChild(splash);
-        }, 300)
-    }
+    splashEffect(e);
     
 });
 
@@ -1280,8 +1354,8 @@ const animate = () => {
         }
     }
 
-    if (time < 6/4) {
-        const adFov = (6 - time*4)**2.4;
+    if (time < 6 / 4) {
+        const adFov = (6 - time * 4) ** 2.4;
         camera.fov = 75 + adFov;
     }
     
@@ -1333,17 +1407,18 @@ const effectFluent = () => {
     let themeOpacity;
     if (!settingTheme.getLocalStorage) {
         themeRgb = "rgba(255, 255, 255, ";
-        themeOpacity = "0.8)";
+        themeOpacity = 0.8;
     } else {
         themeRgb = "rgba(20, 20, 20, ";
-        themeOpacity = "0.8)";
+        themeOpacity = 0.8;
     }
 
     if (!settingGlass.getLocalStorage) {
-        themeOpacity = "1)";
+        themeOpacity = 1;
     }
 
-    root.style.setProperty("--bgFluent", themeRgb + themeOpacity);
+    root.style.setProperty("--bgFluent", themeRgb + (themeOpacity) + ")");
+    root.style.setProperty("--bgFluentB", themeRgb + (themeOpacity / 2) + ")");
 }
 
 settingTheme.create({
@@ -1689,7 +1764,7 @@ const goToolTip = (idEvent, position, words, type = "word") => {
         if (showWord && type == "word" || type == "number") {
             tooltip.style.opacity = 1;
             if (words == "showProgressEnergy") {
-                tooltip.innerText = (progress + " / " + progressTotal);
+                tooltip.innerText = (Number(progress.toFixed(2)) + " / " + progressTotal);
             } else {
                 tooltip.innerText = words;
             }
@@ -1750,7 +1825,7 @@ window.addEventListener("load", () => {
 
 blockWelcomer.addEventListener("click", () => {
     blockWelcomer.style.opacity = 0;
-    blockWelcomer.style.pointerEvents = "none"
+    blockWelcomer.style.pointerEvents = "none";
     setTimeout(() => {
         blockWelcomer.remove();
         blockLoader.remove();

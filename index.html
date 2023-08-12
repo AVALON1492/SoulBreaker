@@ -10,12 +10,15 @@
     <link rel="shortcut icon" href="public/iconMain.ico">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/svg.css">
+    <link rel="stylesheet" href="css/colorPalette.css">
+    <link rel="stylesheet" href="css/gameTraining.css">
     <link rel="stylesheet" href="css/version.css">
     <link rel="stylesheet" href="css/design/uicons-regular-rounded.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script type="module" src="js/main.js" defer></script>
+    <script type="module" src="js/gameTraining.js" defer></script>
     <script type="module" src="js/version.js" defer></script>
 </head>
 <body id="system">
@@ -30,6 +33,18 @@
 
 <audio id="audioNotif">
     <source src="public/sound/notificationSound.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audioEye">
+    <source src="public/sound/eyeOpen.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audioScore">
+    <source src="public/sound/score.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audioGameOver">
+    <source src="public/sound/gameOver.mp3" type="audio/mpeg">
 </audio>
 
 <div class="block fullLoading" id="blockLoader"></div>
@@ -101,6 +116,7 @@
     <div class="versionPreview" id="vPrev">v</div>
 </div>
 
+<!--TODO WINDOW-->
 <div class="block fullWindow" id="tapeWindow"></div>
 
 <div class="blockBottom"></div>
@@ -117,6 +133,7 @@
     </div>
 </div>
 
+<!--TODO RESOURCES-->
 <div class="resourceMenu" id="gemSoulBox">
     <div class="backgroundTheme"></div>
     <div class="blockBold">
@@ -160,10 +177,14 @@
                     <div class="inBarProgressTiny" id="progressEnergy"></div>
                 </div>
             </div>
-            <div class="statsTask" id="timeInfoTask" style="opacity: 0; scale: 0.6;">
-                <div class="boxTimeBig">1:30</div>
+            <div class="statsTask" id="timeInfoTask" style="opacity: 0; scale: 0.6; pointer-events: none;">
+                <div class="boxTimeBig" id="timeTextTraining">0:00</div>
             </div>
             <i class="fi-rr-sign-out-alt buttonTask onPoint" id="exiterTrain" style="position: absolute; top: 6px; right: 6px; opacity: 0; pointer-events: none;"></i>
+            <div id="statsTrain" style="position: absolute; top: 6px; left: 6px; opacity: 0; pointer-events: none;">
+                <div id="svgTrain"></div>
+                <div id="textTotalTrainSession">+0</div>
+            </div>
         </div>
         <div class="secondTaskBar center" style="color: var(--colorMain);">
             <div class="buttonTask onPoint" id="openStats">
@@ -637,6 +658,15 @@
                         </div>
                     </div>
                     <div class="boxButton">
+                        <i class="fi-rr-bullseye-arrow subIcon"></i>
+                        <div class="textSettings">
+                            <div>Entrenamientos realizados</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="textInfoConfig" id="textTotalTrain">0</div>
+                        </div>
+                    </div>
+                    <div class="boxButton">
                         <i class="fi-rr-book-circle-arrow-up subIcon"></i>
                         <div class="textSettings">
                             <div>Mejoras totales</div>
@@ -647,7 +677,7 @@
                     </div>
                 </div>
             </div>
-            <!--TODO LOGROS-->
+            <!--TODO AWARDS-->
             <div class="mainScroller" style="transform: translateX(640px);" id="menuAward">
                 <div class="boxContainer flex">
                     <div class="boxTitle">
@@ -718,6 +748,29 @@
                         <div class="inboxSettings">
                             <div class="boxText">
                                 <div id="rewardEnerTotal">+10</div>
+                                <div class="smallSvg" style="background-image: url(css/svg/gemSoul.svg);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="boxButton">
+                        <i class="fi-rr-bullseye-arrow subIcon"></i>
+                        <div class="textSettings" style="padding-left: 12px;">
+                            <div class="boxTitleAdvanced">
+                                <div>Haz que el alma suba al telón</div>
+                                <div class="boxText" id="idTotalTrainLVL"> Nivel 0</div>
+                            </div>
+                            <div class="textHighlightInfo" id="descTotalTrain">Realiza 4 entrenamientos</div>
+                            <div class="barBox">
+                                <div class="barProgressAchieve">
+                                    <div class="inBarProgressTiny" id="barTotalTrain"></div>
+                                </div>
+                                <div id="inPTotalTrain">0/4</div>
+                            </div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText">
+                                <div id="rewardTrainTotal">+5</div>
                                 <div class="smallSvg" style="background-image: url(css/svg/gemSoul.svg);"></div>
                             </div>
                         </div>
@@ -855,22 +908,22 @@
                 <div class="cardStats">
                     <div class="textCardStats" id="textPower" style="background: var(--redT);">Potencia</div>
                     <div class="iconCardStats" id="openPower" style="background-image: url(css/svg/stats/power.svg);"></div>
-                    <div class="numberCardStats" style="color: var(--red); text-shadow: 0px 0px 8px var(--red); background: var(--redT);">0</div>
+                    <div class="numberCardStats" id="numberPower" style="color: var(--red); text-shadow: 0px 0px 8px var(--red); background: var(--redT);">0</div>
                 </div>
                 <div class="cardStats">
                     <div class="textCardStats" id="textVita" style="background: var(--greenT);">Vitalidad</div>
                     <div class="iconCardStats" id="openVita" style="background-image: url(css/svg/stats/cruz.svg);"></div>
-                    <div class="numberCardStats" style="color: var(--green); text-shadow: 0px 0px 8px var(--green); background: var(--greenT);">0</div>
+                    <div class="numberCardStats" id="numberVita" style="color: var(--green); text-shadow: 0px 0px 8px var(--green); background: var(--greenT);">0</div>
                 </div>
                 <div class="cardStats">
                     <div class="textCardStats" id="textRes" style="background: var(--blueT);">Dureza</div>
                     <div class="iconCardStats" id="openRes" style="background-image: url(css/svg/stats/shield.svg);"></div>
-                    <div class="numberCardStats" style="color: var(--blue); text-shadow: 0px 0px 8px var(--blue); background: var(--blueT);">0</div>
+                    <div class="numberCardStats" id="numberRes" style="color: var(--blue); text-shadow: 0px 0px 8px var(--blue); background: var(--blueT);">0</div>
                 </div>
                 <div class="cardStats">
                     <div class="textCardStats" id="textLea" style="background: var(--yellowT);">Lealtad</div>
                     <div class="iconCardStats" id="openLea" style="background-image: url(css/svg/stats/belief.svg);"></div>
-                    <div class="numberCardStats" style="color: var(--yellow); text-shadow: 0px 0px 8px var(--yellow); background: var(--yellowT);">0</div>
+                    <div class="numberCardStats" id="numberLea" style="color: var(--yellow); text-shadow: 0px 0px 8px var(--yellow); background: var(--yellowT);">0</div>
                 </div>
             </div>
 
@@ -920,7 +973,7 @@
                             <div>Toque</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">1</div>
+                            <div class="textInfoConfig" id="textTouchPower">1</div>
                         </div>
                     </div>
                     <div class="boxButton boxSmall" id="textEner">
@@ -929,7 +982,7 @@
                             <div>Energía</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">1</div>
+                            <div class="textInfoConfig" id="textGainEnergy">1</div>
                         </div>
                     </div>
                     <div class="boxButton boxSmall" id="textCost">
@@ -938,7 +991,7 @@
                             <div>Coste</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">x1</div>
+                            <div class="textInfoConfig" id="textLowCost">x1</div>
                         </div>
                     </div>
                     <div class="boxButton boxSmall" id="textPro">
@@ -947,7 +1000,7 @@
                             <div>Producción</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">0 / 5s</div>
+                            <div class="textInfoConfig" id="textProduction">0 / 5s</div>
                         </div>
                     </div>
                     <div class="boxButton boxSmall" id="textLeaP">
@@ -987,7 +1040,7 @@
                             <div class="iconStats" style="background-image: url(css/svg/stats/cruz.svg);"></div>
                             <div>Vitalidad</div>
                         </div>
-                        <div class="boxDesc">Esquiva los objetos para sumar el entrenamiento de vitalidad y alcalza el máximo combo sin golpear los objetos. Perderás combo si mueves muy rápido el cursor saliendo dentro de la área permitida.</div>
+                        <div class="boxDesc">Enciende el interruptor del centro para iniciar del juego. Recoge discos para sumar el entrenamiento de vitalidad y alcalza el máximo combo evitando la maldición de los ojos despertado. Apaga las luces usando el interruptor para evitar ser pillado por la maldición.</div>
                         <i class="fi-rr-play boxStart center green" id="goVita"><span>Empezar</span></i>
                     </div>
                     <div class="boxCard" id="menuRes">
@@ -1004,7 +1057,7 @@
                             <div>Lealtad</div>
                         </div>
                         <div class="boxDesc">Memoriza los discos que aparecen iluminados seguidos en orden y alcalza el máximo combo sin equivocarse.</div>
-                        <i class="fi-rr-play boxStart center yellow" id="goLea"><span>Empezar</span></i>
+                        <i class="fi-rr-play boxStart center yellow" id="goLea" style="pointer-events: none;"><span>No está disponible aún. Se lanzará en la siguiente versión</span></i>
                     </div>
                 </div>
             </div>
@@ -1012,9 +1065,131 @@
     </div>
 </div>
 
+<!--TODO GAME-->
 <canvas id="worldGame"></canvas>
 <div id="blockContent"></div>
 
+<div id="barTrainer">
+    <div id="inBarTrainer"></div>
+</div>
+<div id="textTrainUp">+1</div>
+
+<div id="boxComboScore">
+    <div class="comboText">Combo</div>
+    <div id="boxScore">x0</div>
+</div>
+
+<div id="failBox"></div>
+
+<div class="playground" id="boxPower">
+    <div class="boxRowPower">
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+    </div>
+    <div class="boxRowPower">
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+    </div>
+    <div class="boxRowPower">
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+    </div>
+    <div class="boxRowPower">
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+    </div>
+    <div class="boxRowPower">
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+        <div class="inboxPower"></div>
+    </div>
+</div>
+
+<div class="playground" id="boxVita">
+    <div class="eyes">
+        <div class="eye" id="eye1">
+            <svg width="50" height="21.59" viewBox="0 0 132 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M35 15.5L39.1421 40C83.2446 73.2311 28 42 17.5 44.5C7 47 0.5 42.5 0.5 42.5C6.57318 43.0033 14.5222 36.5006 35 15.5Z" fill="var(--colorMain)"/>
+                <path d="M116.5 29.5L113.357 40.9062C79 63 114.689 43.5022 119.5 45C124.311 46.4978 131.274 43.2977 131.274 43.2977C128.43 43.3392 122 39.5 116.5 29.5Z" fill="var(--colorMain)"/>
+                <mask id="path-3-inside-1_345_42" fill="white">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M31.3251 46.9213C25.2752 43.6227 22.3655 36.4432 25.1075 30.1216C32.7952 12.3976 50.4498 0 71 0C91.5502 0 109.205 12.3976 116.892 30.1216C119.634 36.4432 116.725 43.6227 110.675 46.9213C98.8879 53.3479 85.3704 57 71 57C56.6295 57 43.1121 53.3479 31.3251 46.9213Z"/>
+                </mask>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M31.3251 46.9213C25.2752 43.6227 22.3655 36.4432 25.1075 30.1216C32.7952 12.3976 50.4498 0 71 0C91.5502 0 109.205 12.3976 116.892 30.1216C119.634 36.4432 116.725 43.6227 110.675 46.9213C98.8879 53.3479 85.3704 57 71 57C56.6295 57 43.1121 53.3479 31.3251 46.9213Z" fill="var(--colorMain)"/>
+                <path d="M116.892 30.1216L111.388 32.5091L116.892 30.1216ZM110.675 46.9213L107.803 41.6534L110.675 46.9213ZM25.1075 30.1216L19.603 27.734L25.1075 30.1216ZM30.612 32.5091C37.3826 16.8996 52.9252 6 71 6V-6C47.9744 -6 28.2078 7.8956 19.603 27.734L30.612 32.5091ZM71 6C89.0748 6 104.617 16.8996 111.388 32.5091L122.397 27.734C113.792 7.8956 94.0256 -6 71 -6V6ZM107.803 41.6534C96.8747 47.6117 84.342 51 71 51V63C86.3989 63 100.901 59.0842 113.547 52.1892L107.803 41.6534ZM71 51C57.658 51 45.1253 47.6117 34.1973 41.6534L28.4529 52.1892C41.0989 59.0842 55.6011 63 71 63V51ZM111.388 32.5091C112.757 35.6647 111.441 39.6695 107.803 41.6534L113.547 52.1892C122.008 47.5759 126.512 37.2216 122.397 27.734L111.388 32.5091ZM19.603 27.734C15.4878 37.2216 19.9918 47.5759 28.4529 52.1892L34.1973 41.6534C30.5587 39.6695 29.2433 35.6647 30.612 32.5091L19.603 27.734Z" fill="var(--colorMain)" mask="url(#path-3-inside-1_345_42)"/>
+                <path d="M106.315 36.8715C107.76 38.8706 107.191 41.6879 105 42.8208C94.6285 48.1831 82.8866 51.0134 70.9146 50.9999C58.9435 50.9864 47.2102 48.1299 36.854 42.745C34.665 41.6067 34.1025 38.787 35.5527 36.7909C36.8408 35.0179 39.266 34.5419 41.2086 35.5564C50.2383 40.2721 60.4779 42.7741 70.9257 42.7859C81.3739 42.7977 91.6205 40.3188 100.663 35.6232C102.608 34.6133 105.032 35.0953 106.315 36.8715Z" fill="black" fill-opacity="0.5"/>
+            </svg>
+        </div>
+        <div class="eye" style="transform: rotateY(180deg);" id="eye2">
+            <svg width="50" height="21.59" viewBox="0 0 132 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M35 15.5L39.1421 40C83.2446 73.2311 28 42 17.5 44.5C7 47 0.5 42.5 0.5 42.5C6.57318 43.0033 14.5222 36.5006 35 15.5Z" fill="var(--colorMain)"/>
+                <path d="M116.5 29.5L113.357 40.9062C79 63 114.689 43.5022 119.5 45C124.311 46.4978 131.274 43.2977 131.274 43.2977C128.43 43.3392 122 39.5 116.5 29.5Z" fill="var(--colorMain)"/>
+                <mask id="path-3-inside-1_345_42" fill="white">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M31.3251 46.9213C25.2752 43.6227 22.3655 36.4432 25.1075 30.1216C32.7952 12.3976 50.4498 0 71 0C91.5502 0 109.205 12.3976 116.892 30.1216C119.634 36.4432 116.725 43.6227 110.675 46.9213C98.8879 53.3479 85.3704 57 71 57C56.6295 57 43.1121 53.3479 31.3251 46.9213Z"/>
+                </mask>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M31.3251 46.9213C25.2752 43.6227 22.3655 36.4432 25.1075 30.1216C32.7952 12.3976 50.4498 0 71 0C91.5502 0 109.205 12.3976 116.892 30.1216C119.634 36.4432 116.725 43.6227 110.675 46.9213C98.8879 53.3479 85.3704 57 71 57C56.6295 57 43.1121 53.3479 31.3251 46.9213Z" fill="var(--colorMain)"/>
+                <path d="M116.892 30.1216L111.388 32.5091L116.892 30.1216ZM110.675 46.9213L107.803 41.6534L110.675 46.9213ZM25.1075 30.1216L19.603 27.734L25.1075 30.1216ZM30.612 32.5091C37.3826 16.8996 52.9252 6 71 6V-6C47.9744 -6 28.2078 7.8956 19.603 27.734L30.612 32.5091ZM71 6C89.0748 6 104.617 16.8996 111.388 32.5091L122.397 27.734C113.792 7.8956 94.0256 -6 71 -6V6ZM107.803 41.6534C96.8747 47.6117 84.342 51 71 51V63C86.3989 63 100.901 59.0842 113.547 52.1892L107.803 41.6534ZM71 51C57.658 51 45.1253 47.6117 34.1973 41.6534L28.4529 52.1892C41.0989 59.0842 55.6011 63 71 63V51ZM111.388 32.5091C112.757 35.6647 111.441 39.6695 107.803 41.6534L113.547 52.1892C122.008 47.5759 126.512 37.2216 122.397 27.734L111.388 32.5091ZM19.603 27.734C15.4878 37.2216 19.9918 47.5759 28.4529 52.1892L34.1973 41.6534C30.5587 39.6695 29.2433 35.6647 30.612 32.5091L19.603 27.734Z" fill="var(--colorMain)" mask="url(#path-3-inside-1_345_42)"/>
+                <path d="M106.315 36.8715C107.76 38.8706 107.191 41.6879 105 42.8208C94.6285 48.1831 82.8866 51.0134 70.9146 50.9999C58.9435 50.9864 47.2102 48.1299 36.854 42.745C34.665 41.6067 34.1025 38.787 35.5527 36.7909C36.8408 35.0179 39.266 34.5419 41.2086 35.5564C50.2383 40.2721 60.4779 42.7741 70.9257 42.7859C81.3739 42.7977 91.6205 40.3188 100.663 35.6232C102.608 34.6133 105.032 35.0953 106.315 36.8715Z" fill="black" fill-opacity="0.5"/>
+            </svg>
+        </div>
+    </div>
+    <i class="fi-rr-triangle-warning" id="warningEyes"></i>
+    <div id="circleVita">Iniciar</div>
+    <div class="discCoin" id="discVita" style="display: none; z-index: 6;"></div>
+    <div id="playgroundVita"></div>
+</div>
+
+<div class="playground" id="boxRes">
+    <div class="basePlate"></div>
+    <div class="boxPlate" style="rotate: 90deg"></div>
+    <div class="boxPlate" style="rotate: 135deg"></div>
+    <div class="boxPlate" style="rotate: 180deg"></div>
+    <div class="boxPlate" style="rotate: 225deg"></div>
+    <div class="boxPlate" style="rotate: 270deg"></div>
+    <div class="boxPlate" style="rotate: 315deg"></div>
+    <div class="boxPlate" style="rotate: 0deg"></div>
+    <div class="boxPlate" style="rotate: 45deg"></div>
+</div>
+
+<!--TODO TOOLTIPS-->
 <div class="toolContent" id="toolMove">
 	<div class="toolBox" id="displayTool">
 		<div class="boxTitleInfo" id="uiToolTip">

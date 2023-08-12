@@ -182,3 +182,21 @@
 .tut2Png {
     background-image: none;
 }
+
+/**/
+
+.statsSvgPower {
+    background-image: url(svg/stats/power.svg);
+}
+
+.statsSvgVita {
+    background-image: url(svg/stats/cruz.svg);
+}
+
+.statsSvgRes {
+    background-image: url(svg/stats/shield.svg);
+}
+
+.statsSvgLea {
+    background-image: url(svg/stats/belief.svg);
+}

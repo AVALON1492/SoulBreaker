@@ -57,11 +57,23 @@ class VERSION {
     }
 }
 
-const versionActual = "Alpha 5"
+const versionActual = "Alpha 6"
 vPrev.innerText = versionActual;
 vPrev2.innerText = versionActual;
 
 const listParches = [
+    new VERSION("Alpha 6", true, true,
+    ["Nuevo sistema de sonidos para una experiencia de mayor entretenimiento y diversión. Se han insertado 6 sonidos diferentes que probar.",
+    "3 ajustes de sonidos agregados.",
+    "Nuevo sección de entrenamiento.",
+    "3 nuevos mecanismos del juego del entrenamiento (Potencia, Vitalidad y Dureza). La lealtad se implementará en la próxima versión.",
+    "Funcionamiento de los atributos para la potencia de toque, la energía y el coste. El resto de ellos, se verán implementados en la próxima versión.",
+    "Balance del juego: Ha subido la dificultad del progreso desde el exponencial sobre 1.4 a 1.5.",
+    "Nuevas estadísticas generales y logros nuevos: Número de entrenamientos.",
+    "Cambios de UI",
+    "El soporte del móvil lo tendrá que verificar el funcionamiento para lanzar una app como prueba. Se verificará en la próxima versión."],
+    ["Otros errores corregidos."]
+    ),
     new VERSION("Alpha 5", false, true,
     [],
     ["Tras la rotación de los móviles, ya no se reescalará el zoom de forma anormal, facilitándose a los usuarios tener menos interrupciones.",

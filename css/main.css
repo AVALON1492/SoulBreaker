@@ -3,6 +3,7 @@
     --bgSecond: rgba(255, 255, 255, 0.7);
     --bgThird: rgba(255, 255, 255);
     --bgFluent: rgba(255, 255, 255, 0.7);
+    --bgFluentB: rgba(255, 255, 255, 0.3);
     --bgText: rgba(0, 0, 0, 0.8);
     --bgTextSoft: rgba(0, 0, 0, 0.5);
 
@@ -26,15 +27,6 @@
     --off: rgba(225, 0, 75, 0.2);
     --onText: rgb(0, 200, 75);
     --offText: rgb(225, 0, 75);
-
-    --red: rgba(255, 1, 77, 1);
-    --green: rgba(1, 255, 118, 1);
-    --blue: rgba(0, 117, 253, 1);
-    --yellow: rgba(255, 184, 2, 1);
-    --redT: rgba(255, 1, 77, 0.1);
-    --greenT: rgba(1, 255, 118, 0.1);
-    --blueT: rgba(0, 117, 253, 0.1);
-    --yellowT: rgba(255, 184, 2, 0.1);
 }
 
 html {
@@ -265,7 +257,7 @@ span {
 
 .splasher {
     position: absolute;
-    z-index: 100;
+    z-index: 300;
     pointer-events: none;
     width: 80px;
     height: 80px;
@@ -689,8 +681,8 @@ span {
 .barProgressTiny {
     position: relative;
     width: 120px;
-    min-height: 8px;
-    border-radius: 4px;
+    min-height: 14px;
+    border-radius: 7px;
     margin-bottom: 6px;
     box-shadow: 0px 0px 0px 3px var(--bgSecond),
                 0px 0px 9px 3px var(--colorMain);
@@ -937,59 +929,9 @@ span {
     will-change: transform;
 }
 
-.boxStart:active {
-    opacity: 0.5;
-    scale: 0.97;
+.boxStart:hover {
+    translate: 0px -2px;
 }
-
-.red {
-    background-color: var(--red);
-    transition: 0.2s;
-}
-
-.green {
-    background-color: var(--green);
-    transition: 0.2s;
-}
-
-.blue {
-    background-color: var(--blue);
-    transition: 0.2s;
-}
-
-.yellow {
-    background-color: var(--yellow);
-    transition: 0.2s;
-}
-
-.red:hover {
-    background-color: var(--redT);
-    box-shadow: inset 0px 0px 0px 3px var(--red),
-                inset 0px 0px 0px 6px var(--redT);
-    color: var(--red);
-}
-
-.green:hover {
-    background-color: var(--greenT);
-    box-shadow: inset 0px 0px 0px 3px var(--green),
-                inset 0px 0px 0px 6px var(--greenT);
-    color: var(--green);
-}
-
-.blue:hover {
-    background-color: var(--blueT);
-    box-shadow: inset 0px 0px 0px 3px var(--blue),
-                inset 0px 0px 0px 6px var(--blueT);
-    color: var(--blue);
-}
-
-.yellow:hover {
-    background-color: var(--yellowT);
-    box-shadow: inset 0px 0px 0px 3px var(--yellow),
-                inset 0px 0px 0px 6px var(--yellowT);
-    color: var(--yellow);
-}
-
 
 .boxTitle {
     width: fit-content;
