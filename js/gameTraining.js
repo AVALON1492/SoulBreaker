@@ -1,6 +1,5 @@
 const splashEffect = (e) => {
     audioScore.load();
-    audioScore.play();
     if (localStorage["valueClickSplash"] == "true") {
         const splash = document.createElement("div");
         splash.className = "splasher";
@@ -217,27 +216,25 @@ const startSystemVita = (idEvent, action) => {
     }, false);
 }
 
-discVita.addEventListener("mouseenter", (e) => {
+const sumDiscVita = (e) => {
     score++;
     scoreTrain++;
-    inBarTrainer.style.width = ((scoreTrain % 12) / 12) * 100 + "%";
-    textTotalTrainSession.innerText = "+" + Math.floor(scoreTrain / 12);
+    inBarTrainer.style.width = ((scoreTrain % 10) / 10) * 100 + "%";
+    textTotalTrainSession.innerText = "+" + Math.floor(scoreTrain / 10);
     boxScore.className = "scoreAnimation";
     boxScore.innerText = "x" + score;
     splashEffect(e);
     discVita.style.translate = (30 + Number((Math.random() * (window.innerWidth - 350 - 112 - 30)).toFixed())) + "px " + (100 + Number((Math.random() * (window.innerHeight - 280 - 112 - 100)).toFixed())) + "px";
+}
+
+discVita.addEventListener("mouseenter", (e) => {
+    sumDiscVita(e);
 });
 
-discVita.addEventListener("touchstart", () => {
-    const touchObj = touches[0];
-    score++;
-    scoreTrain++;
-    inBarTrainer.style.width = ((scoreTrain % 12) / 12) * 100 + "%";
-    textTotalTrainSession.innerText = "+" + Math.floor(scoreTrain / 12);
-    boxScore.className = "scoreAnimation";
-    boxScore.innerText = "x" + score;
-    splashEffect(touchObj);
-    discVita.style.translate = (30 + Number((Math.random() * (window.innerWidth - 350 - 112 - 30)).toFixed())) + "px " + (100 + Number((Math.random() * (window.innerHeight - 280 - 112 - 100)).toFixed())) + "px";
+discVita.addEventListener("touchstart", (e) => {
+    event.preventDefault();
+    const touchObj = e.touches[0];
+    sumDiscVita(touchObj);
 });
 
 startSystemVita(circleVita, "mousedown");
@@ -245,7 +242,9 @@ startSystemVita(circleVita, "mousedown");
 //TODO RES
 let numDirection = -1;
 let auxNumDirection = 0;
-const calcDirections = (mouseX, mouseY) => {
+const calcDirections = (event) => {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
     const posX = window.innerWidth / 2;
     const posY = window.innerHeight / 2 - 40;
     const angle = Number((180 * (Math.atan2(mouseY - posY, mouseX - posX) + Math.PI) / Math.PI).toFixed(1));
@@ -280,17 +279,13 @@ const calcDirections = (mouseX, mouseY) => {
 }
 
 boxRes.addEventListener("mousemove", (event) => {
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-    calcDirections(mouseX, mouseY);
+    calcDirections(event);
 }, false);
 
 boxRes.addEventListener("touchmove", (event) => {
     event.preventDefault();
     const touchObj = event.touches[0];
-    const mouseX = touchObj.clientX;
-    const mouseY = touchObj.clientY;
-    calcDirections(mouseX, mouseY);
+    calcDirections(touchObj);
 }, false);
 
 const createListOfCubes = (n, dir, type, isInverted) => {
@@ -301,19 +296,16 @@ const createListOfCubes = (n, dir, type, isInverted) => {
     const listCubes = [];
     for(let i = 0; i < n; i++) {
         listCubes[i] = document.createElement("div");
+        listCubes[i].className = "cube";
+
         if (type == "line") {
             listCubes[i].value = dir;
-        } else if (type == "curve") {
-            listCubes[i].value = Math.abs(dir + i * goInverted) % 8;
-        }
-
-        listCubes[i].className = "cube";
-        if (type == "line") {
             if (dir % 2 != 0) {
                 listCubes[i].className = "cube rot45";
             }
             listCubes[i].style.animation = "playCube" + dir + " " + timerAction() + "ms cubic-bezier(.85,.95,.95,1) forwards";
         } else if (type == "curve") {
+            listCubes[i].value = Math.abs(dir + i * goInverted) % 8;
             if ((dir + i) % 2 != 0) {
                 listCubes[i].className = "cube rot45";
             }
@@ -328,12 +320,11 @@ const createAtk = (n, dir, type, isInverted) => {
     const listCubes = createListOfCubes(n, dir, type, isInverted);
 
     for(let i = 0; i < n; i++) {
+        const diff = (i * 1000) / Math.min(1 + (Math.sqrt(score / 1.1) / 7.5), 4);
         setTimeout(() => {
             boxRes.appendChild(listCubes[i]);
-        }, (i * 1000) / Math.min(1 + (Math.sqrt(score / 1.1) / 7.5), 4));
-    }
+        }, diff);
 
-    for(let i = 0; i < n; i++) {
         setTimeout(() => {
             if (listCubes[i].value == numDirection) {
                 score++;
@@ -341,14 +332,13 @@ const createAtk = (n, dir, type, isInverted) => {
                 inBarTrainer.style.width = (scoreTrain % 10) * 10 + "%";
                 textTotalTrainSession.innerText = "+" + Math.floor(scoreTrain / 10);
                 audioScore.load();
-                audioScore.play();
                 boxScore.className = "scoreAnimation";
                 boxScore.innerText = "x" + score;
             } else {
                 gameOverSimple();
             }
             listCubes[i].remove();
-        }, timerAction() + (i * 1000) / Math.min(1 + (Math.sqrt(score / 1.1) / 7.5), 4));
+        }, timerAction() + diff);
     }
 }
 
@@ -381,37 +371,37 @@ exiterTrain.addEventListener("click", () => {
         localStorage["valuePower"] = Number(localStorage["valuePower"]) + Math.floor(scoreTrain / 10);
         numberPower.innerText = Number(localStorage["valuePower"]);
     } else if (openedBox.id == "boxVita") {
-        localStorage["valueHealth"] = Number(localStorage["valueHealth"]) + Math.floor(scoreTrain / 12);
+        localStorage["valueHealth"] = Number(localStorage["valueHealth"]) + Math.floor(scoreTrain / 10);
         numberVita.innerText = Number(localStorage["valueHealth"]);
+        clearInterval(timerVita);
+        isLightOn = false;
+        isPlaying = false;
+        playgroundVita.style.display = "block";
+        circleVita.innerText = "Iniciar";
+        discVita.style.zIndex = "6";
+        discVita.style.display = "none";
     } else if (openedBox.id == "boxRes") {
         localStorage["valueDef"] = Number(localStorage["valueDef"]) + Math.floor(scoreTrain / 10);
         numberRes.innerText = Number(localStorage["valueDef"]);
-    }/* else if (openedBox.id == "boxVita") {
-        localStorage["valueVita"] = Number(localStorage["valueVita"]) + Math.floor(scoreTrain / 12);
+        if (numDirection >= 0) {
+            boxRes.querySelectorAll(".boxPlate")[numDirection].style.borderBottomColor = "var(--bgOpacSoftest)";
+            boxRes.querySelectorAll(".boxPlate")[numDirection].style.boxShadow = "0px 3px 0px var(--colorMainFill)";
+            boxRes.querySelectorAll(".boxPlate")[numDirection].style.scale = "1";
+        }
+        numDirection = -1;
+    }/* else if (openedBox.id == "boxLea") {
+        localStorage["valueLea"] = Number(localStorage["valueLea"]) + Math.floor(scoreTrain / 10);
         numberLea.innerText = Number(localStorage["valueLea"]);
     }*/
     clearInterval(timerTraining);
-    clearInterval(timerVita);
     isTraining = false;
-    isLightOn = false;
-    isPlaying = false;
     score = 0;
     scoreTrain = 0;
+    waiter = 0;
     inBarTrainer.style.width = "0%";
     textTotalTrainSession.innerText = "+0";
-    waiter = 0;
     boxScore.innerText = "x" + score;
     failBox.style.display = "none";
-    playgroundVita.style.display = "block";
-    circleVita.innerText = "Iniciar";
-    discVita.style.zIndex = "6";
-    discVita.style.display = "none";
-    if (numDirection >= 0) {
-        boxRes.querySelectorAll(".boxPlate")[numDirection].style.borderBottomColor = "var(--bgOpacSoftest)";
-        boxRes.querySelectorAll(".boxPlate")[numDirection].style.boxShadow = "0px 3px 0px var(--colorMainFill)";
-        boxRes.querySelectorAll(".boxPlate")[numDirection].style.scale = "1";
-    }
-    numDirection = -1;
 });
 
 const createIntervalPower = () => {
@@ -539,20 +529,24 @@ const createIntervalRes = () => {
     }, timerAction() * 1.18 - waiter * 4000);
 }
 
+const setColorClassNames = (color) => {
+    barTrainer.className = color + "BarShadow";
+    inBarTrainer.className = color + "Color";
+    textTrainUp.className = color + "Letter " + color + "LetterShadow";
+    statsTrain.className = color + "ColorOpac";
+    textTotalTrainSession.className = color + "Letter " + color + "LetterShadow";
+}
+
 const goTrainer = (idEvent, interval, box, color, classSvg, type = "flex") => {
     idEvent.addEventListener("mousedown", () => {
+        setColorClassNames(color);
+        svgTrain.className = classSvg;
         timerTraining = setInterval(() => {
             calcTime();
         }, 1000)
         openWindow(boxComboScore, "flex");
         openWindow(box, type);
         openedBox = box;
-        barTrainer.className = color + "BarShadow";
-        inBarTrainer.className = color + "Color";
-        textTrainUp.className = color + "Letter " + color + "LetterShadow";
-        statsTrain.className = color + "ColorOpac";
-        svgTrain.className = classSvg;
-        textTotalTrainSession.className = color + "Letter " + color + "LetterShadow";
         buttonsTraining("none", 0.3, "Limpiando...");
         isTraining = true;
         let caller = interval;
@@ -574,7 +568,6 @@ goTrainer(goRes, createIntervalRes, boxRes, "blue", "statsSvgRes");
 const gameOverSimple = () => {
     if (isTraining) {
         audioGameOver.load();
-        audioGameOver.play();
     }
     waiter = 1;
     score = 0;

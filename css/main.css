@@ -483,6 +483,26 @@ span {
     box-shadow: inset 0px 0px 0px 2px var(--colorMain);
 }
 
+.boxIndex {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 12px;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.infoIndex {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--bgText);
+}
+
 .textHome {
     height: 40px;
     display: flex;
@@ -780,15 +800,25 @@ span {
     width: 100%;
     height: calc(100%);
     overflow: auto;
+    overflow-y: scroll;
     content-visibility: auto;
     border-radius: 18px;
+    padding-right: 0px;
     box-sizing: border-box;
     transition: 0.5s cubic-bezier(0.2, 0.6, 0.4, 1);
     will-change: transform;
 }
 
-.mainScroller::-webkit-scrollbar {
-    display: none;
+.mainScroller::-webkit-scrollbar-thumb {
+    appearance: none;
+    background-color: var(--colorMain);
+    border-radius: 8px 20px 20px 8px;
+}
+
+.mainScroller::-webkit-scrollbar-track {
+    appearance: none;
+    background: var(--colorMainOpac);
+    border-radius: 20px;
 }
 
 .grid2Column {
@@ -968,48 +998,6 @@ span {
     padding-inline: 8px;
 }
 
-.boxSlider {
-    position: absolute;
-    bottom: 16px;
-    width: 120px;
-    height: 32px;
-    background: var(--colorMainOpac);
-    font-size: 18px;
-    color: var(--colorMain);
-    font-weight: 700;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    overflow: hidden;
-    transition: 0.2s;
-    will-change: transform;
-}
-
-.boxSlider:hover {
-    box-shadow: inset 0px 0px 0px 1px var(--colorMainFill);
-}
-
-.boxSlider:active {
-    background: transparent;
-    transform: scale(0.9);
-}
-
-.boxPages {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
-    translate: -50%;
-    width: 120px;
-    height: 32px;
-    font-size: 18px;
-    color: var(--bgText);
-    font-weight: 700;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .boxButton {
     position: relative;
     width: 100%;
@@ -1163,6 +1151,31 @@ span {
 }
 
 .boxQuit:active {
+    transition: 0.1s;
+    scale: 0.95;
+}
+
+.boxNext {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--colorMainOpac);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    color: var(--colorMain);
+    overflow: hidden;
+    transition: 0.2s;
+    will-change: transform;
+}
+
+.boxNext:hover {
+    scale: 1.05;
+    box-shadow: inset 0px 0px 0px 1px var(--colorMainFill);
+}
+
+.boxNext:active {
     transition: 0.1s;
     scale: 0.95;
 }

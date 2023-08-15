@@ -13,6 +13,7 @@ import Stats from 'three/addons/libs/stats.module'
 
 //TODO SETTINGS
 const root = document.querySelector(":root");
+const styleScrollBar = document.createElement("style");
 
 class SETTINGS {
 	constructor(valueStorage, setDefault) {
@@ -211,9 +212,7 @@ const bloomPass = new UnrealBloomPass(new THREE.Vector2(2048, 2048));
 //TODO AUDIO
 document.addEventListener("click", () => {
     audioAmbient.play();
-
     audioClick.load();
-    audioClick.play();
 });
 
 audioAmbient.loop = true;
@@ -261,6 +260,19 @@ const hideSearch = () => {
     searchIndex();
 }
 
+const showIndex = () => {
+    textIndex.style.opacity = 1;
+    textIndex.style.pointerEvents = "inherit";
+    titleId.style.opacity = 0;
+}
+
+const hideIndex = () => {
+    textIndex.style.opacity = 0;
+    textIndex.style.pointerEvents = "none";
+    titleId.style.opacity = 1;
+}
+hideIndex();
+
 let auxMenu = null;
 const goMenu = (idEvent, menu, name, className) => {
     idEvent.addEventListener("click", () => {
@@ -276,9 +288,6 @@ const goMenu = (idEvent, menu, name, className) => {
         iconHome.style.opacity = 0.4;
         iconHome.style.scale = 0.8;
         auxMenu = menu;
-        if (localStorage["valueSearch"] == "true" && nextText.innerText == "Configuración") {
-            showSearch();
-        }
     });
 }
 
@@ -288,6 +297,16 @@ goMenu(goAward, menuAward, "Logros", "awardSvg");
 goMenu(goTutorial, menuTutorial, "Tutorial", "tipSvg");
 goMenu(goAbout, menuAbout, "Acerca de", "aboutSvg");
 goMenu(goVersions, menuVersions, "Versiones", "versionSvg");
+
+goSettings.addEventListener("click", () => {
+    if (localStorage["valueSearch"] == "true") {
+        showSearch();
+    }
+});
+
+goTutorial.addEventListener("click", () => {
+    showIndex();
+})
 
 goMain.addEventListener("click", () => {
     goMain.style.pointerEvents = "none";
@@ -300,6 +319,7 @@ goMain.addEventListener("click", () => {
     iconHome.style.opacity = 1;
     iconHome.style.scale = 1;
     hideSearch();
+    hideIndex();
 });
 
 //SELECT SUBMENU PERFIL
@@ -504,20 +524,40 @@ window.addEventListener("resize", () => {
 
 //TODO PAGE
 let page = 1;
-const pageLimit = 2;
+const pageLimit = 5;
 
 const setPage = (page) => {
-    idPage.innerText = page + " / " + pageLimit;
     switch (page) {
         case 1:
+            infoIndexTut.innerText = page + " > Bienvenida del tutorial";
             idDescTut.innerText = "Te damos la bienvenida a este tutorial para recomendarte a jugar con experiencias sin problemas. Este juego consiste en una plataforma idle basado de un mundo relajante 3D con colores. Pero hay una manera más divertida y activa para no quedarse aburrido, introduciremos unos nuevos mecanismos del juego, a dificultad incremental. A continuación, veremos las siguientes indicaciones que vamos a aprender.";
             titleTut.innerText = "Bienvenida del tutorial";
             imgTut.className = "boxImg tut1Png";
             break;
         case 2:
-            idDescTut.innerText = "???";
-            titleTut.innerText = "???";
+            infoIndexTut.innerText = page + " > Barra de tareas";
+            idDescTut.innerText = "En la barra de tareas, tienen 3 aspectos: en la izquierda indica el menú del inicio; en el centro es la información simplificada del alma; y en la derecha, menú del perfil.";
+            titleTut.innerText = "Barra de tareas";
             imgTut.className = "boxImg tut2Png";
+            break;
+        case 3:
+            infoIndexTut.innerText = page + " > Inicio";
+            idDescTut.innerText = "En el menú del inicio, se observan 6 sección: la configuración del juego; sus estadísticas, información detallado del juego; los logros, objetivos que recompensan almas gemas; el tutorial, donde has entrado esta sección; el Acerca de, información del juego y desarrollador; y la versión, registros de mejoras y parches de errores.";
+            titleTut.innerText = "Inicio";
+            imgTut.className = "boxImg tut3Png";
+            break;
+        case 4:
+            infoIndexTut.innerText = page + " > Perfil > Estadísticas";
+            idDescTut.innerText = "En el menú del perfil, se observan que, en la parte superior, presentan los 4 atributos del alma: Potencia, Vitalidad, Dureza y Lealtad. Y en la parte inferior, están en la información de estadísticas del alma, en la sección estadísticas. Debajo de ahí, están en la barra del perfil para navegar. Nota: pásate al cursor o al dedo encima de los elementos para ver más información.";
+            titleTut.innerText = "Perfil > Estadísticas";
+            imgTut.className = "boxImg tut4Png";
+            break;
+        case 5:
+            infoIndexTut.innerText = page + " > Perfil > Entrenamiento";
+            idDescTut.innerText = "En el entrenamiento, en la parte inferior, hay un mensaje que está diciendo que debes escoger los atributos centrados en el icono en la parte superior del perfil. A continuación, se muestra información del entrenamiento que explica cómo se entrena.";
+            titleTut.innerText = "Perfil > Entrenamiento";
+            imgTut.className = "boxImg tut5Png";
+            break;
     }
 }
 
@@ -624,13 +664,33 @@ settingSearch.create({
 
 hideSearch();
 
+//TODO SCROLLBARS
+document.getElementsByTagName("head")[0].appendChild(styleScrollBar);
+const settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "valueScrollBar", false);
+settingScrollBar.create({
+    on: () => {
+        settingScrollBar.setOnUI();
+        styleScrollBar.appendChild(document.createTextNode(".mainScroller::-webkit-scrollbar {display: block; appearance: none; width: 10px}"));
+        document.querySelectorAll(".mainScroller").forEach((object) => {
+            object.style.paddingRight = "8px";
+        });
+    },
+
+    off:() => {
+        settingScrollBar.setOffUI();
+        styleScrollBar.appendChild(document.createTextNode(".mainScroller::-webkit-scrollbar {display: none; appearance: none; width: 10px}"));
+        document.querySelectorAll(".mainScroller").forEach((object) => {
+            object.style.paddingRight = "0px";
+        });
+    }
+})
+
 //TODO POP-UP WINDOW
 const openWindow = (idWindow) => {
     tapeWindow.style.display = "block";
     idWindow.style.display = "flex";
     setTimeout(() => {
         audioNotif.load();
-        audioNotif.play();
         tapeWindow.style.opacity = "0.5";
         idWindow.style.scale = "1";
         idWindow.style.opacity = "1";
@@ -662,7 +722,6 @@ const pushNotification = (desc) => {
     setTimeout(() => {
         createNotif.style.translate = "-50% 0%";
         audioNotif.load();
-        audioNotif.play();
     }, 10);
 
     setTimeout(() => {
@@ -761,6 +820,13 @@ if (typeof(Storage) !== "undefined") {
 
 numberRes.innerText = Number(localStorage["valueDef"]);
 
+if (typeof(Storage) !== "undefined") {
+    if (localStorage["totalPower"]) {
+    } else {
+        localStorage["totalPower"] = 0;
+    }
+}
+
 let progressTotal;
 let touchPower;
 let gainEnergy;
@@ -779,9 +845,9 @@ const updateStats = () => {
     textProduction.innerText = Number(production.toFixed(2)) + " / 5s";
 
     progressTotal = Number((10 / lowCost + 10 * ((Number(localStorage["valueEnergy"]) / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
+    totalPower.innerText = Number(localStorage["valuePower"]) + Number(localStorage["valueHealth"]) + Number(localStorage["valueDef"]);
+    localStorage["totalPower"] = Number(localStorage["valuePower"]) + Number(localStorage["valueHealth"]) + Number(localStorage["valueDef"]);
 }
-
-updateStats();
 
 //TODO STATS GENERAL
 if (typeof(Storage) !== "undefined") {
@@ -888,15 +954,19 @@ energyAchieve.update();
 const trainAchieve = new ACHIEVE("totalTrain", "lvlTotalTrain", [4, 16, 48, 120, 240, 480, 1000, 2000, 4000, 8000], [5, 10, 20, 40, 80, 160, 350, 700, 1500, 3000], idTotalTrainLVL, barTotalTrain, inPTotalTrain, rewardTrainTotal, descTotalTrain, "Realiza ", " entrenamientos");
 trainAchieve.update();
 
-const totalAwards = 40;
-textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / " + totalAwards;
+const powerAchieve = new ACHIEVE("totalPower", "lvlTotalPower", [100, 500, 1500, 4000, 12000, 40000, 120000, 360000, 1000000, 5000000], [10, 20, 40, 70, 110, 210, 400, 750, 1600, 3200], idTotalPowerLVL, barTotalPower, inPTotalPower, rewardPowerTotal, descTotalPower, "Alcalza ", " de poder total");
+powerAchieve.update();
+
+const totalAwards = 50;
+textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + (Number(localStorage["lvlTotalClicks"])) + " / " + totalAwards;
 setInterval(() => {
     localStorage["totalTime"] = Number(localStorage["totalTime"]) + 1;
     textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
     timeAchieve.update();
     trainAchieve.update();
+    powerAchieve.update();
 
-    textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + " / " + totalAwards;
+    textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + (Number(localStorage["lvlTotalClicks"])) + " / " + totalAwards;
 }, 60000);
 
 //
@@ -925,10 +995,8 @@ const splashEffect = (e) => {
     }
 }
 
-worldGame.addEventListener("mousedown", (e) => {
-    upClick();
-    clickAchieve.update();
-    progress += touchPower;
+const gainProgress = (gain, e, isManually = false) => {
+    progress += gain;
     if (progress >= progressTotal) {
         progress = 0;
         const amount = gainEnergy;
@@ -938,9 +1006,7 @@ worldGame.addEventListener("mousedown", (e) => {
         progressTotal = Number((10 / lowCost + 10 * ((Number(localStorage["valueEnergy"]) / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
         energyAchieve.update();
 
-        //
-
-        if (localStorage["valueClickText"] == "true") {
+        if (localStorage["valueClickText"] == "true" && isManually) {
             const boxNumber = document.createElement("div");
             boxNumber.className = "boxerNumber";
             const textNumber = document.createElement("div");
@@ -958,7 +1024,7 @@ worldGame.addEventListener("mousedown", (e) => {
             boxNumber.appendChild(svg);
             document.body.appendChild(boxNumber);
 
-            textNumber.innerText = "+" + 1;
+            textNumber.innerText = "+" + gainEnergy;
 
             setTimeout(() => {
                 document.body.removeChild(boxNumber);
@@ -967,15 +1033,27 @@ worldGame.addEventListener("mousedown", (e) => {
     }
 
     progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
+}
+
+worldGame.addEventListener("mousedown", (e) => {
+    upClick();
+    clickAchieve.update();
     splashEffect(e);
-    
+    gainProgress(touchPower, e, true);
 });
+
+setInterval(() => {
+    gainProgress(production, null);
+}, 5000)
 
 //
 //TODO THREE JS
 //
 
-const clock = new THREE.Clock();
+let clock;
+window.addEventListener("load", () => {
+    clock = new THREE.Clock();
+})
 
 const scene = new THREE.Scene();
 const color = new THREE.Color("hsl(264, 100%, 90%)");
@@ -983,8 +1061,7 @@ scene.background = color;
 scene.fog = new THREE.FogExp2(color, 0.0016);
 
 //TODO CAMERAS
-const camera = new THREE.PerspectiveCamera(0, window.innerWidth / window.innerHeight, 10, 4800);
-camera.fov = 75;
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 4800);
 camera.lookAt(0,0,0);
 camera.position.set(0, 100, 400);
 
@@ -1197,10 +1274,6 @@ const lightPointB = new THREE.PointLight( 0x6600ff, 3, 600 );
 lightPointB.position.set( 0, -100, 0 );
 scene.add( lightPointB );
 
-/*const sphereSize = 100;
-const pointLightHelper = new THREE.PointLightHelper( lightPointB, sphereSize );
-scene.add( pointLightHelper );*/
-
 const directionalLight = new THREE.DirectionalLight( 0xffffff, 1.5 );
 scene.add( directionalLight );
 
@@ -1244,12 +1317,6 @@ settingShadow.create({
         directionalLight.castShadow = false;
     }
 })
-
-/*const helper = new THREE.DirectionalLightHelper( directionalLight, 5, 0x000000 );
-scene.add( helper );
-
-const helperA = new THREE.CameraHelper( directionalLight.shadow.camera );
-scene.add( helperA );*/
 
 //TODO CONTROLS
 const controls = new OrbitControls( camera, renderer.domElement );
@@ -1357,8 +1424,11 @@ const animate = () => {
     if (time < 6 / 4) {
         const adFov = (6 - time * 4) ** 2.4;
         camera.fov = 75 + adFov;
+    } else {
+        if (camera.fov != 75) {
+            camera.fov = 75;
+        }
     }
-    
 
     const scaleA = Math.cos(time * 1.25) * 0.025;
     const scaleD = Math.cos((time * 1.25) * 1.333 + 0.5) * 0.025;
@@ -1396,7 +1466,9 @@ const animate = () => {
     isVertical ? blockAspectRatioDetector.style.display = "flex" : blockAspectRatioDetector.style.display = "none";
 }
 
-animate();
+window.addEventListener("load", () => {
+    animate();
+})
 
 //SETTINGS OT
 const settingTheme = new SETTINGSTOOGLE(buttonTheme, "valueTheme", false);
@@ -1657,6 +1729,11 @@ getInformation(resetAll, "important", null, "Hora de despedir...", "Acción no r
 "En efecto, no podrás recuperar los datos que has progresado una vez hecho esta acción"
 );
 
+getInformation(textInfoPower, "context", null, "Poder", "Atributo general",
+"Poder que suma todos los atributos del alma y equipamentos del alma.",
+null
+);
+
 getInformation(textPower, "context", null, "Potencia", "Atributo",
 "Atributo que aumenta el ataque, la potencia del toque y la producción baja",
 "Cada 25 puntos, +ataque; Cada 10 puntos, +toque y +producción"
@@ -1788,17 +1865,8 @@ goToolTip(openHome, "right", "Inicio");
 goToolTip(openProfile, "left", "Perfil");
 goToolTip(openStats, "top", "Estadísticas");
 goToolTip(openTrain, "top", "Entrenamiento");
+goToolTip(exiterTrain, "left", "Salir");
 goToolTip(barEnergy, "top", "showProgressEnergy", "number");
-
-//TODO DATA
-resetConfig.addEventListener("click", () => {
-    location.reload();
-});
-
-resetAll.addEventListener("click", () => {
-    localStorage.clear();
-    location.reload();
-});
 
 //TODO LOADING and WELCOME
 window.addEventListener("load", () => {
@@ -1816,7 +1884,6 @@ window.addEventListener("load", () => {
         }
     }, 300)
     
-    
     buttonConfirmProtection.addEventListener("click", () => {
         closeWindow(windowProtection);
         localStorage["popupSec"] = "false";
@@ -1833,3 +1900,15 @@ blockWelcomer.addEventListener("click", () => {
         gemSoulBox.style.translate = "0px 0px";
     }, 310)
 });
+
+//TODO DATA
+resetConfig.addEventListener("click", () => {
+    location.reload();
+});
+
+resetAll.addEventListener("click", () => {
+    localStorage.clear();
+    location.reload();
+});
+
+updateStats();

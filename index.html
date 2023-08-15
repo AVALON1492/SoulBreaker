@@ -5,7 +5,7 @@
     <meta name="description" content="Soul Breaker">
     <meta name="viewport" content="width=device-width, initial-scale = 0.48, maximum-scale = 1, user-scalable = no">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes" /> 
+    <meta name="apple-mobile-web-app-capable" content="yes"> 
     <title>Soul Breaker</title>
     <link rel="shortcut icon" href="public/iconMain.ico">
     <link rel="stylesheet" href="css/main.css">
@@ -27,11 +27,11 @@
     <source src="public/sound/stasis.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="audioClick">
+<audio id="audioClick" autoplay>
     <source src="public/sound/clickSound.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="audioNotif">
+<audio id="audioNotif" autoplay>
     <source src="public/sound/notificationSound.mp3" type="audio/mpeg">
 </audio>
 
@@ -39,11 +39,11 @@
     <source src="public/sound/eyeOpen.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="audioScore">
+<audio id="audioScore" autoplay>
     <source src="public/sound/score.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="audioGameOver">
+<audio id="audioGameOver" autoplay>
     <source src="public/sound/gameOver.mp3" type="audio/mpeg">
 </audio>
 
@@ -202,6 +202,11 @@
             <i class="fi-rr-search subIcon" id="iconSearch" style="color: var(--colorMain); font-size: 22px; min-width: 48px; width: 48px; transition: 0.6s cubic-bezier(0.2, 1.48, 0.4, 1);"></i>
             <input class="searchBox" type="text" maxlength="32" placeholder="Búsqueda" spellcheck="false" id="textSearch">
             <i class="fi-rr-cross boxQuit onPoint" id="buttonEraseSearch"></i>
+            <div class="boxIndex" id="textIndex">
+                <i class="fi-rr-angle-small-left boxNext onPoint" id="goBackPageTut"></i>
+                <div class="infoIndex" id="infoIndexTut"></div>
+                <i class="fi-rr-angle-small-right boxNext onPoint" id="goNextPageTut"></i>
+            </div>
         </div>
         <div class="textHome">
             <div class="boxIcon" id="iconHome">
@@ -538,6 +543,16 @@
                             <div class="boxText"></div>
                         </div>
                     </div>
+                    <div class="boxButton isToogle onPoint" id="buttonScrollBar">
+                        <i class="fi fi-rr-overline subIcon"></i>
+                        <div class="textSettings">
+                            <div>Barras del desplazamiento</div>
+                            <div class="textHighlightInfo">Ideal para los móviles con poco espacio en la pantalla y saber qué posición se encuentra el contenido</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
                     <div class="boxButton isToogle onPoint" id="buttonStatsFPS">
                         <i class="fi-rr-chart-waterfall subIcon"></i>
                         <div class="textSettings">
@@ -775,20 +790,40 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="boxButton">
+                        <i class="fi-rr-fire-flame-curved subIcon"></i>
+                        <div class="textSettings" style="padding-left: 12px;">
+                            <div class="boxTitleAdvanced">
+                                <div>Que el poder brinda al alma</div>
+                                <div class="boxText" id="idTotalPowerLVL"> Nivel 0</div>
+                            </div>
+                            <div class="textHighlightInfo" id="descTotalPower">Alcalza 100 de poder total</div>
+                            <div class="barBox">
+                                <div class="barProgressAchieve">
+                                    <div class="inBarProgressTiny" id="barTotalPower"></div>
+                                </div>
+                                <div id="inPTotalPower">0/100</div>
+                            </div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText">
+                                <div id="rewardPowerTotal">+10</div>
+                                <div class="smallSvg" style="background-image: url(css/svg/gemSoul.svg);"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--TODO TUTORIAL-->
-            <div class="mainScroller flex" style="transform: translateX(640px);" id="menuTutorial">
-                <div class="boxContainer flex" style="min-height: 100%;">
+            <div class="mainScroller" style="transform: translateX(640px);" id="menuTutorial">
+                <div class="boxContainer flex">
                     <div class="boxTitle">
                         <i class="fi-rr-book-bookmark topIcon"></i>
                         <div id="titleTut"></div>
                     </div>
                     <div class="boxImg" id="imgTut"></div>
-                    <div class="boxDesc" id="idDescTut"></div>
-                    <div class="boxSlider onPoint" id="goBackPageTut" style="left: 16px;">Anterior</div>
-                    <div class="boxPages" id="idPage">1 / 2</div>
-                    <div class="boxSlider onPoint" id="goNextPageTut" style="right: 16px;">Siguiente</div>
+                    <div class="boxDesc" id="idDescTut" style="margin-block: 8px;"></div>
                 </div>
             </div>
             <!--TODO ABOUT-->
@@ -895,14 +930,14 @@
             <div id="nextTextPerfil">Estadísticas</div>
         </div>
         <div class="mainScroller flex" style="position: relative;">
-            <div class="boxBigText">
+            <div class="boxBigText" id="textInfoPower">
                 <svg width="33" height="33" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <mask id="path-1-inside-1_255_2" fill="white">
                         <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z"/>
                     </mask>
                     <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM31.9871 50C31.9871 59.9483 40.0517 68.0129 50 68.0129C59.9483 68.0129 68.0129 59.9483 68.0129 50C68.0129 40.0517 59.9483 31.9871 50 31.9871C40.0517 31.9871 31.9871 40.0517 31.9871 50Z" fill="var(--colorMain)" stroke="black" stroke-opacity="0.5" stroke-width="16" mask="url(#path-1-inside-1_255_2)"/>
                 </svg>
-                <div>0</div>
+                <div id="totalPower">0</div>
             </div>
             <div class="gridInline4" style="min-height: 180px;">
                 <div class="cardStats">

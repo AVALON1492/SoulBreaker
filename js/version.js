@@ -57,11 +57,25 @@ class VERSION {
     }
 }
 
-const versionActual = "Alpha 6"
+const versionActual = "Alpha 7"
 vPrev.innerText = versionActual;
 vPrev2.innerText = versionActual;
 
 const listParches = [
+    new VERSION("Alpha 7", true, true,
+    ["Nuevo rediseño de la sección tutorial para los móviles sobre UX y nuevos tutoriales.",
+    "Nueva accesibilidad para ajustes: Barras de desplazamientos, ideal para los móviles que tienen poco espacio. Por defecto, está deshabilitado.",
+    "Nuevo logro incremental: Poder total.",
+    "El poder total ya es funcional.",
+    "Se ha agregado el funcionamiento para el atributo de producción de progreso.",
+    "Balance: El entrenamiento de vitalidad, se ha reducido de 12 a 10 para conseguir puntos de entrenamiento mucho más fácil.",
+    "Cambios de UI.",
+    "Optimización del código."],
+    ["Se ha corregido un error que el audio cargaba de forma anormal y lo cambié usando el autoplay para evitar peticiones excesivas.",
+    "Se ha corregido un error grave que, al borrar los datos del juego, se ha experimentado un fallo en la barra de progreso donde decía NaN (Not a Number).",
+    "Se ha corregido un error que, al cargar la cámara mientras salías de la pestaña del navegador, no se ha procesado correctamente la animación de bienvenida.",
+    "Se ha corregido un error en los gestos táctiles para móviles en el entrenamiento de vitalidad y no responde correctamente su jugabilidad."]
+    ),
     new VERSION("Alpha 6", true, true,
     ["Nuevo sistema de sonidos para una experiencia de mayor entretenimiento y diversión. Se han insertado 6 sonidos diferentes que probar.",
     "3 ajustes de sonidos agregados.",
@@ -70,7 +84,7 @@ const listParches = [
     "Funcionamiento de los atributos para la potencia de toque, la energía y el coste. El resto de ellos, se verán implementados en la próxima versión.",
     "Balance del juego: Ha subido la dificultad del progreso desde el exponencial sobre 1.4 a 1.5.",
     "Nuevas estadísticas generales y logros nuevos: Número de entrenamientos.",
-    "Cambios de UI",
+    "Cambios de UI.",
     "El soporte del móvil lo tendrá que verificar el funcionamiento para lanzar una app como prueba. Se verificará en la próxima versión."],
     ["Otros errores corregidos."]
     ),

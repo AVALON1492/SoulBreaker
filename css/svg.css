@@ -180,7 +180,19 @@
 }
 
 .tut2Png {
-    background-image: none;
+    background-image: url(img/tut2.png);
+}
+
+.tut3Png {
+    background-image: url(img/tut3.png);
+}
+
+.tut4Png {
+    background-image: url(img/tut4.png);
+}
+
+.tut5Png {
+    background-image: url(img/tut5.png);
 }
 
 /**/
