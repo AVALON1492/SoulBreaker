@@ -74,6 +74,8 @@ const resetTime = () => {
     timeTextTraining.innerText = "0:00";
 }
 
+
+//TODO ANIMATION
 boxScore.addEventListener('webkitAnimationEnd', function () {
     this.className = "";
 });
@@ -81,6 +83,14 @@ boxScore.addEventListener('webkitAnimationEnd', function () {
 failBox.addEventListener('webkitAnimationEnd', function () {
     this.className = "";
 });
+
+boxCards.addEventListener('webkitAnimationEnd', function () {
+    this.className = "gridInline4";
+});
+
+boxTrainNope.addEventListener("click", () => {
+    boxCards.className = "gridInline4 getAttention"
+})
 
 const timerAction = () => {
     return timerNumber / Math.min(1 + (Math.sqrt(score / 1.1) / 7.5), 4);

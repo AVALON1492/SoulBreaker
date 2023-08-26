@@ -15,9 +15,16 @@ const versionActual = "Alpha 8"
 vPrev.innerText = versionActual;
 vPrev2.innerText = versionActual;
 
-//TODO SETTINGS
 const root = document.querySelector(":root");
 const styleScrollBar = document.createElement("style");
+let playAnimate = false;
+let isVertical = window.innerWidth < window.innerHeight;
+isVertical ? blockAspectRatioDetector.style.display = "flex" : blockAspectRatioDetector.style.display = "none";
+
+let clock;
+window.addEventListener("load", () => {
+    clock = new THREE.Clock();
+});
 
 export let gameSB;
 const setNewGame = () => {
@@ -46,6 +53,58 @@ const setNewGame = () => {
 }
 
 setNewGame();
+
+//TODO POP-UP WINDOW
+const openWindow = (idWindow) => {
+    tapeWindow.style.display = "block";
+    idWindow.style.display = "flex";
+    setTimeout(() => {
+        audioNotif.load();
+        tapeWindow.style.opacity = "0.5";
+        idWindow.style.scale = "1";
+        idWindow.style.opacity = "1";
+    }, 10)
+}
+
+const closeWindow = (idWindow) => {
+    tapeWindow.style.opacity = "0";
+    idWindow.style.scale = "0.8";
+    idWindow.style.opacity = "0";
+    setTimeout(() => {
+        tapeWindow.style.display = "none";
+        idWindow.style.display = "none";
+    }, 310);
+}
+
+//TODO SETTINGS
+let settingSoundAmbient,
+settingSoundInteract,
+settingSoundSystem,
+settingResolution,
+settingRotateDamp,
+settingRotateSpeed,
+settingRotateSpeedAuto,
+settingZoomSpeed,
+settingColorSelector,
+settingSearch,
+settingScrollBar,
+settingClickSplash,
+settingClickText,
+settingAntialias,
+settingStatsFPS,
+settingBloom,
+settingImage,
+settingRender,
+settingTerrain,
+settingTerrainAnimation,
+settingShadow,
+settingControl,
+settingRotation,
+settingTool,
+settingToolWarn,
+settingToolTip,
+settingTheme,
+settingGlass;
 
 class SETTINGS {
 	constructor(valueObject, setDefault) {
@@ -200,6 +259,7 @@ class SETTINGSARRAY extends SETTINGS {
     }
 }
 
+function init() {
 const settingColor = new SETTINGSARRAY("color", [264, 100, 50]);
 
 //AUTOSETTINGS
@@ -231,21 +291,21 @@ document.addEventListener("click", () => {
 
 audioAmbient.loop = true;
 
-const settingSoundAmbient = new SETTINGSVALUE(rangeSoundAmbient, textSoundAmbient, "soundAmbient", 100,
+settingSoundAmbient = new SETTINGSVALUE(rangeSoundAmbient, textSoundAmbient, "soundAmbient", 100,
     (value) => {
         audioAmbient.volume = value / 100;
     }
 );
 settingSoundAmbient.createRanger();
 
-const settingSoundInteract = new SETTINGSVALUE(rangeSoundInteract, textSoundInteract, "valueSoundInteract", 100,
+settingSoundInteract = new SETTINGSVALUE(rangeSoundInteract, textSoundInteract, "valueSoundInteract", 100,
     (value) => {
         audioClick.volume = value / 100;
     }
 );
 settingSoundInteract.createRanger();
 
-const settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, "valueSoundSystem", 100,
+settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, "valueSoundSystem", 100,
     (value) => {
         audioNotif.volume = value / 100;
         audioEye.volume = value / 100;
@@ -371,6 +431,8 @@ const inTrainMenu = (toogle) => {
 let auxMenuPerfil = boxPerfilStats;
 let auxFunc = null;
 let auxOrder = 0;
+let auxMenuTrain = menuNoneTrain;
+let auxCardTrain = null;
 const goPerfilMenu = (idEvent, menu, name, className, order, func = null) => {
     idEvent.addEventListener("click", () => {
         if (auxOrder != order) {
@@ -391,10 +453,22 @@ const goPerfilMenu = (idEvent, menu, name, className, order, func = null) => {
                 auxFunc(false);
             }
 
+            auxMenuTrain.style.opacity = 0;
+            auxMenuTrain.style.pointerEvents = "none";
+            if (auxCardTrain != null) {
+                auxCardTrain.parentElement.className = "cardStats";
+                auxCardTrain.parentElement.style.rotate = "0deg";
+                auxCardTrain.parentElement.style.scale = "1";
+            }
+            menuNoneTrain.style.opacity = 1;
+            menuNoneTrain.style.pointerEvents = "inherit";
+
             menu.style.translate = "0px";
             auxOrder = order;
             auxFunc = func;
             auxMenuPerfil = menu;
+            auxMenuTrain = menuNoneTrain;
+            auxCardTrain = null;
         }
     });
 }
@@ -402,23 +476,31 @@ const goPerfilMenu = (idEvent, menu, name, className, order, func = null) => {
 goPerfilMenu(openStats, boxPerfilStats, "Estadísticas", "fi-rr-chart-histogram", 0);
 goPerfilMenu(openTrain, boxPerfilTrain, "Entrenamiento", "fi-rr-bullseye-arrow", 1, inTrainMenu);
 
-let auxMenuTrain = menuNoneTrain;
-const goMenuTrain = (idEvent, menu) => {
+const goMenuTrain = (idEvent, menu, className) => {
     idEvent.addEventListener("click", () => {
         if (auxMenuTrain != menu) {
             auxMenuTrain.style.opacity = 0;
             auxMenuTrain.style.pointerEvents = "none";
+            if (auxCardTrain != null) {
+                auxCardTrain.parentElement.className = "cardStats";
+                auxCardTrain.parentElement.style.rotate = "0deg";
+                auxCardTrain.parentElement.style.scale = "1";
+            }
+            idEvent.parentElement.className = "cardStats " + className;
+            idEvent.parentElement.style.rotate = "4deg";
+            idEvent.parentElement.style.scale = "0.9";
             menu.style.opacity = 1;
             menu.style.pointerEvents = "inherit";
             auxMenuTrain = menu;
+            auxCardTrain = idEvent;
         }
     })
 }
 
-goMenuTrain(openPower, menuPower);
-goMenuTrain(openVita, menuVita);
-goMenuTrain(openRes, menuRes);
-goMenuTrain(openLea, menuLea);
+goMenuTrain(openPower, menuPower, "redShadow");
+goMenuTrain(openVita, menuVita, "greenShadow");
+goMenuTrain(openRes, menuRes, "blueShadow");
+goMenuTrain(openLea, menuLea, "yellowShadow");
 
 //MENU SYSTEM
 let auxIdEvent = null;
@@ -655,7 +737,7 @@ textSearch.addEventListener("keyup", () => {
     searchIndex();
 })
 
-const settingSearch = new SETTINGSTOOGLE(buttonSearch, "search", true,
+settingSearch = new SETTINGSTOOGLE(buttonSearch, "search", true,
     () => {
         settingSearch.setOnUI();
         showSearch();
@@ -671,7 +753,7 @@ hideSearch();
 
 //TODO SCROLLBARS
 document.getElementsByTagName("head")[0].appendChild(styleScrollBar);
-const settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "scrollBar", false,
+settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "scrollBar", false,
     () => {
         settingScrollBar.setOnUI();
         styleScrollBar.appendChild(document.createTextNode(".mainScroller::-webkit-scrollbar {display: block; appearance: none; width: 10px}"));
@@ -688,28 +770,6 @@ const settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "scrollBar", false,
     }
 );
 settingScrollBar.setChange();
-
-//TODO POP-UP WINDOW
-const openWindow = (idWindow) => {
-    tapeWindow.style.display = "block";
-    idWindow.style.display = "flex";
-    setTimeout(() => {
-        audioNotif.load();
-        tapeWindow.style.opacity = "0.5";
-        idWindow.style.scale = "1";
-        idWindow.style.opacity = "1";
-    }, 10)
-}
-
-const closeWindow = (idWindow) => {
-    tapeWindow.style.opacity = "0";
-    idWindow.style.scale = "0.8";
-    idWindow.style.opacity = "0";
-    setTimeout(() => {
-        tapeWindow.style.display = "none";
-        idWindow.style.display = "none";
-    }, 310);
-}
 
 //TODO NOTIFICATION
 const pushNotification = (desc) => {
@@ -765,7 +825,7 @@ document.addEventListener("mousemove", (e) => {
 //TODO GAME
 //
 
-const settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "clickSplash", true,
+settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "clickSplash", true,
     () => {
         settingClickSplash.setOnUI();
     },
@@ -775,7 +835,7 @@ const settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "clickSplash", 
 );
 settingClickSplash.setChange();
 
-const settingClickText = new SETTINGSTOOGLE(buttonClickText, "clickText", true,
+settingClickText = new SETTINGSTOOGLE(buttonClickText, "clickText", true,
     () => {
         settingClickText.setOnUI();
     },
@@ -973,12 +1033,6 @@ setInterval(() => {
 //
 //TODO THREE JS
 //
-
-let clock;
-window.addEventListener("load", () => {
-    clock = new THREE.Clock();
-})
-
 const scene = new THREE.Scene();
 const color = new THREE.Color("hsl(264, 100%, 90%)");
 scene.background = color;
@@ -991,7 +1045,7 @@ camera.position.set(0, 100, 400);
 
 //TODO RENDER
 let renderer = new THREE.WebGLRenderer({canvas: worldGame, powerPreference: "high-performance", antialias: false});
-const settingAntialias = new SETTINGSTOOGLE(buttonAntialias, "antialias", false,
+settingAntialias = new SETTINGSTOOGLE(buttonAntialias, "antialias", false,
     () => {
         settingAntialias.setOnUI();
         renderer["antialias"] = true;
@@ -1013,7 +1067,7 @@ let sizes = {
 	height: window.innerHeight
 }
 
-const settingResolution = new SETTINGSVALUE(rangeResolution, textResolution, "resolution", 1,
+settingResolution = new SETTINGSVALUE(rangeResolution, textResolution, "resolution", 1,
     (value) => {
         renderer.setPixelRatio( window.devicePixelRatio * value );
         composer.renderer = renderer;
@@ -1025,7 +1079,7 @@ settingResolution.resetRanger(resetResolution);
 
 const stats = new Stats();
 document.body.appendChild(stats.dom);
-const settingStatsFPS = new SETTINGSTOOGLE(buttonStatsFPS, "statsFPS", false,
+settingStatsFPS = new SETTINGSTOOGLE(buttonStatsFPS, "statsFPS", false,
     () => {
         settingStatsFPS.setOnUI();
         document.body.appendChild(stats.dom);
@@ -1040,17 +1094,17 @@ settingStatsFPS.setChange();
 //TODO COMPOSER
 const renderScene = new RenderPass(scene, camera);
 
-const settingBloom = new SETTINGSTOOGLE(buttonBloom, "bloom", false,
+settingBloom = new SETTINGSTOOGLE(buttonBloom, "bloom", false,
     () => {
         settingBloom.setOnUI();
         composer.insertPass(bloomPass, 1);
-        valueShadersTerrain = 8;
+        valueShadersTerrain = -2;
         changeMaterial();
     },
     () => {
         settingBloom.setOffUI();
         composer.removePass(bloomPass);
-        valueShadersTerrain = 0;
+        valueShadersTerrain = -14;
         changeMaterial();
     }
 );
@@ -1059,7 +1113,7 @@ settingBloom.setChange();
 const afterImagePass = new AfterimagePass();
 afterImagePass.uniforms["damp"].value = 0.8;
 
-const settingImage = new SETTINGSTOOGLE(buttonImage, "image", false,
+settingImage = new SETTINGSTOOGLE(buttonImage, "image", false,
     () => {
         settingImage.setOnUI();
         composer.insertPass(afterImagePass, 2);
@@ -1071,7 +1125,7 @@ const settingImage = new SETTINGSTOOGLE(buttonImage, "image", false,
 );
 settingImage.setChange();
 
-const settingRender = new SETTINGSTOOGLE(buttonRender, "render", false,
+settingRender = new SETTINGSTOOGLE(buttonRender, "render", false,
     () => {
         settingRender.setOnUI();
         composer.insertPass(renderScene, 0);
@@ -1142,7 +1196,7 @@ const materialTerrain = new THREE.MeshStandardMaterial({ color: 0x6600ff, roughn
 const meshTerrain = new THREE.Mesh( geometryTerrain, materialTerrain );
 scene.add( meshTerrain );
 
-const settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "terrain", false,
+settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "terrain", false,
     (input) => {
         input["svg"].className = "fi-rr-grid-alt subIcon";
         input["text"].innerText = "Alámbrica";
@@ -1156,7 +1210,7 @@ const settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "terrain", false,
 );
 settingTerrain.setChange();
 
-const settingTerrainAnimation = new SETTINGSTOOGLE(buttonTerrainAnimation, "terrainAnimation", true,
+settingTerrainAnimation = new SETTINGSTOOGLE(buttonTerrainAnimation, "terrainAnimation", true,
     (input) => {
         input["svg"].className = "fi-rr-water subIcon";
         input["text"].innerText = "Animado";
@@ -1213,7 +1267,7 @@ meshTorusB.castShadow = true;
 meshTorusB.receiveShadow = true;
 meshTerrain.receiveShadow = true;
 
-const settingShadow = new SETTINGSTOOGLE(buttonShadow, "shadow", false,
+settingShadow = new SETTINGSTOOGLE(buttonShadow, "shadow", false,
     (input) => {
         input["svg"].className = "fi-rr-opacity subIcon";
         settingShadow.setOnUI();
@@ -1231,7 +1285,7 @@ settingShadow.setChange();
 
 //TODO CONTROLS
 const controls = new OrbitControls( camera, renderer.domElement );
-const settingControl = new SETTINGSTOOGLE(buttonControl, "control", false,
+settingControl = new SETTINGSTOOGLE(buttonControl, "control", false,
     () => {
         settingControl.setOnUI();
         controls.mouseButtons = {
@@ -1260,7 +1314,7 @@ controls.maxPolarAngle = Math.PI / 2;
 controls.minDistance = 300;
 controls.maxDistance = 800;
 
-const settingRotation = new SETTINGSTOOGLE(buttonRotation, "rotation", true,
+settingRotation = new SETTINGSTOOGLE(buttonRotation, "rotation", true,
     () => {
         settingRotation.setOnUI();
         controls.autoRotate = true;
@@ -1272,7 +1326,7 @@ const settingRotation = new SETTINGSTOOGLE(buttonRotation, "rotation", true,
 );
 settingRotation.setChange();
 
-const settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "rotateDamp", 0.05,
+settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "rotateDamp", 0.05,
     (value) => {
         controls.dampingFactor = value;
     }
@@ -1280,7 +1334,7 @@ const settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "ro
 settingRotateDamp.createRanger();
 settingRotateDamp.resetRanger(resetRotateDamp);
 
-const settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotateSpeed", 1,
+settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotateSpeed", 1,
     (value) => {
         controls.rotateSpeed = value;
     }
@@ -1288,7 +1342,7 @@ const settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, 
 settingRotateSpeed.createRanger();
 settingRotateSpeed.resetRanger(resetRotateSpeed);
 
-const settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeedAuto, "rotateSpeedAuto", 1,
+settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeedAuto, "rotateSpeedAuto", 1,
     (value) => {
         controls.autoRotateSpeed = value;
     }
@@ -1296,7 +1350,7 @@ const settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotat
 settingRotateSpeedAuto.createRanger();
 settingRotateSpeedAuto.resetRanger(resetRotateSpeedAuto);
 
-const settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "zoomSpeed", 2,
+settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "zoomSpeed", 2,
     (value) => {
         controls.zoomSpeed = value;
     }
@@ -1305,11 +1359,6 @@ settingZoomSpeed.createRanger();
 settingZoomSpeed.resetRanger(resetZoomSpeed);
 
 //TODO ANIMATION
-let playAnimate = false
-
-let isVertical = window.innerWidth < window.innerHeight;
-isVertical ? blockAspectRatioDetector.style.display = "flex" : blockAspectRatioDetector.style.display = "none";
-
 scene.matrixWorldAutoUpdate = true;
 const animate = () => {
     requestAnimationFrame(animate);
@@ -1401,7 +1450,7 @@ const effectFluent = () => {
     root.style.setProperty("--bgFluentB", themeRgb + (themeOpacity / 2) + ")");
 }
 
-const settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
+settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
     (input) => {
         input["svg"].className = "fi-rr-moon subIcon"
         input["text"].innerText = "Oscuro";
@@ -1429,9 +1478,9 @@ const settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
 
         effectFluent();
         colorLight = 10;
-        bloomPass.strength = 0.42;
-        bloomPass.radius = 1.5;
-        bloomPass.threshold = 0.8;
+        bloomPass.strength = 0.44;
+        bloomPass.radius = 1.8;
+        bloomPass.threshold = 0.78;
 
         changeScene();
     },
@@ -1451,7 +1500,7 @@ const settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
         root.style.setProperty("--bgOpacSoftest", "rgba(0, 0, 0, 0.1)");
 
         root.style.setProperty("--opacFill", "0.5");
-        root.style.setProperty("--opacLight", "0.1");
+        root.style.setProperty("--opacLight", "0.15");
 
         root.style.setProperty("--on", "rgba(0, 200, 75, 0.2)");
         root.style.setProperty("--off", "rgba(225, 0, 75, 0.2)");
@@ -1471,7 +1520,7 @@ const settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
 );
 settingTheme.setChange();
 
-const settingGlass = new SETTINGSTOOGLE(buttonGlass, "glass", false,
+settingGlass = new SETTINGSTOOGLE(buttonGlass, "glass", false,
     () => {
         settingGlass.setOnUI();
         root.style.setProperty("--filterGlass", "blur(16px)");
@@ -1485,7 +1534,7 @@ const settingGlass = new SETTINGSTOOGLE(buttonGlass, "glass", false,
 );
 settingGlass.setChange();
 
-const settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "colorSelector", 1,
+settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "colorSelector", 1,
     (value, group, text) => {
         switch (value) {
             case 0:
@@ -1497,8 +1546,8 @@ const settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "colorSel
                 settingColor.changeSetting([264, 100, 55]);
                 break;
             case 2:
-                text.innerText = "Cielo azul"
-                settingColor.changeSetting([200, 100, 50]);
+                text.innerText = "Mar azul"
+                settingColor.changeSetting([212, 100, 50]);
                 break;
             case 3:
                 text.innerText = "Bosque esmeralda"
@@ -1554,7 +1603,7 @@ document.addEventListener("mousemove", (e) => {
 //TODO INFO
 let showContext;
 let showWarning;
-const settingTool = new SETTINGSTOOGLE(buttonTool, "valueTool", true,
+settingTool = new SETTINGSTOOGLE(buttonTool, "valueTool", true,
     () => {
         settingTool.setOnUI();
         showContext = true;
@@ -1566,7 +1615,7 @@ const settingTool = new SETTINGSTOOGLE(buttonTool, "valueTool", true,
 );
 settingTool.setChange();
 
-const settingToolWarn = new SETTINGSTOOGLE(buttonToolWarn, "valueToolWarn", true,
+settingToolWarn = new SETTINGSTOOGLE(buttonToolWarn, "valueToolWarn", true,
     () => {
         settingToolWarn.setOnUI();
         showWarning = true;
@@ -1719,7 +1768,7 @@ null
 
 //TOOLTIP
 let showWord;
-const settingToolTip = new SETTINGSTOOGLE(buttonToolTip, "valueToolTip", true,
+settingToolTip = new SETTINGSTOOGLE(buttonToolTip, "valueToolTip", true,
     () => {
         settingToolTip.setOnUI();
         showWord = true;
@@ -1770,11 +1819,19 @@ const goToolTip = (idEvent, position, words, type = "word") => {
 
 goToolTip(openHome, "right", "Inicio");
 goToolTip(openProfile, "left", "Perfil");
+goToolTip(exiterTrain, "left", "Salir");
 goToolTip(openStats, "top", "Estadísticas");
 goToolTip(openTrain, "top", "Entrenamiento");
-goToolTip(exiterTrain, "left", "Salir");
+goToolTip(buttonExitGame, "top", "Salir");
+goToolTip(buttonSaveAs, "top", "Guardar como");
+goToolTip(buttonSave, "top", "Guardar");
 goToolTip(barEnergy, "top", "showProgressEnergy", "number");
 
+updateStats();
+
+};
+
+//TODO OUT INIT
 //TODO LOADING and WELCOME
 window.addEventListener("load", () => {
     blockLoader.style.animation = "playFade 0.8s forwards ease-in";
@@ -1868,11 +1925,13 @@ const onBeforeUnload = () => {
 buttonNewGame.addEventListener("click", () => {
     openWindow(windowProtection);
     quitWelcome();
-	/*buttonSave.style.opacity = 0.5;
-	buttonSave.style.pointerEvents = "none";*/
+	buttonSave.style.opacity = 0.5;
+	buttonSave.style.pointerEvents = "none";
+    buttonSaveAs.children[0].className = "fi-rr-add-document subIcon";
 
     setNewGame();
 
+    init();
     playAnimate = true;
 	setNewDefault();
 
@@ -1880,13 +1939,80 @@ buttonNewGame.addEventListener("click", () => {
 	onBeforeUnload();
 })
 
+buttonLoadGame.addEventListener("click", async () => {
+	try {
+		[fileHandle] = await window.showOpenFilePicker({
+			types: [
+				{
+					description: 'txt',
+					accept: {
+						'text/*': ['.txt']
+					}
+				},
+			],
+			excludeAcceptAllOption: true,
+			multiple: false
+		});
+		let fileData = await fileHandle.getFile();
+		let text = await fileData.text();
+        gameSB = null;
+        console.log(gameSB);
+		gameSB = JSON.parse(text);
+        console.log(gameSB);
+		
+		if (gameSB.codeGame == "Soul Breaker") {
+			quitWelcome();
+			buttonSave.style.opacity = 1;
+			buttonSave.style.pointerEvents = "inherit";
+            idTextFile.innerText = fileHandle.name;
+
+            init();
+            playAnimate = true;
+            setNewDefault();
+            //init();
+
+			onBeforeUnload();
+		} else {
+			console.error("El archivo introducido es inválido");
+            setNewGame();
+		}
+	} catch {
+		console.error("Se ha cancelado la solicitud");
+	}
+})
+
+const save = async () => {
+	try {
+	let stream = await fileHandle.createWritable();
+	await stream.write(JSON.stringify(gameSB));
+	await stream.close();
+	} catch {}
+}
+
+buttonSave.addEventListener("click", save);
+
+buttonSaveAs.addEventListener("click", async () => {
+	try {
+		fileHandle = await window.showSaveFilePicker({
+			types: [
+				{
+					description: 'txt',
+					accept: {
+						'text/*': ['.txt']
+					}
+				},
+			],
+			excludeAcceptAllOption: true
+		});
+		save();
+		buttonSave.style.opacity = 1;
+		buttonSave.style.pointerEvents = "all";
+		idTextFile.innerText = fileHandle.name;
+	} catch {}
+})
+
 buttonExitGame.addEventListener("click", () => {
-	fileHandle = null;
-	gameSB = null;
-    taskBox.style.translate = "0px 200px";
-	blockWelcomer.style.opacity = 1;
-    blockWelcomer.style.pointerEvents = "inherit";
-    playAnimate = false
+    location.reload();
 })
 
 //TODO DATA
@@ -1897,7 +2023,5 @@ resetConfig.addEventListener("click", () => {
 resetAll.addEventListener("click", () => {
     location.reload();
 });
-
-updateStats();
 
 localStorage.clear();
