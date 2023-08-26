@@ -1,6 +1,8 @@
+import { gameSB } from "./main.js";
+
 const splashEffect = (e) => {
     audioScore.load();
-    if (localStorage["valueClickSplash"] == "true") {
+    if (gameSB.settings["valueClickSplash"] == "true") {
         const splash = document.createElement("div");
         splash.className = "splasher";
         splash.style.left = (e.clientX - 40) + "px";
@@ -368,11 +370,11 @@ exiterTrain.addEventListener("click", () => {
     closeWindow(boxComboScore);
     closeWindow(openedBox);
     if (openedBox.id == "boxPower") {
-        localStorage["valuePower"] = Number(localStorage["valuePower"]) + Math.floor(scoreTrain / 10);
-        numberPower.innerText = Number(localStorage["valuePower"]);
+        gameSB.data["valuePower"] += Math.floor(scoreTrain / 10);
+        numberPower.innerText = gameSB.data["valuePower"];
     } else if (openedBox.id == "boxVita") {
-        localStorage["valueHealth"] = Number(localStorage["valueHealth"]) + Math.floor(scoreTrain / 10);
-        numberVita.innerText = Number(localStorage["valueHealth"]);
+        gameSB.data["valueHealth"] += Math.floor(scoreTrain / 10);
+        numberVita.innerText = gameSB.data["valueHealth"];
         clearInterval(timerVita);
         isLightOn = false;
         isPlaying = false;
@@ -381,8 +383,8 @@ exiterTrain.addEventListener("click", () => {
         discVita.style.zIndex = "6";
         discVita.style.display = "none";
     } else if (openedBox.id == "boxRes") {
-        localStorage["valueDef"] = Number(localStorage["valueDef"]) + Math.floor(scoreTrain / 10);
-        numberRes.innerText = Number(localStorage["valueDef"]);
+        gameSB.data["valueDef"] += Math.floor(scoreTrain / 10);
+        numberRes.innerText = gameSB.data["valueDef"];
         if (numDirection >= 0) {
             boxRes.querySelectorAll(".boxPlate")[numDirection].style.borderBottomColor = "var(--bgOpacSoftest)";
             boxRes.querySelectorAll(".boxPlate")[numDirection].style.boxShadow = "0px 3px 0px var(--colorMainFill)";
@@ -390,8 +392,8 @@ exiterTrain.addEventListener("click", () => {
         }
         numDirection = -1;
     }/* else if (openedBox.id == "boxLea") {
-        localStorage["valueLea"] = Number(localStorage["valueLea"]) + Math.floor(scoreTrain / 10);
-        numberLea.innerText = Number(localStorage["valueLea"]);
+        gameSB.data["valueLea"] += Math.floor(scoreTrain / 10);
+        numberLea.innerText = gameSB.data["valueLea"];
     }*/
     clearInterval(timerTraining);
     isTraining = false;
@@ -555,8 +557,8 @@ const goTrainer = (idEvent, interval, box, color, classSvg, type = "flex") => {
         }
         failBox.style.display = "block";
         failBox.className = "";
-        localStorage["totalTrain"] = Number(localStorage["totalTrain"]) + 1;
-        textTotalTrain.innerText = Number(localStorage["totalTrain"]);
+        gameSB.data["totalTrain"] += 1;
+        textTotalTrain.innerText = gameSB.data["totalTrain"];
     });
 }
 

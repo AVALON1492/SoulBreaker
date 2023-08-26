@@ -11,199 +11,213 @@ import {computePosition, offset} from '@floating-ui/dom';
 
 import Stats from 'three/addons/libs/stats.module'
 
+const versionActual = "Alpha 8"
+vPrev.innerText = versionActual;
+vPrev2.innerText = versionActual;
+
 //TODO SETTINGS
 const root = document.querySelector(":root");
 const styleScrollBar = document.createElement("style");
 
+export let gameSB;
+const setNewGame = () => {
+    gameSB = {
+        codeGame: "Soul Breaker",
+        version: versionActual,
+        settings: {},
+        data: {
+            gemSoul: 0,
+            valuePower: 0,
+            valueHealth: 0,
+            valueDef: 0,
+            totalPower: 0,
+            totalTime: 0,
+            totalClicks: 0,
+            totalEnergy: 0,
+            totalTrain: 0,
+            valueEnergy: 0,
+            lvlTotalClicks: 0,
+            lvlTotalTime: 0,
+            lvlTotalEnergy: 0,
+            lvlTotalTrain: 0,
+            lvlTotalPower: 0
+        }
+    }
+}
+
+setNewGame();
+
 class SETTINGS {
-	constructor(valueStorage, setDefault) {
-        this.valueStorage = valueStorage;
-        this.setDefault = setDefault;
-        if (typeof(Storage) !== "undefined") {
-			if (localStorage[valueStorage]) {
-			} else {
-				localStorage[valueStorage] = JSON.stringify(setDefault);
-			}
-		}
-        this.reset();
+	constructor(valueObject, setDefault) {
+        gameSB.settings[valueObject] = setDefault;
+		this.valueObject = valueObject;
+		this.setDefault = setDefault;
 	}
 
-    get getLocalStorage() {
-        return JSON.parse(localStorage[this.valueStorage].toLowerCase());
-    }
+    isNewDefault() {
+		if (gameSB.settings[this.valueObject] == undefined) {
+			gameSB.settings[this.valueObject] = this.setDefault;
+		}
+	}
 
-    reset() {
-        resetConfig.addEventListener("click", () => {
-            localStorage[this.valueStorage] = JSON.stringify(this.setDefault);
-        });
+    getValue() {
+        return gameSB.settings[this.valueObject];
     }
 }
 
 class SETTINGSTOOGLE extends SETTINGS {
-    constructor(button, valueStorage, setDefault) {
-        super(valueStorage, setDefault);
+    constructor(button, valueObject, setDefault, setFunctionOn, setFunctionOff) {
+        super(valueObject, setDefault);
         this.button = button;
         this.svgInput = button.children[0];
         this.textInput = button.children[2].children[0];
-        this.caller = null;
+        this.setFunctionOn = setFunctionOn;
+		this.setFunctionOff = setFunctionOff;
     }
+
+    setToogle() {
+        try {
+            if (gameSB.settings[this.valueObject]) {
+                this.setFunctionOn({svg: this.svgInput, text: this.textInput});
+            } else {
+                this.setFunctionOff({svg: this.svgInput, text: this.textInput});
+            }
+        } catch {}
+	}
 
     changeSetting() {
-        const isTrue = localStorage[this.valueStorage] == "true";
-        isTrue ? localStorage[this.valueStorage] = false : localStorage[this.valueStorage] = true;
+        if (gameSB.settings[this.valueObject]) {
+            gameSB.settings[this.valueObject] = false;
+        } else {
+            gameSB.settings[this.valueObject] = true;
+        }
+
+        this.setToogle();
     }
+
+	setChange() {
+		this.button.addEventListener("click", () => {
+			this.changeSetting();
+		})
+	}
 
     setSettingToogle(boolean) {
-        localStorage[this.valueStorage] = boolean;
-        this.switcher(this.caller);
-    }
-
-    switcher = (functioner) => {
-        let actionToogle;
-        const isTrue = localStorage[this.valueStorage] == "true";
-        isTrue ? actionToogle = functioner.on : actionToogle = functioner.off;
-        
-        if (actionToogle != null) {
-            actionToogle({svg: this.svgInput, text: this.textInput});
-        }
-    }
-
-    create = (functionSetting) => {
-        this.caller = functionSetting;
-        this.switcher(functionSetting);
-    
-        this.button.addEventListener("click", () => {
-            this.changeSetting();
-            this.switcher(functionSetting);
-        })
+        gameSB.settings[this.valueObject] = boolean;
+        this.setToogle();
     }
 
     setOnUI() {
         this.svgInput.style.opacity = 1;
-        this.textInput.innerText = "Activado";
+        this.textInput.innerText = "Encendido";
         this.textInput.style.color = "var(--onText)";
         this.textInput.style.background = "var(--on)";
+        this.textInput.style.boxShadow = `0px 0px 0px 2px var(--onText),
+                                          inset 0px 0px 0px 3px var(--on)`;
     }
 
     setOffUI() {
         this.svgInput.style.opacity = 0.4;
-        this.textInput.innerText = "Desactivado";
+        this.textInput.innerText = "Apagado";
         this.textInput.style.color = "var(--offText)";
         this.textInput.style.background = "var(--off)";
+        this.textInput.style.boxShadow = `0px 0px 0px 2px var(--offText),
+                                          inset 0px 0px 0px 3px var(--off)`;
     }
 }
 
 class SETTINGSVALUE extends SETTINGS {
-    constructor(button, textRanger = null, valueStorage, setDefault) {
-        super(valueStorage, setDefault);
+    constructor(button, textRanger = null, valueObject, setDefault, functioner) {
+        super(valueObject, setDefault);
         this.button = button;
         this.textRanger = textRanger;
-        this.caller = null;
+        this.functioner = functioner;
     }
 
     changeSetting(value) {
         if (value != undefined) {
-            localStorage[this.valueStorage] = value;
+            gameSB.settings[this.valueObject] = value;
         }
     }
 
     //RANGER
-    ranger(functioner) {
-        const caller = functioner;
-        caller(this.setRanger());
-    }
-
-    createRanger = (functioner) => {
-        this.caller = functioner;
-        this.ranger(functioner);
-    
-        this.button.addEventListener("input", (e) => {
-            this.changeSetting(e.target.value);
-            this.ranger(functioner);
-        })
-    }
-
-    resetRanger = (idReset) => {
-        idReset.addEventListener("click", () => {
-            this.changeSetting(this.setDefault);
-            this.caller(this.setRanger());
-        });
-    }
-
-    setRanger = () => {
-        const val = this.getLocalStorage;
+    setRanger() {
+        const val = gameSB.settings[this.valueObject];
         this.textRanger.innerText = val;
         this.button.value = val;
         this.button.style.backgroundSize = (val - this.button.min) * 100 / (this.button.max - this.button.min) + "% 100%";
         return val;
     }
 
-    //DROPDOWN
-    droper = (functioner) => {
-        const caller = functioner;
-        const val = this.getLocalStorage;
-        caller(val, this.button, this.textRanger);
+    ranger() {
+        this.functioner(this.setRanger());
     }
 
-    createDropDown = (functioner) => {
+    createRanger() {
+        this.ranger();
+    
+        this.button.addEventListener("input", (e) => {
+            this.changeSetting(e.target.value);
+            this.ranger();
+        })
+    }
+
+    resetRanger(idReset) {
+        idReset.addEventListener("click", () => {
+            this.changeSetting(this.setDefault);
+            this.ranger();
+        });
+    }
+
+    //DROPDOWN
+    droper() {
+        const val = gameSB.settings[this.valueObject];
+        this.functioner(val, this.button, this.textRanger);
+    }
+
+    createDropDown() {
         for(let i = 0; i < this.button.children.length; i++) {
             this.button.children[i].value = i;
         }
 
-        this.droper(functioner);
+        this.droper();
 
         this.button.addEventListener("click", (e) => {
             this.changeSetting(e.target.value);
-            this.droper(functioner);
+            this.droper();
         })
     }
 }
 
 class SETTINGSARRAY extends SETTINGS {
-    constructor(valueStorage, setDefault) {
-        super(valueStorage, setDefault);
+    constructor(valueObject, setDefault) {
+        super(valueObject, setDefault);
     }
 
     changeSetting(value) {
         if (value != undefined) {
-            localStorage[this.valueStorage] = JSON.stringify(value);
+            gameSB.settings[this.valueObject] = value;
         }
-    }
-
-    changeSettingOnePicker(position, value) {
-        const values = JSON.parse(localStorage[this.valueStorage]);
-        if (value != undefined) {
-            values[position] = value;
-            localStorage[this.valueStorage] = JSON.stringify(values);
-        }
-    }
-
-    get getLocalStorage() {
-        return JSON.parse(localStorage[this.valueStorage]);
     }
 }
 
-const settingColor = new SETTINGSARRAY("valueColor", [264, 100, 50]);
-const valueShadersTerrain = new SETTINGSARRAY("valueShaders", [0, 20]);
+const settingColor = new SETTINGSARRAY("color", [264, 100, 50]);
 
 //AUTOSETTINGS
-let colorLight;
+let colorLight = 90;
+let valueShadersTerrain = 12;
 const changeMaterial = () => {
-    try {
-        materialTerrain.color = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + (settingColor.getLocalStorage[2] - (valueShadersTerrain.getLocalStorage[0] - valueShadersTerrain.getLocalStorage[1])) + "%)");
-    } catch {}
+    console.log(valueShadersTerrain)
+    materialTerrain.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + (settingColor.getValue()[2] - (valueShadersTerrain)) + "%)");
 }
 
 const changeScene = () => {
-    try {
-        scene.background = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + colorLight + "%)");
-        scene.fog.color = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + colorLight + "%)");
-    } catch {}
+    scene.background = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + colorLight + "%)");
+    scene.fog.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + colorLight + "%)");
 }
 
 //TODO POSTPROCESSING
 //EFECTO BLOOM
-const bloomPass = new UnrealBloomPass(new THREE.Vector2(2048, 2048));
+const bloomPass = new UnrealBloomPass(new THREE.Vector2(1024, 1024));
 
 //
 //TODO FUNCTIONS
@@ -217,26 +231,29 @@ document.addEventListener("click", () => {
 
 audioAmbient.loop = true;
 
-const settingSoundAmbient = new SETTINGSVALUE(rangeSoundAmbient, textSoundAmbient, "valueSoundAmbient", 100);
-settingSoundAmbient.createRanger(
+const settingSoundAmbient = new SETTINGSVALUE(rangeSoundAmbient, textSoundAmbient, "soundAmbient", 100,
     (value) => {
-    audioAmbient.volume = value / 100;
-});
+        audioAmbient.volume = value / 100;
+    }
+);
+settingSoundAmbient.createRanger();
 
-const settingSoundInteract = new SETTINGSVALUE(rangeSoundInteract, textSoundInteract, "valueSoundInteract", 100);
-settingSoundInteract.createRanger(
+const settingSoundInteract = new SETTINGSVALUE(rangeSoundInteract, textSoundInteract, "valueSoundInteract", 100,
     (value) => {
-    audioClick.volume = value / 100;
-});
+        audioClick.volume = value / 100;
+    }
+);
+settingSoundInteract.createRanger();
 
-const settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, "valueSoundSystem", 100);
-settingSoundSystem.createRanger(
+const settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, "valueSoundSystem", 100,
     (value) => {
-    audioNotif.volume = value / 100;
-    audioEye.volume = value / 100;
-    audioScore.volume = value / 100;
-    audioGameOver.volume = value / 100;
-});
+        audioNotif.volume = value / 100;
+        audioEye.volume = value / 100;
+        audioScore.volume = value / 100;
+        audioGameOver.volume = value / 100;
+    }
+);
+settingSoundSystem.createRanger();
 
 //TODO SELECT
 //SELECT SUBMENU MAIN
@@ -283,8 +300,16 @@ const goMenu = (idEvent, menu, name, className) => {
         svgNext.style.transform = "scale(1) rotateZ(0deg)";
         nextText.style.transform = "translateX(0px)";
         nextText.innerText = name;
-        menu.style.transform = "translateX(0px)";
-        mainMenu.style.transform = "translateX(-640px)";
+        menu.style.display = "inherit";
+        setTimeout(() => {
+            menu.style.transform = "translateX(0px)";
+            menu.style.opacity = 1;
+        }, 100);
+        mainMenu.style.transform = "translateX(-200px)";
+        mainMenu.style.opacity = 0;
+        setTimeout(() => {
+            mainMenu.style.display = "none";
+        }, 250)
         iconHome.style.opacity = 0.4;
         iconHome.style.scale = 0.8;
         auxMenu = menu;
@@ -299,7 +324,7 @@ goMenu(goAbout, menuAbout, "Acerca de", "aboutSvg");
 goMenu(goVersions, menuVersions, "Versiones", "versionSvg");
 
 goSettings.addEventListener("click", () => {
-    if (localStorage["valueSearch"] == "true") {
+    if (settingSearch.getValue()) {
         showSearch();
     }
 });
@@ -314,8 +339,16 @@ goMain.addEventListener("click", () => {
     goNext.style.opacity = 0;
     svgNext.style.transform = "scale(0) rotateZ(-45deg)";
     nextText.style.transform = "translateX(-200px)";
-    auxMenu.style.transform = "translateX(640px)";
-    mainMenu.style.transform = "translateX(0px)";
+    auxMenu.style.transform = "translateX(200px)";
+    auxMenu.style.opacity = 0;
+    setTimeout(() => {
+        auxMenu.style.display = "none";
+    }, 250)
+    mainMenu.style.display = "grid";
+    setTimeout(() => {
+        mainMenu.style.transform = "translateX(0px)";
+        mainMenu.style.opacity = 1;
+    }, 100);
     iconHome.style.opacity = 1;
     iconHome.style.scale = 1;
     hideSearch();
@@ -390,22 +423,20 @@ goMenuTrain(openLea, menuLea);
 //MENU SYSTEM
 let auxIdEvent = null;
 let auxGoMenu = null;
+let auxTask = null;
 let isOpenMenu = false;
 const closeMenuAnimation = () => {
     auxIdEvent.style.opacity = 1;
     auxIdEvent.style.pointerEvents = "inherit";
-    auxGoMenu.style.opacity = 0;
-    auxGoMenu.style.scale = 0.8;
-    auxGoMenu.style.pointerEvents = "none";
+    auxGoMenu.style.display = "none"
 }
 
 const closeMenu = (idEvent) => {
     idEvent.addEventListener("mousedown", () => {
-        taskHome.style.borderRadius = "36px";
-        taskHome.style.height = "calc(72px)"
-        lineHome.style.transform = "translateX(-50%) translateY(0px)"
-        home.style.transition = "0.36s cubic-bezier(0.2, 1, 0.4, 1)";
-        home.style.height = "84px";
+        taskHome.style.borderRadius = "42px";
+        home.style.translate = "0px 62px";
+        home.style.opacity = 0;
+        home.style.pointerEvents = "none";
         isOpenMenu = false;
 
         if (auxIdEvent != null) {
@@ -420,49 +451,32 @@ const closeMenu = (idEvent) => {
 closeMenu(blockContent);
 closeMenu(blockTask);
 
-const goOpen = (idEvent, menu, moreTask = false, hasExit = false) => {
+const goOpen = (idEvent, menu, hasExit = false) => {
     idEvent.addEventListener("click", () => {
-        taskHome.style.borderRadius = "12px 12px 36px 36px";
-        home.style.transition = "0.44s cubic-bezier(0.2, 1.36, 0.4, 1)";
-        home.style.height = "calc(800px)";
-        home.style.width = "640px";
-        if (window.innerHeight < 860) {
-            home.style.height = "calc(" + window.innerHeight + "px - 60px)";
-        }
+        taskHome.style.borderRadius = "16px 16px 42px 42px";
+        home.style.translate = "0px 0px";
+        home.style.opacity = 1;
+        home.style.pointerEvents = "inherit";
 
         if (!hasExit) {
             idEvent.style.opacity = 0;
             idEvent.style.pointerEvents = "none";
         } else {
-            openHome.style.opacity = 1;
-            openHome.style.pointerEvents = "inherit";
-            exiterTrain.style.opacity = 0;
-            exiterTrain.style.pointerEvents = "none";
-            statsTrain.style.opacity = 0;
-            statsTrain.style.pointerEvents = "none";
-            statsInfoTask.style.opacity = 1;
-            statsInfoTask.style.scale = 1;
-            statsInfoTask.style.pointerEvents = "inherit";
-            timeInfoTask.style.opacity = 0;
-            timeInfoTask.style.scale = 0.6;
+            taskHome.style.width = "640px";
+            openHome.style.display = "flex";
+            openProfile.style.display = "flex";
+            exiterTrain.style.display = "none";
+            statsTrain.style.display = "none";
+            statsInfoTask.style.display = "flex";
+            timeInfoTask.style.display = "none";
             setTimeout(() => {
                 updateStats();
             }, 500)
         }
         
-        menu.style.opacity = 1;
-        menu.style.scale = 1;
-        menu.style.pointerEvents = "inherit";
+        menu.style.display = "flex"
         blockContent.style.display = "block";
         isOpenMenu = true;
-
-        if (moreTask) {
-            taskHome.style.height = "calc(144px)"
-            lineHome.style.transform = "translateX(-50%) translateY(-72px)"
-        } else {
-            taskHome.style.height = "calc(72px)"
-            lineHome.style.transform = "translateX(-50%) translateY(0px)"
-        }
 
         if (auxIdEvent != null) {
             closeMenuAnimation();
@@ -479,8 +493,8 @@ const goOpen = (idEvent, menu, moreTask = false, hasExit = false) => {
 }
 
 goOpen(openHome, startMenu);
-goOpen(openProfile, profileMenu, true);
-goOpen(exiterTrain, profileMenu, true, true);
+goOpen(openProfile, profileMenu);
+goOpen(exiterTrain, profileMenu, true);
 
 closeMenu(goPower);
 closeMenu(goVita);
@@ -489,20 +503,13 @@ closeMenu(goLea);
 
 const startTrain = (idEvent) => {
     idEvent.addEventListener("mousedown", () => {
-        home.style.width = "400px";
-        openHome.style.opacity = 0;
-        openHome.style.pointerEvents = "none";
-        openProfile.style.opacity = 0;
-        openProfile.style.pointerEvents = "none";
-        exiterTrain.style.opacity = 1;
-        exiterTrain.style.pointerEvents = "inherit";
-        statsTrain.style.opacity = 1;
-        statsTrain.style.pointerEvents = "inherit";
-        statsInfoTask.style.opacity = 0;
-        statsInfoTask.style.scale = 0.6;
-        statsInfoTask.style.pointerEvents = "none";
-        timeInfoTask.style.opacity = 1;
-        timeInfoTask.style.scale = 1;
+        taskHome.style.width = "400px";
+        openHome.style.display = "none";
+        openProfile.style.display = "none";
+        exiterTrain.style.display = "flex";
+        statsTrain.style.display = "flex";
+        statsInfoTask.style.display = "none";
+        timeInfoTask.style.display = "flex";
     });
 }
 
@@ -512,13 +519,12 @@ startTrain(goRes);
 startTrain(goLea);
 
 window.addEventListener("resize", () => {
-    renderer.setPixelRatio( window.devicePixelRatio * Number(localStorage["valueResolution"]) );
+    renderer.setPixelRatio( window.devicePixelRatio * settingResolution.getValue() );
 
-    if (isOpenMenu) {
-        home.style.height = "calc(800px)";
-        if (window.innerHeight < 860) {
-            home.style.height = "calc(" + window.innerHeight + "px - 60px)";
-        }
+    if (window.innerHeight < 885) {
+        home.style.height = "calc(" + window.innerHeight + "px - 165px)";
+    } else {
+        home.style.height = "calc(720px)";
     }
 })
 
@@ -649,41 +655,39 @@ textSearch.addEventListener("keyup", () => {
     searchIndex();
 })
 
-const settingSearch = new SETTINGSTOOGLE(buttonSearch, "valueSearch", true);
-settingSearch.create({
-    on: () => {
+const settingSearch = new SETTINGSTOOGLE(buttonSearch, "search", true,
+    () => {
         settingSearch.setOnUI();
         showSearch();
     },
-
-    off:() => {
+    () => {
         settingSearch.setOffUI();
         hideSearch();
     }
-})
+);
+settingSearch.setChange();
 
 hideSearch();
 
 //TODO SCROLLBARS
 document.getElementsByTagName("head")[0].appendChild(styleScrollBar);
-const settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "valueScrollBar", false);
-settingScrollBar.create({
-    on: () => {
+const settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "scrollBar", false,
+    () => {
         settingScrollBar.setOnUI();
         styleScrollBar.appendChild(document.createTextNode(".mainScroller::-webkit-scrollbar {display: block; appearance: none; width: 10px}"));
         document.querySelectorAll(".mainScroller").forEach((object) => {
             object.style.paddingRight = "8px";
         });
     },
-
-    off:() => {
+    () => {
         settingScrollBar.setOffUI();
         styleScrollBar.appendChild(document.createTextNode(".mainScroller::-webkit-scrollbar {display: none; appearance: none; width: 10px}"));
         document.querySelectorAll(".mainScroller").forEach((object) => {
             object.style.paddingRight = "0px";
         });
     }
-})
+);
+settingScrollBar.setChange();
 
 //TODO POP-UP WINDOW
 const openWindow = (idWindow) => {
@@ -761,71 +765,31 @@ document.addEventListener("mousemove", (e) => {
 //TODO GAME
 //
 
-const settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "valueClickSplash", true);
-settingClickSplash.create({
-    on: () => {
+const settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "clickSplash", true,
+    () => {
         settingClickSplash.setOnUI();
     },
-
-    off:() => {
+    () => {
         settingClickSplash.setOffUI();
     }
-})
+);
+settingClickSplash.setChange();
 
-const settingClickText = new SETTINGSTOOGLE(buttonClickText, "valueClickText", true);
-settingClickText.create({
-    on: () => {
+const settingClickText = new SETTINGSTOOGLE(buttonClickText, "clickText", true,
+    () => {
         settingClickText.setOnUI();
     },
-
-    off:() => {
+    () => {
         settingClickText.setOffUI();
     }
-})
+);
+settingClickText.setChange();
 
 //TODO RESOURCES GENERAL
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["gemSoul"]) {
-    } else {
-        localStorage["gemSoul"] = 0;
-    }
-}
-
-textGemSoul.innerText = Number(localStorage["gemSoul"]);
-
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["valuePower"]) {
-    } else {
-        localStorage["valuePower"] = 0;
-    }
-}
-
-numberPower.innerText = Number(localStorage["valuePower"]);
-
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["valueHealth"]) {
-    } else {
-        localStorage["valueHealth"] = 0;
-    }
-}
-
-numberVita.innerText = Number(localStorage["valueHealth"]);
-
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["valueDef"]) {
-    } else {
-        localStorage["valueDef"] = 0;
-    }
-}
-
-numberRes.innerText = Number(localStorage["valueDef"]);
-
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["totalPower"]) {
-    } else {
-        localStorage["totalPower"] = 0;
-    }
-}
+textGemSoul.innerText = gameSB.data["gemSoul"];
+numberPower.innerText = gameSB.data["valuePower"];
+numberVita.innerText = gameSB.data["valueHealth"];
+numberRes.innerText = gameSB.data["valueDef"];
 
 let progressTotal;
 let touchPower;
@@ -834,62 +798,34 @@ let lowCost;
 let production;
 
 const updateStats = () => {
-    touchPower = 1 + Math.floor(Number(localStorage["valuePower"]) / 10) * 0.1;
-    gainEnergy = 1 + Math.floor(Number(localStorage["valueDef"]) / 20) * 0.05;
-    lowCost = 1 + Math.floor(Number(localStorage["valueHealth"]) / 100) * 0.01;
-    production = 0 + Math.floor(Number(localStorage["valuePower"]) / 10) * 0.05 + Math.floor(Number(localStorage["valueHealth"]) / 10) * 0.15;
+    touchPower = 1 + Math.floor(gameSB.data["valuePower"]) / 10 * 0.1;
+    gainEnergy = 1 + Math.floor(gameSB.data["valueDef"]) / 20 * 0.05;
+    lowCost = 1 + Math.floor(gameSB.data["valueHealth"]) / 100 * 0.01;
+    production = 0 + Math.floor(gameSB.data["valuePower"]) / 10 * 0.05 + Math.floor(gameSB.data["valueHealth"]) / 10 * 0.15;
 
     textTouchPower.innerText = Number(touchPower.toFixed(2));
     textGainEnergy.innerText = Number(gainEnergy.toFixed(2));
     textLowCost.innerText = "x" + Number(lowCost.toFixed(2));
     textProduction.innerText = Number(production.toFixed(2)) + " / 5s";
 
-    progressTotal = Number((10 / lowCost + 10 * ((Number(localStorage["valueEnergy"]) / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
-    totalPower.innerText = Number(localStorage["valuePower"]) + Number(localStorage["valueHealth"]) + Number(localStorage["valueDef"]);
-    localStorage["totalPower"] = Number(localStorage["valuePower"]) + Number(localStorage["valueHealth"]) + Number(localStorage["valueDef"]);
+    progressTotal = Number((10 / lowCost + 10 * ((gameSB.data["valueEnergy"] / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
+    gameSB.data["totalPower"] = gameSB.data["valuePower"] + gameSB.data["valueHealth"] + gameSB.data["valueDef"];
+    totalPower.innerText = gameSB.data["totalPower"];
 }
 
 //TODO STATS GENERAL
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["totalTime"]) {
-    } else {
-        localStorage["totalTime"] = 0;
-    }
-}
+textTimeTotal.innerText = gameSB.data["totalTime"] + " min";
+textTotalClicks.innerText = gameSB.data["totalClicks"];
 
-textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
-
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["totalClicks"]) {
-    } else {
-        localStorage["totalClicks"] = 0;
-    }
-}
-
-textTotalClicks.innerText = Number(localStorage["totalClicks"]);
 const upClick = () => {
-    localStorage["totalClicks"] = Number(localStorage["totalClicks"]) + 1;
-    textTotalClicks.innerText = Number(localStorage["totalClicks"]);
+    gameSB.data["totalClicks"] = gameSB.data["totalClicks"] + 1;
+    textTotalClicks.innerText = gameSB.data["totalClicks"];
 }
 
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["totalEnergy"]) {
-    } else {
-        localStorage["totalEnergy"] = 0;
-    }
-}
-
-textTotalEnergy.innerText = Number(localStorage["totalEnergy"]);
+textTotalEnergy.innerText = gameSB.data["totalEnergy"];
 const upEnergy = (amount) => {
-    localStorage["totalEnergy"] = Number(localStorage["totalEnergy"]) + amount;
-    textTotalEnergy.innerText = Number(localStorage["totalEnergy"]);
-}
-
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["totalTrain"]) {
-    } else {
-        localStorage["totalTrain"] = 0;
-    }
+    gameSB.data["totalEnergy"] = gameSB.data["totalEnergy"] + amount;
+    textTotalEnergy.innerText = gameSB.data["totalEnergy"];
 }
 
 //TODO AWARDS
@@ -897,12 +833,6 @@ class ACHIEVE {
     constructor(data, dataLVL, goals, rewards, idLevel, idBarProgress, idTextProgress, idTextReward, idDesc, desc1, desc2) {
         this.data = data;
         this.dataLVL = dataLVL;
-        if (typeof(Storage) !== "undefined") {
-			if (localStorage[dataLVL]) {
-			} else {
-				localStorage[dataLVL] = 0;
-			}
-		}
         this.goals = goals;
         this.rewards = rewards;
         this.idLevel = idLevel;
@@ -916,20 +846,20 @@ class ACHIEVE {
 
     update() {
         if (this.idLevel.innerText != "Nivel MÁX") {
-            const level = Number(localStorage[this.dataLVL]);
+            const level = gameSB.data[this.dataLVL];
             this.idLevel.innerText = "Nivel " + level;
             if (level < this.goals.length) {
                 this.idLevel.innerText = "Nivel " + level;
                 this.idDesc.innerText = this.desc1 + this.goals[level] + this.desc2;
-                this.idTextProgress.innerText = Number(Number(localStorage[this.data]).toFixed(2)) + " / " + this.goals[level];
+                this.idTextProgress.innerText = Number(gameSB.data[this.data].toFixed(2)) + " / " + this.goals[level];
                 this.idTextReward.innerText = "+" + this.rewards[level];
-                this.idBarProgress.style.width = (Number(localStorage[this.data]) / this.goals[level]) * 100 + "%";
+                this.idBarProgress.style.width = (gameSB.data[this.data] / this.goals[level]) * 100 + "%";
 
-                if(Number(localStorage[this.data]) >= this.goals[level]) {
+                if(Number(gameSB.data[this.data]) >= this.goals[level]) {
                     pushNotification("Has completado el logro. Has obtenido " + this.rewards[level] + " almas gemas.");
-                    localStorage["gemSoul"] = Number(localStorage["gemSoul"]) + this.rewards[level];
-                    textGemSoul.innerText = Number(localStorage["gemSoul"]);
-                    localStorage[this.dataLVL] = Number(localStorage[this.dataLVL]) + 1;
+                    gameSB.data["gemSoul"] = gameSB.data["gemSoul"] + this.rewards[level];
+                    textGemSoul.innerText = gameSB.data["gemSoul"];
+                    gameSB.data[this.dataLVL]++;
                     this.update();
                 }
             } else {
@@ -958,32 +888,25 @@ const powerAchieve = new ACHIEVE("totalPower", "lvlTotalPower", [100, 500, 1500,
 powerAchieve.update();
 
 const totalAwards = 50;
-textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + (Number(localStorage["lvlTotalClicks"])) + " / " + totalAwards;
+textTotalAwards.innerText = (gameSB.data["lvlTotalClicks"] + gameSB.data["lvlTotalTime"] + gameSB.data["lvlTotalEnergy"] + gameSB.data["lvlTotalClicks"]) + " / " + totalAwards;
 setInterval(() => {
-    localStorage["totalTime"] = Number(localStorage["totalTime"]) + 1;
-    textTimeTotal.innerText = Number(localStorage["totalTime"]) + " min";
+    gameSB.data["totalTime"]++;
+    textTimeTotal.innerText = gameSB.data["totalTime"] + " min";
     timeAchieve.update();
     trainAchieve.update();
     powerAchieve.update();
 
-    textTotalAwards.innerText = (Number(localStorage["lvlTotalClicks"]) + Number(localStorage["lvlTotalTime"]) + Number(localStorage["lvlTotalEnergy"])) + (Number(localStorage["lvlTotalClicks"])) + " / " + totalAwards;
+    textTotalAwards.innerText = (gameSB.data["lvlTotalClicks"] + gameSB.data["lvlTotalTime"] + gameSB.data["lvlTotalEnergy"] + gameSB.data["lvlTotalClicks"]) + " / " + totalAwards;
 }, 60000);
 
 //
 
-if (typeof(Storage) !== "undefined") {
-    if (localStorage["valueEnergy"]) {
-    } else {
-        localStorage["valueEnergy"] = JSON.stringify(0);
-    }
-}
-
 let progress = 0;
-infoEnergy.innerText = Number(Number(localStorage["valueEnergy"]).toFixed(2));
+infoEnergy.innerText = Number(gameSB.data["valueEnergy"].toFixed(2));
 progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
 
 const splashEffect = (e) => {
-    if (localStorage["valueClickSplash"] == "true") {
+    if (settingClickSplash.getValue()) {
         const splash = document.createElement("div");
         splash.className = "splasher";
         splash.style.left = (e.clientX - 40) + "px";
@@ -1001,21 +924,22 @@ const gainProgress = (gain, e, isManually = false) => {
         progress = 0;
         const amount = gainEnergy;
         upEnergy(Number(amount.toFixed(2)));
-        localStorage["valueEnergy"] = Number(localStorage["valueEnergy"]) + Number(amount.toFixed(2));
-        infoEnergy.innerText = Number(Number(localStorage["valueEnergy"]).toFixed(2));
-        progressTotal = Number((10 / lowCost + 10 * ((Number(localStorage["valueEnergy"]) / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
+        gameSB.data["valueEnergy"] += Number(amount.toFixed(2));
+        infoEnergy.innerText = Number(gameSB.data["valueEnergy"].toFixed(2));
+        progressTotal = Number((10 / lowCost + 10 * ((gameSB.data["valueEnergy"] / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
         energyAchieve.update();
 
-        if (localStorage["valueClickText"] == "true" && isManually) {
+        if (settingClickText.getValue() && isManually) {
             const boxNumber = document.createElement("div");
             boxNumber.className = "boxerNumber";
             const textNumber = document.createElement("div");
             textNumber.className = "texterNumber";
             const svg = document.createElement("div");
             svg.className = "svgResource";
-            svg.innerHTML = `<svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M100 50C100 77.6142 77.6142 100 50 100C22.3858 100 0 77.6142 0 50C0 22.3858 22.3858 0 50 0C77.6142 0 100 22.3858 100 50ZM30 50C30 61.0457 38.9543 70 50 70C61.0457 70 70 61.0457 70 50C70 38.9543 61.0457 30 50 30C38.9543 30 30 38.9543 30 50Z" fill="var(--colorMain)"/>
-            <circle cx="50" cy="50" r="27.5" stroke="var(--bgSecond)" stroke-width="15"/>
+            svg.innerHTML = `<svg width="20" height="28" viewBox="0 0 50 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M30.2307 1.21802C30.3188 0.82251 30.4091 0.416992 30.5 0C12.3076 13.5551 3.0224 27.8737 0.647034 39.3245C0.223755 41.1479 0 43.0477 0 45C0 58.8071 11.1929 70 25 70C38.8071 70 50 58.8071 50 45C50 37.3114 46.5292 30.4335 41.069 25.8475C27.5489 13.2605 28.4195 9.35107 30.2307 1.21802Z" fill="var(--colorMain)"/>
+            <circle cx="25" cy="45" r="16" fill="white"/>
+            <circle cx="25" cy="45" r="10" fill="var(--colorMainFill)"/>
             </svg>`;
 
             boxNumber.style.left = (e.clientX) + "px";
@@ -1066,25 +990,19 @@ camera.lookAt(0,0,0);
 camera.position.set(0, 100, 400);
 
 //TODO RENDER
-let renderer;
-const settingAntialias = new SETTINGSTOOGLE(buttonAntialias, "valueAntialias", false);
-settingAntialias.create({
-    on: () => {
+let renderer = new THREE.WebGLRenderer({canvas: worldGame, powerPreference: "high-performance", antialias: false});
+const settingAntialias = new SETTINGSTOOGLE(buttonAntialias, "antialias", false,
+    () => {
         settingAntialias.setOnUI();
-        renderer = new THREE.WebGLRenderer({canvas: worldGame, powerPreference: "high-performance", antialias: true});
+        renderer["antialias"] = true;
     },
-
-    off:() => {
+    () => {
         settingAntialias.setOffUI();
-        renderer = new THREE.WebGLRenderer({canvas: worldGame, powerPreference: "high-performance", antialias: false});
+        renderer["antialias"] = false;
     }
-})
+);
+settingAntialias.setChange();
 
-buttonAntialias.addEventListener("click", () => {
-    location.reload();
-})
-
-//renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.setClearColor(color);
 renderer.setSize( window.innerWidth / 1, window.innerHeight / 1 );
 renderer.shadowMap.enabled = true;
@@ -1095,70 +1013,66 @@ let sizes = {
 	height: window.innerHeight
 }
 
-const settingResolution = new SETTINGSVALUE(rangeResolution, textResolution, "valueResolution", 1);
-const composer = new EffectComposer(renderer);
-settingResolution.createRanger(
+const settingResolution = new SETTINGSVALUE(rangeResolution, textResolution, "resolution", 1,
     (value) => {
-    renderer.setPixelRatio( window.devicePixelRatio * value );
-    composer.renderer = renderer;
-});
-
+        renderer.setPixelRatio( window.devicePixelRatio * value );
+        composer.renderer = renderer;
+    }
+);
+const composer = new EffectComposer(renderer);
+settingResolution.createRanger();
 settingResolution.resetRanger(resetResolution);
 
 const stats = new Stats();
 document.body.appendChild(stats.dom);
-const settingStatsFPS = new SETTINGSTOOGLE(buttonStatsFPS, "valueStatsFPS", false);
-settingStatsFPS.create({
-    on: () => {
+const settingStatsFPS = new SETTINGSTOOGLE(buttonStatsFPS, "statsFPS", false,
+    () => {
         settingStatsFPS.setOnUI();
         document.body.appendChild(stats.dom);
     },
-
-    off:() => {
+    () => {
         settingStatsFPS.setOffUI();
         document.body.removeChild(stats.dom);
     }
-})
+);
+settingStatsFPS.setChange();
 
 //TODO COMPOSER
 const renderScene = new RenderPass(scene, camera);
 
-const settingBloom = new SETTINGSTOOGLE(buttonBloom, "valueBloom", false);
-settingBloom.create({
-    on: () => {
+const settingBloom = new SETTINGSTOOGLE(buttonBloom, "bloom", false,
+    () => {
         settingBloom.setOnUI();
         composer.insertPass(bloomPass, 1);
-        valueShadersTerrain.changeSettingOnePicker(0, 24);
+        valueShadersTerrain = 8;
         changeMaterial();
     },
-
-    off:() => {
+    () => {
         settingBloom.setOffUI();
         composer.removePass(bloomPass);
-        valueShadersTerrain.changeSettingOnePicker(0, 12);
+        valueShadersTerrain = 0;
         changeMaterial();
     }
-});
+);
+settingBloom.setChange();
 
 const afterImagePass = new AfterimagePass();
 afterImagePass.uniforms["damp"].value = 0.8;
 
-const settingImage = new SETTINGSTOOGLE(buttonImage, "valueImage", false);
-settingImage.create({
-    on: () => {
+const settingImage = new SETTINGSTOOGLE(buttonImage, "image", false,
+    () => {
         settingImage.setOnUI();
         composer.insertPass(afterImagePass, 2);
     },
-
-    off:() => {
+    () => {
         settingImage.setOffUI();
         composer.removePass(afterImagePass);
     }
-});
+);
+settingImage.setChange();
 
-const settingRender = new SETTINGSTOOGLE(buttonRender, "valueRender", false);
-settingRender.create({
-    on: () => {
+const settingRender = new SETTINGSTOOGLE(buttonRender, "render", false,
+    () => {
         settingRender.setOnUI();
         composer.insertPass(renderScene, 0);
         buttonBloom.style.opacity = 1;
@@ -1166,8 +1080,7 @@ settingRender.create({
         buttonBloom.style.pointerEvents = "inherit";
         buttonImage.style.pointerEvents = "inherit";
     },
-
-    off:() => {
+    () => {
         settingRender.setOffUI();
         composer.removePass(renderScene);
         buttonBloom.style.opacity = 0.2;
@@ -1177,7 +1090,8 @@ settingRender.create({
         settingBloom.setSettingToogle(false);
         settingImage.setSettingToogle(false);
     }
-})
+);
+settingRender.setChange();
 
 //TODO MESH
 const orb = new THREE.Group();
@@ -1228,35 +1142,33 @@ const materialTerrain = new THREE.MeshStandardMaterial({ color: 0x6600ff, roughn
 const meshTerrain = new THREE.Mesh( geometryTerrain, materialTerrain );
 scene.add( meshTerrain );
 
-const settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "valueTerrain", false);
-settingTerrain.create({
-    on: (input) => {
+const settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "terrain", false,
+    (input) => {
         input["svg"].className = "fi-rr-grid-alt subIcon";
         input["text"].innerText = "Alámbrica";
         materialTerrain.wireframe = true;
     },
-
-    off:(input) => {
+    (input) => {
         input["svg"].className = "fi-rr-square subIcon";
         input["text"].innerText = "Plana";
         materialTerrain.wireframe = false;
     }
-})
+);
+settingTerrain.setChange();
 
-const settingTerrainAnimation = new SETTINGSTOOGLE(buttonTerrainAnimation, "valueTerrainAnimation", true);
-settingTerrainAnimation.create({
-    on: (input) => {
+const settingTerrainAnimation = new SETTINGSTOOGLE(buttonTerrainAnimation, "terrainAnimation", true,
+    (input) => {
         input["svg"].className = "fi-rr-water subIcon";
         input["text"].innerText = "Animado";
         meshTerrain.geometry = geometryTerrain;
     },
-
-    off:(input) => {
+    (input) => {
         input["svg"].className = "fi-rr-align-justify subIcon";
         input["text"].innerText = "Estático";
         meshTerrain.geometry = geometryTerrainStatic;
     }
-})
+);
+settingTerrainAnimation.setChange();
 
 meshTerrain.rotation.x = -Math.PI / 2;
 meshTerrain.position.y = -175;
@@ -1301,28 +1213,26 @@ meshTorusB.castShadow = true;
 meshTorusB.receiveShadow = true;
 meshTerrain.receiveShadow = true;
 
-const settingShadow = new SETTINGSTOOGLE(buttonShadow, "valueShadow", false);
-settingShadow.create({
-    on: (input) => {
+const settingShadow = new SETTINGSTOOGLE(buttonShadow, "shadow", false,
+    (input) => {
         input["svg"].className = "fi-rr-opacity subIcon";
         settingShadow.setOnUI();
         renderer.shadowMap.enabled = true;
         directionalLight.castShadow = true;
     },
-
-    off:(input) => {
+    (input) => {
         input["svg"].className = "fi-rr-circle-dashed subIcon";
         settingShadow.setOffUI();
         renderer.shadowMap.enabled = false;
         directionalLight.castShadow = false;
     }
-})
+);
+settingShadow.setChange();
 
 //TODO CONTROLS
 const controls = new OrbitControls( camera, renderer.domElement );
-const settingControl = new SETTINGSTOOGLE(buttonControl, "valueControl", false);
-settingControl.create({
-    on: () => {
+const settingControl = new SETTINGSTOOGLE(buttonControl, "control", false,
+    () => {
         settingControl.setOnUI();
         controls.mouseButtons = {
             LEFT: THREE.MOUSE.ROTATE,
@@ -1330,8 +1240,7 @@ settingControl.create({
             RIGHT: null
         }
     },
-
-    off:() => {
+    () => {
         settingControl.setOffUI();
         controls.mouseButtons = {
             LEFT: THREE.MOUSE.ROTATE,
@@ -1339,7 +1248,8 @@ settingControl.create({
             RIGHT: THREE.MOUSE.ROTATE
         }
     }
-})
+);
+settingControl.setChange();
 
 controls.autoRotateSpeed = 1;
 controls.rotateSpeed = 1;
@@ -1350,134 +1260,132 @@ controls.maxPolarAngle = Math.PI / 2;
 controls.minDistance = 300;
 controls.maxDistance = 800;
 
-const settingRotation = new SETTINGSTOOGLE(buttonRotation, "valueRotation", true);
-settingRotation.create({
-    on: () => {
+const settingRotation = new SETTINGSTOOGLE(buttonRotation, "rotation", true,
+    () => {
         settingRotation.setOnUI();
         controls.autoRotate = true;
     },
-
-    off:() => {
+    () => {
         settingRotation.setOffUI();
         controls.autoRotate = false;
     }
-})
+);
+settingRotation.setChange();
 
-const settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "valueRotateDamp", 0.05);
-settingRotateDamp.createRanger(
+const settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "rotateDamp", 0.05,
     (value) => {
         controls.dampingFactor = value;
     }
-)
-
+);
+settingRotateDamp.createRanger();
 settingRotateDamp.resetRanger(resetRotateDamp);
 
-const settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "valueRotateSpeed", 1);
-settingRotateSpeed.createRanger(
+const settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotateSpeed", 1,
     (value) => {
         controls.rotateSpeed = value;
     }
-)
-
+);
+settingRotateSpeed.createRanger();
 settingRotateSpeed.resetRanger(resetRotateSpeed);
 
-const settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeedAuto, "valueRotateSpeedAuto", 1);
-settingRotateSpeedAuto.createRanger(
+const settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeedAuto, "rotateSpeedAuto", 1,
     (value) => {
         controls.autoRotateSpeed = value;
     }
-)
-
+);
+settingRotateSpeedAuto.createRanger();
 settingRotateSpeedAuto.resetRanger(resetRotateSpeedAuto);
 
-const settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "valueZoomSpeed", 2);
-settingZoomSpeed.createRanger(
+const settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "zoomSpeed", 2,
     (value) => {
         controls.zoomSpeed = value;
     }
-)
-
+);
+settingZoomSpeed.createRanger();
 settingZoomSpeed.resetRanger(resetZoomSpeed);
 
 //TODO ANIMATION
+let playAnimate = false
+
+let isVertical = window.innerWidth < window.innerHeight;
+isVertical ? blockAspectRatioDetector.style.display = "flex" : blockAspectRatioDetector.style.display = "none";
+
 scene.matrixWorldAutoUpdate = true;
 const animate = () => {
     requestAnimationFrame(animate);
-    controls.update();
 
-    //Animation
-    const time = clock.getElapsedTime();
+    if (playAnimate) {
+        controls.update();
 
-    if (localStorage["valueTerrainAnimation"] == "true") {
-        const positionWaves = geometryTerrain.attributes.position;
-        positionWaves.needsUpdate = true;
+        //Animation
+        const time = clock.getElapsedTime();
 
-        const countPar = positionWaves.count;
-        for (let i = 0; i < countPar; i++) {
+        if (settingTerrainAnimation.getValue()) {
+            const positionWaves = geometryTerrain.attributes.position;
+            positionWaves.needsUpdate = true;
 
-            const z = 12 * Math.sin(i / 3 + Math.sin(time) / 5 + time) + 12 * Math.cos(-i / 12 + time);
-            positionWaves.setZ(i, z);
+            const countPar = positionWaves.count;
+            for (let i = 0; i < countPar; i++) {
 
+                const z = 12 * Math.sin(i / 3 + Math.sin(time) / 5 + time) + 12 * Math.cos(-i / 12 + time);
+                positionWaves.setZ(i, z);
+
+            }
         }
-    }
 
-    if (time < 6 / 4) {
-        const adFov = (6 - time * 4) ** 2.4;
-        camera.fov = 75 + adFov;
-    } else {
-        if (camera.fov != 75) {
-            camera.fov = 75;
+        if (time < 6 / 4) {
+            const adFov = (6 - time * 4) ** 2.4;
+            camera.fov = 75 + adFov;
+        } else {
+            if (camera.fov != 75) {
+                camera.fov = 75;
+            }
         }
-    }
 
-    const scaleA = Math.cos(time * 1.25) * 0.025;
-    const scaleD = Math.cos((time * 1.25) * 1.333 + 0.5) * 0.025;
+        const scaleA = Math.cos(time * 1.25) * 0.025;
+        const scaleD = Math.cos((time * 1.25) * 1.333 + 0.5) * 0.025;
 
-    meshIcoA.scale.set(1 + scaleA, 1 + scaleA, 1 + scaleA);
-    meshIcoD.scale.set(1 + scaleD, 1 + scaleD, 1 + scaleD);
+        meshIcoA.scale.set(1 + scaleA, 1 + scaleA, 1 + scaleA);
+        meshIcoD.scale.set(1 + scaleD, 1 + scaleD, 1 + scaleD);
 
-	torus.rotation.set((time / 5), (time / 5) * 2, (time / 5));
+        torus.rotation.set((time / 5), (time / 5) * 2, (time / 5));
 
-	const moveOrb = Math.cos(time * 2) * 8;
-	orb.position.y = moveOrb;
+        const moveOrb = Math.cos(time * 2) * 8;
+        orb.position.y = moveOrb;
 
-    //Update sizes
-	sizes.width = window.innerWidth;
-	sizes.height = window.innerHeight;
+        //Update sizes
+        sizes.width = window.innerWidth;
+        sizes.height = window.innerHeight;
 
-    //Update camera
-	camera.aspect = sizes.width / sizes.height;
-	camera.updateProjectionMatrix();
+        //Update camera
+        camera.aspect = sizes.width / sizes.height;
+        camera.updateProjectionMatrix();
 
-    //Update renderer
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.render( scene, camera );
+        //Update renderer
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.render( scene, camera );
 
-    const delta = clock.getDelta();
-    if (localStorage["valueRender"] == "true") {
-        if (localStorage["valueBloom"] == "true" || localStorage["valueImage"] == "true") {
-            composer.render(delta);
+        const delta = clock.getDelta();
+        if (settingRender.getValue()) {
+            if (settingBloom.getValue() || settingImage.getValue()) {
+                composer.render(delta);
+            }
         }
+
+        stats.update();
+
+        isVertical = window.innerWidth < window.innerHeight;
+        isVertical ? blockAspectRatioDetector.style.display = "flex" : blockAspectRatioDetector.style.display = "none";
     }
-
-    stats.update();
-
-    const isVertical = window.innerWidth < window.innerHeight;
-    isVertical ? blockAspectRatioDetector.style.display = "flex" : blockAspectRatioDetector.style.display = "none";
 }
 
-window.addEventListener("load", () => {
-    animate();
-})
+animate();
 
-//SETTINGS OT
-const settingTheme = new SETTINGSTOOGLE(buttonTheme, "valueTheme", false);
-const settingGlass = new SETTINGSTOOGLE(buttonGlass, "valueGlass", false);
-
+//SETTINGS APPAREANCE
 const effectFluent = () => {
     let themeRgb;
     let themeOpacity;
-    if (!settingTheme.getLocalStorage) {
+    if (!settingTheme.getValue()) {
         themeRgb = "rgba(255, 255, 255, ";
         themeOpacity = 0.8;
     } else {
@@ -1485,7 +1393,7 @@ const effectFluent = () => {
         themeOpacity = 0.8;
     }
 
-    if (!settingGlass.getLocalStorage) {
+    if (!settingGlass.getValue()) {
         themeOpacity = 1;
     }
 
@@ -1493,8 +1401,8 @@ const effectFluent = () => {
     root.style.setProperty("--bgFluentB", themeRgb + (themeOpacity / 2) + ")");
 }
 
-settingTheme.create({
-    on: (input) => {
+const settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
+    (input) => {
         input["svg"].className = "fi-rr-moon subIcon"
         input["text"].innerText = "Oscuro";
 
@@ -1527,8 +1435,7 @@ settingTheme.create({
 
         changeScene();
     },
-    
-    off:(input) => {
+    (input) => {
         input["svg"].className = "fi-rr-sun subIcon"
         input["text"].innerText = "Claro";
 
@@ -1561,68 +1468,71 @@ settingTheme.create({
 
         changeScene();
     }
-});
+);
+settingTheme.setChange();
 
-settingGlass.create({
-    on: () => {
+const settingGlass = new SETTINGSTOOGLE(buttonGlass, "glass", false,
+    () => {
         settingGlass.setOnUI();
         root.style.setProperty("--filterGlass", "blur(16px)");
         effectFluent();
     },
-
-    off:() => {
+    () => {
         settingGlass.setOffUI();
         root.style.setProperty("--filterGlass", "initial");
         effectFluent();
     }
-});
+);
+settingGlass.setChange();
 
-const settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "valueColorSelector", 1);
-settingColorSelector.createDropDown((value, group, text) => {
-    switch (value) {
-        case 0:
-            text.innerText = "Rosa azucarada"
-            settingColor.changeSetting([300, 100, 70]);
-            break;
-        case 1:
-            text.innerText = "Indigo"
-            settingColor.changeSetting([264, 100, 55]);
-            break;
-        case 2:
-            text.innerText = "Cielo azul"
-            settingColor.changeSetting([200, 100, 50]);
-            break;
-        case 3:
-            text.innerText = "Bosque esmeralda"
-            settingColor.changeSetting([150, 100, 50]);
-            break;
-        case 4:
-            text.innerText = "Oro de desierto"
-            settingColor.changeSetting([52, 100, 50]);
-            break;
-        case 5:
-            text.innerText = "Melocotón"
-            settingColor.changeSetting([30, 100, 55]);
-            break;
-        case 6:
-            text.innerText = "Rosa mosqueta"
-            settingColor.changeSetting([350, 100, 65]);
-            break;
+const settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "colorSelector", 1,
+    (value, group, text) => {
+        switch (value) {
+            case 0:
+                text.innerText = "Rosa azucarada"
+                settingColor.changeSetting([300, 100, 70]);
+                break;
+            case 1:
+                text.innerText = "Indigo"
+                settingColor.changeSetting([264, 100, 55]);
+                break;
+            case 2:
+                text.innerText = "Cielo azul"
+                settingColor.changeSetting([200, 100, 50]);
+                break;
+            case 3:
+                text.innerText = "Bosque esmeralda"
+                settingColor.changeSetting([150, 100, 50]);
+                break;
+            case 4:
+                text.innerText = "Oro de desierto"
+                settingColor.changeSetting([52, 100, 50]);
+                break;
+            case 5:
+                text.innerText = "Melocotón"
+                settingColor.changeSetting([30, 100, 55]);
+                break;
+            case 6:
+                text.innerText = "Rosa mosqueta"
+                settingColor.changeSetting([350, 100, 65]);
+                break;
+        }
+
+        root.style.setProperty("--colorMain", "hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        root.style.setProperty("--colorMainOpacSoft", "hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%, 0.075)");
+        root.style.setProperty("--colorMainOpac", "hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%, 0.15)");
+        root.style.setProperty("--colorMainFill", "hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%, 0.3)");
+
+        materialIcoB.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        materialIcoWA.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        materialTorusB.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        lightPointA.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        lightPointB.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        changeMaterial();
+        changeScene();
     }
-
-    root.style.setProperty("--colorMain", "hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%)");
-    root.style.setProperty("--colorMainOpacSoft", "hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%, 0.075)");
-    root.style.setProperty("--colorMainOpac", "hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%, 0.15)");
-    root.style.setProperty("--colorMainFill", "hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%, 0.3)");
-
-    materialIcoB.color = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%)");
-    materialIcoWA.color = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%)");
-    materialTorusB.color = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%)");
-    lightPointA.color = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%)");
-    lightPointB.color = new THREE.Color("hsl(" + settingColor.getLocalStorage[0] + ", " + settingColor.getLocalStorage[1] + "%, " + settingColor.getLocalStorage[2] + "%)");
-    changeMaterial();
-    changeScene();
-})
+);
+settingColorSelector.createDropDown();
 
 //TODO TOOLTIP
 const screenType = (yTool, logScreenY, valueX) => {
@@ -1644,31 +1554,29 @@ document.addEventListener("mousemove", (e) => {
 //TODO INFO
 let showContext;
 let showWarning;
-const settingTool = new SETTINGSTOOGLE(buttonTool, "valueTool", true);
-settingTool.create({
-    on: () => {
+const settingTool = new SETTINGSTOOGLE(buttonTool, "valueTool", true,
+    () => {
         settingTool.setOnUI();
         showContext = true;
     },
-
-    off:() => {
+    () => {
         settingTool.setOffUI();
         showContext = false;
     }
-})
+);
+settingTool.setChange();
 
-const settingToolWarn = new SETTINGSTOOGLE(buttonToolWarn, "valueToolWarn", true);
-settingToolWarn.create({
-    on: () => {
+const settingToolWarn = new SETTINGSTOOGLE(buttonToolWarn, "valueToolWarn", true,
+    () => {
         settingToolWarn.setOnUI();
         showWarning = true;
     },
-
-    off:() => {
+    () => {
         settingToolWarn.setOffUI();
         showWarning = false;
     }
-})
+);
+settingToolWarn.setChange();
 
 //TODO INFORMACIÓN
 const getInformation = (idEvent, typeMessage, svg, title, type, textA, textB) => {
@@ -1811,18 +1719,17 @@ null
 
 //TOOLTIP
 let showWord;
-const settingToolTip = new SETTINGSTOOGLE(buttonToolTip, "valueToolTip", true);
-settingToolTip.create({
-    on: () => {
+const settingToolTip = new SETTINGSTOOGLE(buttonToolTip, "valueToolTip", true,
+    () => {
         settingToolTip.setOnUI();
         showWord = true;
     },
-
-    off:() => {
+    () => {
         settingToolTip.setOffUI();
         showWord = false;
     }
-})
+);
+settingToolTip.setChange();
 
 const goToolTip = (idEvent, position, words, type = "word") => {
     const updateToolTip = () => {
@@ -1871,35 +1778,116 @@ goToolTip(barEnergy, "top", "showProgressEnergy", "number");
 //TODO LOADING and WELCOME
 window.addEventListener("load", () => {
     blockLoader.style.animation = "playFade 0.8s forwards ease-in";
-    if (typeof(Storage) !== "undefined") {
-        if (localStorage["popupSec"]) {
-        } else {
-            localStorage["popupSec"] = true;
-        }
-    }
-    
-    setTimeout(() => {
-        if (localStorage["popupSec"] == "true") {
-                openWindow(windowProtection);
-        }
-    }, 300)
-    
-    buttonConfirmProtection.addEventListener("click", () => {
-        closeWindow(windowProtection);
-        localStorage["popupSec"] = "false";
-    })
 });
 
-blockWelcomer.addEventListener("click", () => {
+buttonConfirmProtection.addEventListener("click", () => {
+    closeWindow(windowProtection);
+});
+
+const openWelcome = () => {
+    textWelcomer.remove();
+    setTimeout(() => {
+        svgWelcomer.style.translate = "0% -150px"
+        blockLoader.remove();
+        boxFiles.style.scale = 1;
+        boxFiles.style.opacity = 1;
+        boxFiles.style.pointerEvents = "inherit";
+    }, 310)
+    blockWelcomer.removeEventListener("click", openWelcome);
+}
+
+blockWelcomer.addEventListener("click", openWelcome);
+
+//TODO New Game
+
+let fileHandle = null;
+
+const quitWelcome = () => {
     blockWelcomer.style.opacity = 0;
     blockWelcomer.style.pointerEvents = "none";
     setTimeout(() => {
-        blockWelcomer.remove();
-        blockLoader.remove();
-        home.style.translate = "0px 0px";
+        taskBox.style.translate = "0px 0px";
         gemSoulBox.style.translate = "0px 0px";
     }, 310)
-});
+}
+
+const setSettingNewDefaultToogle = (objectSetting) => {
+	objectSetting.isNewDefault();
+	objectSetting.setToogle();
+}
+
+const setSettingNewDefaultRanger = (objectSetting) => {
+    objectSetting.isNewDefault();
+    objectSetting.ranger();
+}
+
+const setSettingNewDefaultDropDown = (objectSetting) => {
+	objectSetting.isNewDefault();
+    objectSetting.droper();
+}
+
+const setNewDefault = () => {
+    setSettingNewDefaultRanger(settingSoundAmbient);
+    setSettingNewDefaultRanger(settingSoundInteract);
+    setSettingNewDefaultRanger(settingSoundSystem);
+    setSettingNewDefaultRanger(settingResolution);
+    setSettingNewDefaultRanger(settingRotateDamp);
+    setSettingNewDefaultRanger(settingRotateSpeed);
+    setSettingNewDefaultRanger(settingRotateSpeedAuto);
+    setSettingNewDefaultRanger(settingZoomSpeed);
+
+    setSettingNewDefaultDropDown(settingColorSelector);
+
+    setSettingNewDefaultToogle(settingSearch);
+    setSettingNewDefaultToogle(settingScrollBar);
+    setSettingNewDefaultToogle(settingClickSplash);
+    setSettingNewDefaultToogle(settingClickText);
+    setSettingNewDefaultToogle(settingAntialias);
+    setSettingNewDefaultToogle(settingStatsFPS);
+    setSettingNewDefaultToogle(settingBloom);
+    setSettingNewDefaultToogle(settingImage);
+    setSettingNewDefaultToogle(settingRender);
+    setSettingNewDefaultToogle(settingTerrain);
+    setSettingNewDefaultToogle(settingTerrainAnimation);
+    setSettingNewDefaultToogle(settingShadow);
+    setSettingNewDefaultToogle(settingControl);
+    setSettingNewDefaultToogle(settingRotation);
+    setSettingNewDefaultToogle(settingTool);
+    setSettingNewDefaultToogle(settingToolWarn);
+    setSettingNewDefaultToogle(settingToolTip);
+	setSettingNewDefaultToogle(settingTheme);
+    setSettingNewDefaultToogle(settingGlass);
+}
+
+const onBeforeUnload = () => {
+	window.onbeforeunload = (event) => {
+		event.returnValue = ""
+	}
+}
+
+buttonNewGame.addEventListener("click", () => {
+    openWindow(windowProtection);
+    quitWelcome();
+	/*buttonSave.style.opacity = 0.5;
+	buttonSave.style.pointerEvents = "none";*/
+
+    setNewGame();
+
+    playAnimate = true;
+	setNewDefault();
+
+    console.log(JSON.stringify(gameSB));
+	onBeforeUnload();
+})
+
+buttonExitGame.addEventListener("click", () => {
+	fileHandle = null;
+	gameSB = null;
+    taskBox.style.translate = "0px 200px";
+	blockWelcomer.style.opacity = 1;
+    blockWelcomer.style.pointerEvents = "inherit";
+    playAnimate = false
+})
 
 //TODO DATA
 resetConfig.addEventListener("click", () => {
@@ -1907,8 +1895,9 @@ resetConfig.addEventListener("click", () => {
 });
 
 resetAll.addEventListener("click", () => {
-    localStorage.clear();
     location.reload();
 });
 
 updateStats();
+
+localStorage.clear();

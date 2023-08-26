@@ -1,8 +1,8 @@
 .svgWelcome {
-    position: absolute;
-    left: 50%;
-    top: 120px;
-    translate: -50%;
+    width: 70%;
+    translate: 0% -50px;
+    will-change: transform;
+    transition: 0.5s;
 }
 
 .svgAnimation {
@@ -20,31 +20,31 @@
 }
 
 .bigSvg {
-    width: 54px;
-    height: 54px;
+    width: 42px;
+    height: 42px;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: 100%;
-    will-change: transform;
-    transition: 0.2s cubic-bezier(0.2, 0.6, 0.4, 1);
+    transition: 0.4s cubic-bezier(.3,2.25,.6,1);
     pointer-events: none;
+    will-change: transform;
 }
 
 .mediumSvg {
-    width: 36px;
-    height: 36px;
+    width: 56px;
+    height: 56px;
     background-position: center center;
     background-repeat: no-repeat;
-    background-size: 78%;
+    background-size: 100%;
 }
 
 .smallSvg {
-    margin-block: 2px;
-    width: 24px;
-    height: 24px;
+    margin-inline: -2px;
+    width: 28px;
+    height: 28px;
     background-position: center center;
     background-repeat: no-repeat;
-    background-size: 78%;
+    background-size: 100%;
 }
 
 .svgIcon {

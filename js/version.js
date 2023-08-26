@@ -57,10 +57,6 @@ class VERSION {
     }
 }
 
-const versionActual = "Alpha 7"
-vPrev.innerText = versionActual;
-vPrev2.innerText = versionActual;
-
 const listParches = [
     new VERSION("Alpha 7", true, true,
     ["Nuevo rediseño de la sección tutorial para los móviles sobre UX y nuevos tutoriales.",
