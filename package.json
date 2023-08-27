@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.5.1",
+    "crypto-js": "^4.1.1",
     "three": "^0.155.0"
   }
 }

@@ -154,6 +154,9 @@
             </div>
         </div>
     </div>
+    <a class="buttonTask onPoint" style="position: absolute; right: 30px; bottom: 30px;" href="https://github.com/AVALON1492/SoulBreaker/tree/main">
+        <div class="iconStats" style="background-image: url(css/svg/social/github-mark.svg);"></div>
+    </a>
 </div>
 
 <!--TODO WINDOW-->
@@ -166,7 +169,7 @@
         <i class="fi-rr-shield-check topIcon"></i>
         <div>Aviso sobre la protección de datos</div>
     </div>
-    <div class="boxDesc" style="margin-top: 12px;">Este juego es gratiuto y libre para jugar todo el tiempo que quieras. No obstante, los archivos de datos del este juego sólo funcionan para los navegadores Chromium y PC o MAC (No tienen compatibilidad con los móviles). Además, no es buena idea hacer modificaciones ilegales en los archivos guardados y pueden detectar errores. Gracias por leer este aviso y disfrutad mucho en este juego 😄.</div>
+    <div class="boxDesc" style="margin-top: 12px;">Este juego es gratiuto y libre para jugar todo el tiempo que quieras. No obstante, los archivos de datos del este juego están cifrados al extremo para evitar modificaciones ilegales de los datos. No se validarán archivos descifrados o que está fuera del campo de su validación por la verificación de la originalidad del juego mientras intenta cargar el juego. Gracias por leer este aviso y disfrutad mucho en este juego 😄.</div>
     <div class="boxDesc" style="margin-top: 12px;">Nota: podrás ver de nuevo en la sección de "Acerca de" por si te olvidas algo.</div>
     <div class="boxButtonLabelWindow center">
         <div class="buttonConfirm center onPoint" id="buttonConfirmProtection">Acepto y continuar jugando</div>
@@ -653,13 +656,6 @@
                         </div>
                         <div class="inboxSettings"></div>
                     </div>
-                    <div class="boxButton isToogle onPoint" id="resetAll">
-                        <i class="fi-rr-broom subIcon"></i>
-                        <div class="textSettings">
-                            <div>Eliminar datos del juego</div>
-                            <div class="textHighlightInfo">Empieza el juego como nuevo</div>
-                        </div><div class="inboxSettings"></div>
-                    </div>
                 </div>
             </div>
             <!--TODO ESTADÍSTICAS-->
@@ -935,7 +931,7 @@
                     </div>
                     <div class="boxButton">
                         <div class="textSettings" style="padding-inline: 16px; width: 100%;">
-                            <div class="textHighlightInfo">Este juego es gratiuto y libre para jugar todo el tiempo que quieras. No obstante, los archivos de datos del este juego sólo funcionan para los navegadores Chromium y PC o MAC (No tienen compatibilidad con los móviles). Además, no es buena idea hacer modificaciones ilegales en los archivos guardados y pueden detectar errores.</div>
+                            <div class="textHighlightInfo">Los archivos de datos del este juego están cifrados al extremo para evitar modificaciones ilegales de los datos. No se validarán archivos descifrados o que está fuera del campo de su validación por la verificación de la originalidad del juego mientras intenta cargar el juego.</div>
                         </div>
                     </div>
                 </div>
@@ -948,7 +944,7 @@
         <div class="secondTaskBar center" id="taskHomeFiles" style="color: var(--colorMain); justify-content: space-between;">
             <div class="pillText center">
                 <i class="fi-rr-document topIcon" style="color: var(--colorMain);"></i>
-                <div id="idTextFile">Sin_nombre.txt</div>
+                <div id="idTextFile" style="max-width: 150px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">Sin_nombre.txt</div>
             </div>
             <div class="center" style="gap: 12px;">
                 <div class="buttonTask onPoint" id="buttonSave">

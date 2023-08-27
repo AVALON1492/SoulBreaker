@@ -4,6 +4,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
+import CryptoJS from "crypto-js"
 
 //
 
@@ -75,6 +76,98 @@ const closeWindow = (idWindow) => {
         idWindow.style.display = "none";
     }, 310);
 }
+
+//TODO NOTIFICATION
+let countNotif;
+const pushNotification = (desc, type = "normal") => {
+    countNotif = 0;
+    const createNotif = document.createElement("div");
+    if (type == "normal") {
+        createNotif.className = "popUpNotification";
+        audioNotif.load();
+    }
+
+    if (type == "error") {
+        createNotif.className = "popUpNotification errorNotif";
+        audioNotif.load();
+    }
+
+    if (type == "success") {
+        createNotif.className = "popUpNotification successNotif";
+        audioNotif.load();
+    }
+
+    if (type == "process") {
+        createNotif.className = "popUpNotification processNotif";
+    }
+    
+    createNotif.innerText = desc;
+    document.body.appendChild(createNotif);
+
+    setTimeout(() => {
+        for (let i = document.querySelectorAll(".popUpNotification").length - 1; i >= 0; i--) {
+            document.querySelectorAll(".popUpNotification")[i].style.translate = "-50% calc(" + (countNotif * 72) + "px)";
+            countNotif++;
+        }
+    }, 10);
+
+    setTimeout(() => {
+        createNotif.style.opacity = "0";
+        createNotif.style.scale = "0.8";
+    }, 5000);
+
+    setTimeout(() => {
+        countNotif--;
+        createNotif.remove();
+    }, 6000);
+}
+
+//TODO TIME
+const showTimeStartMinute = (number, idText) => {
+    const minute = number % 60;
+    const hour = Math.floor(number / 60);
+    const day = Math.floor(hour / 24);
+    let isNoneTime = 3;
+    idText.innerText = "";
+    if (day != 0) {
+        idText.innerText = day + "d "
+        isNoneTime--;
+    }
+    if (hour != 0) {
+        idText.innerText += hour + "h "
+        isNoneTime--;
+    }
+    if (minute != 0) {
+        idText.innerText += minute + "m"
+        isNoneTime--;
+    }
+
+    (isNoneTime == 3) ? idText.innerText = "---" : null;
+}
+
+//TODO APARIENCIA
+const createLight = document.createElement("div");
+createLight.className = "pointLight";
+
+document.addEventListener("mouseout", () => {
+    createLight.style.display = "none";
+})
+
+document.querySelectorAll(".onPoint").forEach((object) => {
+    object.addEventListener("mouseover", (e) => {
+        e.target.appendChild(createLight);
+        createLight.style.width = (e.target.offsetWidth * 1.5) + "px";
+        createLight.style.height = (e.target.offsetWidth * 1.5) + "px";
+        createLight.style.display = "inherit";
+    })
+});
+
+document.addEventListener("mousemove", (e) => {
+    const xPointer = e.offsetX - createLight.offsetWidth / 2;
+    const yPointer = e.offsetY - createLight.offsetHeight / 2;
+
+    createLight.style.transform = "translateX(" + xPointer + "px) translateY(" + yPointer + "px)"
+});
 
 //TODO SETTINGS
 let settingSoundAmbient,
@@ -266,7 +359,6 @@ const settingColor = new SETTINGSARRAY("color", [264, 100, 50]);
 let colorLight = 90;
 let valueShadersTerrain = 12;
 const changeMaterial = () => {
-    console.log(valueShadersTerrain)
     materialTerrain.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + (settingColor.getValue()[2] - (valueShadersTerrain)) + "%)");
 }
 
@@ -771,56 +863,6 @@ settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "scrollBar", false,
 );
 settingScrollBar.setChange();
 
-//TODO NOTIFICATION
-const pushNotification = (desc) => {
-    const createNotif = document.createElement("div");
-    createNotif.className = "popUpNotification";
-
-    const textNotif = document.createElement("div");
-    textNotif.className = "boxDesc";
-    textNotif.innerText = desc;
-
-    createNotif.appendChild(textNotif);
-    document.body.appendChild(createNotif);
-
-    setTimeout(() => {
-        createNotif.style.translate = "-50% 0%";
-        audioNotif.load();
-    }, 10);
-
-    setTimeout(() => {
-        createNotif.style.translate = "-50% calc(-100% - 60px)";
-    }, 5000);
-
-    setTimeout(() => {
-        createNotif.remove();
-    }, 6000);
-}
-
-//TODO APARIENCIA
-const createLight = document.createElement("div");
-createLight.className = "pointLight";
-
-document.addEventListener("mouseout", () => {
-    createLight.style.display = "none";
-})
-
-document.querySelectorAll(".onPoint").forEach((object) => {
-    object.addEventListener("mouseover", (e) => {
-        e.target.appendChild(createLight);
-        createLight.style.width = (e.target.offsetWidth * 1.5) + "px";
-        createLight.style.height = (e.target.offsetWidth * 1.5) + "px";
-        createLight.style.display = "inherit";
-    })
-});
-
-document.addEventListener("mousemove", (e) => {
-    const xPointer = e.offsetX - createLight.offsetWidth / 2;
-    const yPointer = e.offsetY - createLight.offsetHeight / 2;
-
-    createLight.style.transform = "translateX(" + xPointer + "px) translateY(" + yPointer + "px)"
-});
-
 //
 //TODO GAME
 //
@@ -874,7 +916,7 @@ const updateStats = () => {
 }
 
 //TODO STATS GENERAL
-textTimeTotal.innerText = gameSB.data["totalTime"] + " min";
+showTimeStartMinute(gameSB.data["totalTime"], textTimeTotal);
 textTotalClicks.innerText = gameSB.data["totalClicks"];
 
 const upClick = () => {
@@ -951,7 +993,7 @@ const totalAwards = 50;
 textTotalAwards.innerText = (gameSB.data["lvlTotalClicks"] + gameSB.data["lvlTotalTime"] + gameSB.data["lvlTotalEnergy"] + gameSB.data["lvlTotalClicks"]) + " / " + totalAwards;
 setInterval(() => {
     gameSB.data["totalTime"]++;
-    textTimeTotal.innerText = gameSB.data["totalTime"] + " min";
+    showTimeStartMinute(gameSB.data["totalTime"], textTimeTotal);
     timeAchieve.update();
     trainAchieve.update();
     powerAchieve.update();
@@ -1667,23 +1709,18 @@ const getInformation = (idEvent, typeMessage, svg, title, type, textA, textB) =>
 }
 
 getInformation(textEnergyId, "context", null, "Energía del alma", "Recurso",
-"Recurso común para comprar mejoras y acciones",
+"Recurso común para comprar mejoras y acciones.",
 null
 );
 
 getInformation(buttonAntialias, "warning", null, "Aviso", "Se reiniciará la página",
-"Al aplicarlo, se refrescará la página volviendo al inicio",
+"Al aplicarlo, se refrescará la página volviendo al inicio.",
 null
 );
 
 getInformation(resetConfig, "warning", null, "¿Seguro?", "Acción no recomendable",
-"Una vez presionado, los datos de configuración se restablecerán despúes de reiniciar la página",
-"En efecto, no podrás volver los datos que has cambiado"
-);
-
-getInformation(resetAll, "important", null, "Hora de despedir...", "Acción no recomendable",
-"Una vez presionado, todos los datos se perderán despúes de reiniciar la página",
-"En efecto, no podrás recuperar los datos que has progresado una vez hecho esta acción"
+"Una vez presionado, los datos de configuración se restablecerán.",
+"En efecto, no podrás volver los datos que has cambiado."
 );
 
 getInformation(textInfoPower, "context", null, "Poder", "Atributo general",
@@ -1692,77 +1729,77 @@ null
 );
 
 getInformation(textPower, "context", null, "Potencia", "Atributo",
-"Atributo que aumenta el ataque, la potencia del toque y la producción baja",
-"Cada 25 puntos, +ataque; Cada 10 puntos, +toque y +producción"
+"Atributo que aumenta el ataque, la potencia del toque y la producción baja.",
+"Cada 25 puntos, +ataque; Cada 10 puntos, +toque y +producción."
 );
 
 getInformation(textVita, "context", null, "Vitalidad", "Atributo",
-"Atributo que aumenta la salud, el coste de la energía y la producción alta",
-"Cada 10 puntos, +salud y ++producción; Cada 100 puntos, -coste"
+"Atributo que aumenta la salud, el coste de la energía y la producción alta.",
+"Cada 10 puntos, +salud y ++producción; Cada 100 puntos, -coste."
 );
 
 getInformation(textRes, "context", null, "Dureza", "Atributo",
-"Atributo que aumenta el aguante, la defensa y el impulso de energía",
-"Cada 300 puntos, +aguante; Cada 20 puntos, +energía; La defensa depende de los puntos"
+"Atributo que aumenta el aguante, la defensa y el impulso de energía.",
+"Cada 300 puntos, +aguante; Cada 20 puntos, +energía; La defensa depende de los puntos."
 );
 
 getInformation(textLea, "context", null, "Lealtad", "Atributo",
-"Atributo que aumenta el crecimiento de la lealtad y la lealtad permanente",
-"Cada 15 puntos, +lealtad permanente; Cada 5 puntos; +crecimiento de la lealtad"
+"Atributo que aumenta el crecimiento de la lealtad y la lealtad permanente.",
+"Cada 15 puntos, +lealtad permanente; Cada 5 puntos; +crecimiento de la lealtad."
 );
 
 getInformation(textHealth, "context", null, "Salud", "Atributo de vitalidad",
-"Atributo que indica cúanta vida tiene el alma",
-"Si su vida es 0, se reiniciará las creencias hasta su lealtad permanente y se perderá la mitad de energía y el progreso"
+"Atributo que indica cúanta vida tiene el alma.",
+"Si su vida es 0, se reiniciará las creencias hasta su lealtad permanente y se perderá la mitad de energía y el progreso."
 );
 
 getInformation(textStamina, "context", null, "Aguante", "Atributo de dureza",
 "Atributo que indica cúanta resistencia tiene el alma",
-"Si su aguante es inferior a 50%, el crecimiento de la lealtad se detendrá; Si su aguante es inferior a 10%, el crecimiento de la lealtad lo declarará como pérdida hasta 5x"
+"Si su aguante es inferior a 50%, el crecimiento de la lealtad se detendrá; Si su aguante es inferior a 10%, el crecimiento de la lealtad lo declarará como pérdida hasta 5x."
 );
 
 getInformation(textDefen, "context", null, "Defensa", "Atributo de dureza",
-"Atributo que indica cúanta armadura tiene el alma",
-"La armadura máxima llega hasta 85%"
+"Atributo que indica cúanta armadura tiene el alma.",
+"La armadura máxima llega hasta 85%."
 );
 
 getInformation(textAtk, "context", null, "Ataque", "Atributo de potencia",
-"Atributo que indica cúanto daño puede causar contra los Kurotamas (Almas negras)",
+"Atributo que indica cúanto daño puede causar contra los Kurotamas (Almas negras).",
 null
 );
 
 getInformation(textTap, "context", null, "Toque", "Atributo de potencia",
-"Atributo que indica cúanta cantidad de progreso acumula por toque",
+"Atributo que indica cúanta cantidad de progreso acumula por toque.",
 null
 );
 
 getInformation(textEner, "context", null, "Energía", "Atributo de dureza",
-"Atributo que indica cúanta cantidad de energía acumula cuando la barra de progreso está lleno",
-"Nota: cuanto mayor energía tiene, el coste afectará en relación de esa energía almacenada, pues el alma tiene los límites de almacenar energía"
+"Atributo que indica cúanta cantidad de energía acumula cuando la barra de progreso está lleno.",
+"Nota: cuanto mayor energía tiene, el coste afectará en relación de esa energía almacenada, pues el alma tiene los límites de almacenar energía."
 );
 
 getInformation(textCost, "context", null, "Coste", "Atributo de vitalidad",
-"Atributo que divide el coste de la barra del progreso necesita para acumular la energía",
+"Atributo que divide el coste de la barra del progreso necesita para acumular la energía.",
 null
 );
 
 getInformation(textPro, "context", null, "Producción", "Atributo de vitalidad o potencia",
-"Atributo que acumula progreso por 5 segundos",
+"Atributo que acumula progreso por 5 segundos.",
 null
 );
 
 getInformation(textLeaP, "context", null, "Lealtad permanente", "Atributo de lealtad",
-"Atributo que fija la cantidad de las creencias sin sufrir pérdidas",
+"Atributo que fija la cantidad de las creencias sin sufrir pérdidas.",
 null
 );
 
 getInformation(textLeaC, "context", null, "Crecimiento", "Atributo de lealtad",
-"Atributo que crece las creencias por 10 segundos",
+"Atributo que crece las creencias por 10 segundos.",
 null
 );
 
 getInformation(gemSoulBox, "context", null, "Alma gema", "Recurso valioso",
-"Útil para compras de mejoras permanentes y potenciadores de tiempo",
+"Útil para compras de mejoras permanentes y potenciadores de tiempo.",
 null
 );
 
@@ -1935,12 +1972,12 @@ buttonNewGame.addEventListener("click", () => {
     playAnimate = true;
 	setNewDefault();
 
-    console.log(JSON.stringify(gameSB));
 	onBeforeUnload();
 })
 
 buttonLoadGame.addEventListener("click", async () => {
 	try {
+        pushNotification("Cargando...", "process");
 		[fileHandle] = await window.showOpenFilePicker({
 			types: [
 				{
@@ -1955,44 +1992,71 @@ buttonLoadGame.addEventListener("click", async () => {
 		});
 		let fileData = await fileHandle.getFile();
 		let text = await fileData.text();
-        gameSB = null;
-        console.log(gameSB);
-		gameSB = JSON.parse(text);
-        console.log(gameSB);
+        const mySentenceSB = "Gracias por jugar Soul Breaker"
+        const bytes = CryptoJS.AES.decrypt(text, mySentenceSB)
+        let gameSBFile = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+		gameSB = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 		
-		if (gameSB.codeGame == "Soul Breaker") {
+		if (gameSBFile.codeGame == "Soul Breaker") {
 			quitWelcome();
 			buttonSave.style.opacity = 1;
 			buttonSave.style.pointerEvents = "inherit";
             idTextFile.innerText = fileHandle.name;
 
             init();
+            gameSB = gameSBFile;
             playAnimate = true;
             setNewDefault();
             //init();
 
+            gameSBFile = null;
 			onBeforeUnload();
+            pushNotification("Se ha cargado el juego con éxito.", "success");
 		} else {
-			console.error("El archivo introducido es inválido");
+            pushNotification("El archivo no es original en este juego", "error");
             setNewGame();
 		}
-	} catch {
-		console.error("Se ha cancelado la solicitud");
+	} catch (err) {
+        console.log(err.name);
+        console.log(err.message);
+        console.error(err);
+        if (err.name == "AbortError") {
+            pushNotification("Se ha cancelado solicitar carga del archivo.", "error");
+        }
+
+        if (err.name == "SyntaxError") {
+            pushNotification("El tipo de archivo del texto es inválido. Inténtalo de nuevo.", "error");
+        }
+
+        if (err.message == "Malformed UTF-8 data") {
+            pushNotification("Los datos UTF-8 de este archivo está mal formados o su formato del texto es inválido. Inténtalo de nuevo.", "error");
+        }
 	}
 })
 
 const save = async () => {
 	try {
-	let stream = await fileHandle.createWritable();
-	await stream.write(JSON.stringify(gameSB));
-	await stream.close();
-	} catch {}
+        pushNotification("Guardando...", "process");
+        const mySentenceSB = "Gracias por jugar Soul Breaker"
+	    let stream = await fileHandle.createWritable();
+	    await stream.write(CryptoJS.AES.encrypt(JSON.stringify(gameSB), mySentenceSB).toString());
+	    await stream.close();
+        pushNotification("Se ha guardado el juego con éxito.", "success");
+	} catch (err) {
+        console.log(err.name);
+        console.log(err.message);
+        console.error(err);
+        if (err.name == "InvalidStateError") {
+            pushNotification("EL disco duro está ocupado escribiendo el archivo.", "error");
+        }
+    }
 }
 
 buttonSave.addEventListener("click", save);
 
 buttonSaveAs.addEventListener("click", async () => {
 	try {
+        pushNotification("Creando archivo...", "process");
 		fileHandle = await window.showSaveFilePicker({
 			types: [
 				{
@@ -2008,7 +2072,15 @@ buttonSaveAs.addEventListener("click", async () => {
 		buttonSave.style.opacity = 1;
 		buttonSave.style.pointerEvents = "all";
 		idTextFile.innerText = fileHandle.name;
-	} catch {}
+        pushNotification("Se ha creado el archivo con éxito.", "success");
+	} catch (err) {
+        console.log(err.name);
+        console.log(err.message);
+        console.error(err);
+        if (err.name == "AbortError") {
+            pushNotification("Se ha cancelado solicitar guardar como archivo.", "error");
+        }
+    }
 })
 
 buttonExitGame.addEventListener("click", () => {
@@ -2017,11 +2089,8 @@ buttonExitGame.addEventListener("click", () => {
 
 //TODO DATA
 resetConfig.addEventListener("click", () => {
-    location.reload();
-});
-
-resetAll.addEventListener("click", () => {
-    location.reload();
+    gameSB.settings = {};
+    setNewDefault();
 });
 
 localStorage.clear();
