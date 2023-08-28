@@ -35,6 +35,10 @@
     <source src="public/sound/notificationSound.mp3" type="audio/mpeg">
 </audio>
 
+<audio id="audioNotifError">
+    <source src="public/sound/notificationError.mp3" type="audio/mpeg">
+</audio>
+
 <audio id="audioEye">
     <source src="public/sound/eyeOpen.mp3" type="audio/mpeg">
 </audio>
@@ -173,6 +177,13 @@
     <div class="boxDesc" style="margin-top: 12px;">Nota: podrás ver de nuevo en la sección de "Acerca de" por si te olvidas algo.</div>
     <div class="boxButtonLabelWindow center">
         <div class="buttonConfirm center onPoint" id="buttonConfirmProtection">Acepto y continuar jugando</div>
+    </div>
+</div>
+
+<div class="boxTopLeft">
+    <div class="boxCircle" id="textLevelMain" style="width: 50px;">1</div>
+    <div class="barProgressTiny" id="barEXP" style="background-color: var(--bgThird); width: 180px; top: 18px; left: 12px;">
+        <div class="inBarProgressTiny" id="barProgressEXP"></div>
     </div>
 </div>
 

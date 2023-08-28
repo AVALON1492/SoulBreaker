@@ -1,4 +1,4 @@
-import { gameSB } from "./main.js";
+import { gameSB, mainEXP } from "./main.js";
 
 const splashEffect = (e) => {
     audioScore.load();
@@ -49,6 +49,7 @@ let timeTraining = 0;
 let timerTraining = null;
 let score = 0;
 let scoreTrain = 0;
+let barScore = 0;
 const timerNumber = 4200;
 let timerPower = null;
 let timerVita = null;
@@ -57,6 +58,21 @@ let patron = 0;
 let num = 0;
 let dir = 0;
 let waiter = 0;
+
+const calcScore = (amount) => {
+    mainEXP.gain(((amount ** 2) + (gameSB.data["lvlMain"] - 1) * 0.1) ** 1.9);
+    score += amount;
+    scoreTrain += amount;
+    if (gameSB.data["lvlMain"] != 1) {
+        barScore = Math.floor((scoreTrain / 10) * ((gameSB.data["lvlMain"] - 1) * 0.1));
+    } else {
+        barScore = Math.floor((scoreTrain / 10));
+    }
+    inBarTrainer.style.width = (scoreTrain % 10) * 10 + "%";
+    textTotalTrainSession.innerText = "+" + barScore;
+    boxScore.className = "scoreAnimation";
+    boxScore.innerText = "x" + score;
+}
 
 const calcTime = () => {
     let min = 0;
@@ -73,7 +89,6 @@ const resetTime = () => {
     timeTraining = 0;
     timeTextTraining.innerText = "0:00";
 }
-
 
 //TODO ANIMATION
 boxScore.addEventListener('webkitAnimationEnd', function () {
@@ -190,12 +205,7 @@ boxPower.addEventListener("mousedown", (event) => {
             event.target.style.background = "var(--colorMain)"
             event.target.style.pointerEvents = "inherit";
             event.target.value = 0;
-            score++;
-            scoreTrain++;
-            inBarTrainer.style.width = (scoreTrain % 10) * 10 + "%";
-            textTotalTrainSession.innerText = "+" + Math.floor(scoreTrain / 10);
-            boxScore.className = "scoreAnimation";
-            boxScore.innerText = "x" + score;
+            calcScore(1);
             splashEffect(event);
         }
     } else {
@@ -229,12 +239,7 @@ const startSystemVita = (idEvent, action) => {
 }
 
 const sumDiscVita = (e) => {
-    score++;
-    scoreTrain++;
-    inBarTrainer.style.width = ((scoreTrain % 10) / 10) * 100 + "%";
-    textTotalTrainSession.innerText = "+" + Math.floor(scoreTrain / 10);
-    boxScore.className = "scoreAnimation";
-    boxScore.innerText = "x" + score;
+    calcScore(1);
     splashEffect(e);
     discVita.style.translate = (30 + Number((Math.random() * (window.innerWidth - 350 - 112 - 30)).toFixed())) + "px " + (100 + Number((Math.random() * (window.innerHeight - 280 - 112 - 100)).toFixed())) + "px";
 }
@@ -339,13 +344,8 @@ const createAtk = (n, dir, type, isInverted) => {
 
         setTimeout(() => {
             if (listCubes[i].value == numDirection) {
-                score++;
-                scoreTrain++;
-                inBarTrainer.style.width = (scoreTrain % 10) * 10 + "%";
-                textTotalTrainSession.innerText = "+" + Math.floor(scoreTrain / 10);
+                calcScore(1);
                 audioScore.load();
-                boxScore.className = "scoreAnimation";
-                boxScore.innerText = "x" + score;
             } else {
                 gameOverSimple();
             }
@@ -380,10 +380,10 @@ exiterTrain.addEventListener("click", () => {
     closeWindow(boxComboScore);
     closeWindow(openedBox);
     if (openedBox.id == "boxPower") {
-        gameSB.data["valuePower"] += Math.floor(scoreTrain / 10);
+        gameSB.data["valuePower"] += Math.floor(barScore);
         numberPower.innerText = gameSB.data["valuePower"];
     } else if (openedBox.id == "boxVita") {
-        gameSB.data["valueHealth"] += Math.floor(scoreTrain / 10);
+        gameSB.data["valueHealth"] += Math.floor(barScore);
         numberVita.innerText = gameSB.data["valueHealth"];
         clearInterval(timerVita);
         isLightOn = false;
@@ -393,7 +393,7 @@ exiterTrain.addEventListener("click", () => {
         discVita.style.zIndex = "6";
         discVita.style.display = "none";
     } else if (openedBox.id == "boxRes") {
-        gameSB.data["valueDef"] += Math.floor(scoreTrain / 10);
+        gameSB.data["valueDef"] += Math.floor(barScore);
         numberRes.innerText = gameSB.data["valueDef"];
         if (numDirection >= 0) {
             boxRes.querySelectorAll(".boxPlate")[numDirection].style.borderBottomColor = "var(--bgOpacSoftest)";
@@ -409,6 +409,7 @@ exiterTrain.addEventListener("click", () => {
     isTraining = false;
     score = 0;
     scoreTrain = 0;
+    barScore = 0;
     waiter = 0;
     inBarTrainer.style.width = "0%";
     textTotalTrainSession.innerText = "+0";

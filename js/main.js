@@ -4,6 +4,11 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
+import { color, float, vec2, texture, normalMap, uv, MeshPhysicalNodeMaterial } from 'three/nodes';
+import { nodeFrame } from 'three/addons/renderers/webgl/nodes/WebGLNodes.js';
+import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
+
+import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import CryptoJS from "crypto-js"
 
 //
@@ -48,10 +53,14 @@ const setNewGame = () => {
             lvlTotalTime: 0,
             lvlTotalEnergy: 0,
             lvlTotalTrain: 0,
-            lvlTotalPower: 0
+            lvlTotalPower: 0,
+            lvlMain: 1,
+            expMain: 0
         }
     }
 }
+
+export let mainEXP;
 
 setNewGame();
 
@@ -89,7 +98,8 @@ const pushNotification = (desc, type = "normal") => {
 
     if (type == "error") {
         createNotif.className = "popUpNotification errorNotif";
-        audioNotif.load();
+        audioNotifError.load();
+        audioNotifError.play();
     }
 
     if (type == "success") {
@@ -1003,6 +1013,38 @@ setInterval(() => {
 
 //
 
+class EXPERIENCIE {
+    constructor(idTextLevel, barProgress, level, expActual, startAmount, sequenceAmount, incrementalAmount, exponencial) {
+        this.idTextLevel = idTextLevel;
+        this.barProgress = barProgress;
+        this.level = level;
+        this.expActual = expActual;
+        this.startAmount = startAmount;
+        this.sequenceAmount = sequenceAmount;
+        this.incrementalAmount = incrementalAmount;    
+        this.idTextLevel.innerText = this.level;
+        this.barProgress.style.width = (this.expActual / this.expRequired) * 100 + "%";
+        this.expRequired = startAmount + sequenceAmount * (level - 1) + incrementalAmount * ((level - 1) ** exponencial);
+    }
+
+    gain(amount) {
+        this.expActual += amount;
+        if (this.expActual >= this.expRequired) {
+            this.expActual -= this.expRequired;
+            this.level++;
+            this.expRequired = this.startAmount + this.sequenceAmount * (this.level - 1) + this.incrementalAmount * ((this.level - 1) ** this.exponencial);
+            this.idTextLevel.innerText = this.idTextLevel;
+        }
+        this.barProgress.style.width = (this.expActual / this.expRequired) * 100 + "%";
+    }
+
+    showInfo() {
+        return (Math.floor(this.expActual) + " / " + this.expRequired);
+    }
+}
+
+mainEXP = new EXPERIENCIE(textLevelMain, barProgressEXP, gameSB.data["lvlMain"], gameSB.data["expMain"], 400, 150, 25, 2)
+
 let progress = 0;
 infoEnergy.innerText = Number(gameSB.data["valueEnergy"].toFixed(2));
 progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
@@ -1020,6 +1062,34 @@ const splashEffect = (e) => {
     }
 }
 
+const createTextNumberSvg = (e, amount, svgType, type = "paster") => {
+    if (settingClickText.getValue()) {
+        const boxNumber = document.createElement("div");
+        boxNumber.className = "boxerNumber";
+        const textNumber = document.createElement("div");
+        textNumber.className = "texterNumber";
+        const svg = document.createElement("div");
+        if (type == "paster") {
+            svg.className = "svgResource";
+            svg.innerHTML = svgType;
+        }
+        if (type == "file") {
+            svg.className = "svgResourceFile " + svgType;
+        }
+        boxNumber.style.left = (e.clientX) + "px";
+        boxNumber.style.top = (e.clientY - 20) + "px";
+        boxNumber.appendChild(textNumber);
+        boxNumber.appendChild(svg);
+        document.body.appendChild(boxNumber);
+
+        textNumber.innerText = "+" + amount;
+
+        setTimeout(() => {
+            document.body.removeChild(boxNumber);
+        }, 1200);
+    }
+}
+
 const gainProgress = (gain, e, isManually = false) => {
     progress += gain;
     if (progress >= progressTotal) {
@@ -1031,30 +1101,12 @@ const gainProgress = (gain, e, isManually = false) => {
         progressTotal = Number((10 / lowCost + 10 * ((gameSB.data["valueEnergy"] / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
         energyAchieve.update();
 
-        if (settingClickText.getValue() && isManually) {
-            const boxNumber = document.createElement("div");
-            boxNumber.className = "boxerNumber";
-            const textNumber = document.createElement("div");
-            textNumber.className = "texterNumber";
-            const svg = document.createElement("div");
-            svg.className = "svgResource";
-            svg.innerHTML = `<svg width="20" height="28" viewBox="0 0 50 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+        if (isManually) {
+            createTextNumberSvg(e, gainEnergy, `<svg width="20" height="28" viewBox="0 0 50 70" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M30.2307 1.21802C30.3188 0.82251 30.4091 0.416992 30.5 0C12.3076 13.5551 3.0224 27.8737 0.647034 39.3245C0.223755 41.1479 0 43.0477 0 45C0 58.8071 11.1929 70 25 70C38.8071 70 50 58.8071 50 45C50 37.3114 46.5292 30.4335 41.069 25.8475C27.5489 13.2605 28.4195 9.35107 30.2307 1.21802Z" fill="var(--colorMain)"/>
             <circle cx="25" cy="45" r="16" fill="white"/>
             <circle cx="25" cy="45" r="10" fill="var(--colorMainFill)"/>
-            </svg>`;
-
-            boxNumber.style.left = (e.clientX) + "px";
-            boxNumber.style.top = (e.clientY - 20) + "px";
-            boxNumber.appendChild(textNumber);
-            boxNumber.appendChild(svg);
-            document.body.appendChild(boxNumber);
-
-            textNumber.innerText = "+" + gainEnergy;
-
-            setTimeout(() => {
-                document.body.removeChild(boxNumber);
-            }, 1200);
+            </svg>`);
         }
     }
 
@@ -1070,15 +1122,46 @@ worldGame.addEventListener("mousedown", (e) => {
 
 setInterval(() => {
     gainProgress(production, null);
-}, 5000)
+}, 5000);
+
+setInterval(() => {
+    const number = Math.random() * 100;
+    console.log(number)
+    if (number < 50) {
+        const createGemSoulRain = document.createElement("div");
+        createGemSoulRain.className = "mediumSvg freePos gemSoulSvg";
+        createGemSoulRain.style.transition = "15s linear"
+        const pos = 30 + Math.random() * (window.innerWidth - 60);
+        createGemSoulRain.style.translate = pos + "px -120px";
+        setTimeout(() => {
+            createGemSoulRain.style.translate = pos + "px " + (window.innerHeight + 120) + "px";
+        }, 10);
+
+        document.body.appendChild(createGemSoulRain);
+
+        createGemSoulRain.addEventListener("mousedown", (e) => {
+            audioScore.load();
+            const amount = Math.floor(Math.random() * 3 + 1);
+            gameSB.data["gemSoul"] += amount;
+            createTextNumberSvg(e, amount, "gemSoulSvg", "file");
+            textGemSoul.innerText = gameSB.data["gemSoul"];
+            createGemSoulRain.remove();
+        })
+
+        setTimeout(() => {
+            createGemSoulRain.remove();
+        }, 15000);
+    }
+    
+}, 20000);
 
 //
 //TODO THREE JS
 //
 const scene = new THREE.Scene();
-const color = new THREE.Color("hsl(264, 100%, 90%)");
-scene.background = color;
-scene.fog = new THREE.FogExp2(color, 0.0016);
+const colour = new THREE.Color("hsl(264, 100%, 90%)");
+scene.background = colour;
+scene.fog = new THREE.FogExp2(colour, 0.0016);
 
 //TODO CAMERAS
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 10, 4800);
@@ -1099,7 +1182,7 @@ settingAntialias = new SETTINGSTOOGLE(buttonAntialias, "antialias", false,
 );
 settingAntialias.setChange();
 
-renderer.setClearColor(color);
+renderer.setClearColor(colour);
 renderer.setSize( window.innerWidth / 1, window.innerHeight / 1 );
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -1192,27 +1275,27 @@ settingRender.setChange();
 //TODO MESH
 const orb = new THREE.Group();
 
-const geometryIcoA = new THREE.IcosahedronGeometry(60, 5);
-const materialIcoA = new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false, transparent: true, opacity: 0.55, side: THREE.BackSide });
+const geometryIcoA = new THREE.IcosahedronGeometry(60, 6);
+const materialIcoA = new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false, transparent: true, opacity: 0.3, side: THREE.BackSide });
 const meshIcoA = new THREE.Mesh( geometryIcoA, materialIcoA );
 orb.add( meshIcoA );
 
-const geometryIcoB = new THREE.IcosahedronGeometry(40, 5);
+const geometryIcoB = new THREE.IcosahedronGeometry(40, 6);
 const materialIcoB = new THREE.MeshPhysicalMaterial({ color: 0x6600ff, fog: false, side: THREE.BackSide, roughness: 1, clearcoat: 0.75, clearcoatRoughness: 0.25 });
 const meshIcoB = new THREE.Mesh( geometryIcoB, materialIcoB );
 orb.add( meshIcoB );
 
-const geometryIcoC = new THREE.IcosahedronGeometry(28, 5);
+const geometryIcoC = new THREE.IcosahedronGeometry(28, 6);
 const materialIcoC = new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false });
 const meshIcoC = new THREE.Mesh( geometryIcoC, materialIcoC );
 orb.add( meshIcoC );
 
-const geometryIcoD = new THREE.IcosahedronGeometry(56, 5);
-const materialIcoD = new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false, transparent: true, opacity: 0.55, side: THREE.BackSide });
+const geometryIcoD = new THREE.IcosahedronGeometry(54, 6);
+const materialIcoD = new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false, transparent: true, opacity: 0.7, side: THREE.BackSide });
 const meshIcoD = new THREE.Mesh( geometryIcoD, materialIcoD );
 orb.add( meshIcoD );
 
-const geometryIcoWA = new THREE.IcosahedronGeometry(44, 5);
+const geometryIcoWA = new THREE.IcosahedronGeometry(44, 6);
 const materialIcoWA = new THREE.MeshPhysicalMaterial({ color: 0x6600ff, wireframe: true, roughness: 1, clearcoat: 0.75, clearcoatRoughness: 0.25 });
 const meshIcoWA = new THREE.Mesh( geometryIcoWA, materialIcoWA );
 orb.add( meshIcoWA );
@@ -1224,8 +1307,17 @@ const materialTorusA = new THREE.MeshBasicMaterial({ color: 0xffffff, fog: false
 const meshTorusA = new THREE.Mesh( geometryTorusA, materialTorusA );
 torus.add( meshTorusA );
 
+const normalMapFlakes = new THREE.CanvasTexture(new FlakesTexture());
+normalMapFlakes.wrapS = THREE.RepeatWrapping;
+normalMapFlakes.wrapT = THREE.RepeatWrapping;
+normalMapFlakes.anisotropy = 20;
+
+const paintUV = uv().mul( vec2( 15, 9 ) );
+const paintNormalScale = vec2( 2 );
+
 const geometryTorusB = new THREE.TorusGeometry(80, 9, 30, 96);
-const materialTorusB = new THREE.MeshPhysicalMaterial({ color: 0x6600ff, roughness: 1, clearcoat: 1, clearcoatRoughness: 0.15 });
+//const materialTorusB = new THREE.MeshPhysicalMaterial({ color: 0x6600ff, roughness: 1, clearcoat: 1, clearcoatRoughness: 0.15 });
+let materialTorusB = new MeshPhysicalNodeMaterial();
 const meshTorusB = new THREE.Mesh( geometryTorusB, materialTorusB );
 torus.add( meshTorusB );
 orb.add(torus);
@@ -1234,7 +1326,7 @@ scene.add(orb);
 
 const geometryTerrain = new THREE.PlaneGeometry(3500, 3500, 150, 150);
 const geometryTerrainStatic = new THREE.PlaneGeometry(3500, 3500, 150, 150);
-const materialTerrain = new THREE.MeshStandardMaterial({ color: 0x6600ff, roughness: 0.5, metalness: 0.4 });
+const materialTerrain = new THREE.MeshPhysicalMaterial({ color: 0x6600ff, roughness: 0.45, metalness: 0.1, reflectivity: 0.4, clearcoat: 0.8, clearcoatRoughness: 1 });
 const meshTerrain = new THREE.Mesh( geometryTerrain, materialTerrain );
 scene.add( meshTerrain );
 
@@ -1308,6 +1400,14 @@ meshTorusB.castShadow = true;
 
 meshTorusB.receiveShadow = true;
 meshTerrain.receiveShadow = true;
+
+const rectLight = new THREE.RectAreaLight( 0xffffff, 4, 200, 200 );
+rectLight.position.set( 0, -120, 0 );
+rectLight.lookAt( 0, 0, 0 );
+scene.add( rectLight );
+
+//const rectLightHelper = new RectAreaLightHelper( rectLight );
+//rectLight.add( rectLightHelper );
 
 settingShadow = new SETTINGSTOOGLE(buttonShadow, "shadow", false,
     (input) => {
@@ -1407,21 +1507,21 @@ const animate = () => {
 
     if (playAnimate) {
         controls.update();
+        nodeFrame.update();
 
         //Animation
         const time = clock.getElapsedTime();
 
         if (settingTerrainAnimation.getValue()) {
             const positionWaves = geometryTerrain.attributes.position;
-            positionWaves.needsUpdate = true;
-
-            const countPar = positionWaves.count;
-            for (let i = 0; i < countPar; i++) {
+            positionWaves.usage = THREE.DynamicDrawUsage;
+            for (let i = 0; i < positionWaves.count; i++) {
 
                 const z = 12 * Math.sin(i / 3 + Math.sin(time) / 5 + time) + 12 * Math.cos(-i / 12 + time);
                 positionWaves.setZ(i, z);
 
             }
+            positionWaves.needsUpdate = true;
         }
 
         if (time < 6 / 4) {
@@ -1434,9 +1534,11 @@ const animate = () => {
         }
 
         const scaleA = Math.cos(time * 1.25) * 0.025;
+        const scaleC = Math.cos((time * 1.5) * 1.4 + 0.25) * 0.06;
         const scaleD = Math.cos((time * 1.25) * 1.333 + 0.5) * 0.025;
 
         meshIcoA.scale.set(1 + scaleA, 1 + scaleA, 1 + scaleA);
+        meshIcoC.scale.set(1 + scaleC, 1 + scaleC, 1 + scaleC)
         meshIcoD.scale.set(1 + scaleD, 1 + scaleD, 1 + scaleD);
 
         torus.rotation.set((time / 5), (time / 5) * 2, (time / 5));
@@ -1616,7 +1718,15 @@ settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "colorSelector"
 
         materialIcoB.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
         materialIcoWA.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
-        materialTorusB.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        //materialTorusB.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
+        materialTorusB = new MeshPhysicalNodeMaterial();
+        materialTorusB.clearcoatNode = float( 1 );
+        materialTorusB.clearcoatRoughnessNode = float( 0 );
+        materialTorusB.metalnessNode = float( 0.55 );
+        materialTorusB.roughnessNode = float( 0.45 );
+        materialTorusB.normalNode = normalMap( texture( normalMapFlakes, paintUV ), paintNormalScale );
+        materialTorusB.colorNode = color( new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)") );
+        meshTorusB.material = materialTorusB;
         lightPointA.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
         lightPointB.color = new THREE.Color("hsl(" + settingColor.getValue()[0] + ", " + settingColor.getValue()[1] + "%, " + settingColor.getValue()[2] + "%)");
         changeMaterial();
@@ -1833,10 +1943,11 @@ const goToolTip = (idEvent, position, words, type = "word") => {
     const showTooltip = () => {
         if (showWord && type == "word" || type == "number") {
             tooltip.style.opacity = 1;
-            if (words == "showProgressEnergy") {
-                tooltip.innerText = (Number(progress.toFixed(2)) + " / " + progressTotal);
-            } else {
+            console.log("")
+            if (typeof words == "string") {
                 tooltip.innerText = words;
+            } else {
+                tooltip.innerText = words();
             }
             updateToolTip();
         }
@@ -1862,7 +1973,8 @@ goToolTip(openTrain, "top", "Entrenamiento");
 goToolTip(buttonExitGame, "top", "Salir");
 goToolTip(buttonSaveAs, "top", "Guardar como");
 goToolTip(buttonSave, "top", "Guardar");
-goToolTip(barEnergy, "top", "showProgressEnergy", "number");
+goToolTip(barEnergy, "top", () => {return Number(progress.toFixed(2)) + " / " + progressTotal}, "number");
+goToolTip(barEXP, "right", mainEXP.showInfo(), "number")
 
 updateStats();
 
