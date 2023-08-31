@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -7,7 +8,6 @@ import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
 import { color, float, vec2, texture, normalMap, uv, MeshPhysicalNodeMaterial } from 'three/nodes';
 import { nodeFrame } from 'three/addons/renderers/webgl/nodes/WebGLNodes.js';
 import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
-
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import CryptoJS from "crypto-js"
 
@@ -32,12 +32,46 @@ window.addEventListener("load", () => {
     clock = new THREE.Clock();
 });
 
+const packSettings = () => {
+    return {
+        soundAmbient: 100,
+        soundInteract: 100,
+        soundSystem: 100,
+        resolution: 1,
+        rotateDamp: 0.05,
+        rotateSpeed: 1,
+        rotateSpeedAuto: 1,
+        zoomSpeed: 2,
+        colorSelector: 1,
+        search: true,
+        scrollBar: false,
+        clickSplash: true,
+        clickText: true,
+        antialias: false,
+        statsFPS: false,
+        bloom: false,
+        image: false,
+        render: false,
+        terrain: false,
+        terrainAnimation: true,
+        shadow: false,
+        control: false,
+        rotation: true,
+        notif: true,
+        tool: true,
+        toolWarn: true,
+        toolTip: true,
+        theme: false,
+        glass: false
+    }
+}
+
 export let gameSB;
 const setNewGame = () => {
     gameSB = {
         codeGame: "Soul Breaker",
         version: versionActual,
-        settings: {},
+        settings: packSettings(),
         data: {
             gemSoul: 0,
             valuePower: 0,
@@ -58,6 +92,10 @@ const setNewGame = () => {
             expMain: 0
         }
     }
+}
+
+const setSettingDefault = () => {
+    gameSB.settings = packSettings();
 }
 
 export let mainEXP;
@@ -91,7 +129,7 @@ let countNotif;
 const pushNotification = (desc, type = "normal") => {
     countNotif = 0;
     const createNotif = document.createElement("div");
-    if (type == "normal") {
+    if (type == "normal" && gameSB.settings["notif"]) {
         createNotif.className = "popUpNotification";
         audioNotif.load();
     }
@@ -102,12 +140,12 @@ const pushNotification = (desc, type = "normal") => {
         audioNotifError.play();
     }
 
-    if (type == "success") {
+    if (type == "success" && gameSB.settings["notif"]) {
         createNotif.className = "popUpNotification successNotif";
         audioNotif.load();
     }
 
-    if (type == "process") {
+    if (type == "process" && gameSB.settings["notif"]) {
         createNotif.className = "popUpNotification processNotif";
     }
     
@@ -203,6 +241,7 @@ settingTerrainAnimation,
 settingShadow,
 settingControl,
 settingRotation,
+settingNotif,
 settingTool,
 settingToolWarn,
 settingToolTip,
@@ -210,16 +249,8 @@ settingTheme,
 settingGlass;
 
 class SETTINGS {
-	constructor(valueObject, setDefault) {
-        gameSB.settings[valueObject] = setDefault;
+	constructor(valueObject) {
 		this.valueObject = valueObject;
-		this.setDefault = setDefault;
-	}
-
-    isNewDefault() {
-		if (gameSB.settings[this.valueObject] == undefined) {
-			gameSB.settings[this.valueObject] = this.setDefault;
-		}
 	}
 
     getValue() {
@@ -228,8 +259,8 @@ class SETTINGS {
 }
 
 class SETTINGSTOOGLE extends SETTINGS {
-    constructor(button, valueObject, setDefault, setFunctionOn, setFunctionOff) {
-        super(valueObject, setDefault);
+    constructor(button, valueObject, setFunctionOn, setFunctionOff) {
+        super(valueObject);
         this.button = button;
         this.svgInput = button.children[0];
         this.textInput = button.children[2].children[0];
@@ -268,8 +299,12 @@ class SETTINGSTOOGLE extends SETTINGS {
         this.setToogle();
     }
 
-    setOnUI() {
-        this.svgInput.style.opacity = 1;
+    setOnUI(svgIcon = null) {
+        if (svgIcon == null) {
+            this.svgInput.style.opacity = 1;
+        } else {
+            this.svgInput.className = svgIcon + " subIcon"
+        }
         this.textInput.innerText = "Encendido";
         this.textInput.style.color = "var(--onText)";
         this.textInput.style.background = "var(--on)";
@@ -277,8 +312,12 @@ class SETTINGSTOOGLE extends SETTINGS {
                                           inset 0px 0px 0px 3px var(--on)`;
     }
 
-    setOffUI() {
-        this.svgInput.style.opacity = 0.4;
+    setOffUI(svgIcon = null) {
+        if (svgIcon == null) {
+            this.svgInput.style.opacity = 0.4;
+        } else {
+            this.svgInput.className = svgIcon + " subIcon"
+        }
         this.textInput.innerText = "Apagado";
         this.textInput.style.color = "var(--offText)";
         this.textInput.style.background = "var(--off)";
@@ -288,8 +327,8 @@ class SETTINGSTOOGLE extends SETTINGS {
 }
 
 class SETTINGSVALUE extends SETTINGS {
-    constructor(button, textRanger = null, valueObject, setDefault, functioner) {
-        super(valueObject, setDefault);
+    constructor(button, textRanger = null, valueObject, functioner) {
+        super(valueObject);
         this.button = button;
         this.textRanger = textRanger;
         this.functioner = functioner;
@@ -351,8 +390,8 @@ class SETTINGSVALUE extends SETTINGS {
 }
 
 class SETTINGSARRAY extends SETTINGS {
-    constructor(valueObject, setDefault) {
-        super(valueObject, setDefault);
+    constructor(valueObject) {
+        super(valueObject);
     }
 
     changeSetting(value) {
@@ -362,8 +401,9 @@ class SETTINGSARRAY extends SETTINGS {
     }
 }
 
+let firstStartup = true;
 function init() {
-const settingColor = new SETTINGSARRAY("color", [264, 100, 50]);
+const settingColor = new SETTINGSARRAY("color");
 
 //AUTOSETTINGS
 let colorLight = 90;
@@ -385,6 +425,16 @@ const bloomPass = new UnrealBloomPass(new THREE.Vector2(1024, 1024));
 //TODO FUNCTIONS
 //
 
+settingNotif = new SETTINGSTOOGLE(buttonNotif, "notif",
+    () => {
+        settingNotif.setOnUI("fi-rr-bell");
+    },
+    () => {
+        settingNotif.setOffUI("fi-rr-bell-slash");
+    }
+)
+settingNotif.setChange();
+
 //TODO AUDIO
 document.addEventListener("click", () => {
     audioAmbient.play();
@@ -393,21 +443,21 @@ document.addEventListener("click", () => {
 
 audioAmbient.loop = true;
 
-settingSoundAmbient = new SETTINGSVALUE(rangeSoundAmbient, textSoundAmbient, "soundAmbient", 100,
+settingSoundAmbient = new SETTINGSVALUE(rangeSoundAmbient, textSoundAmbient, "soundAmbient",
     (value) => {
         audioAmbient.volume = value / 100;
     }
 );
 settingSoundAmbient.createRanger();
 
-settingSoundInteract = new SETTINGSVALUE(rangeSoundInteract, textSoundInteract, "valueSoundInteract", 100,
+settingSoundInteract = new SETTINGSVALUE(rangeSoundInteract, textSoundInteract, "soundInteract",
     (value) => {
         audioClick.volume = value / 100;
     }
 );
 settingSoundInteract.createRanger();
 
-settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, "valueSoundSystem", 100,
+settingSoundSystem = new SETTINGSVALUE(rangeSoundSystem, textSoundSystem, "soundSystem",
     (value) => {
         audioNotif.volume = value / 100;
         audioEye.volume = value / 100;
@@ -555,21 +605,18 @@ const goPerfilMenu = (idEvent, menu, name, className, order, func = null) => {
                 auxFunc(false);
             }
 
-            auxMenuTrain.style.opacity = 0;
-            auxMenuTrain.style.pointerEvents = "none";
             if (auxCardTrain != null) {
                 auxCardTrain.parentElement.className = "cardStats";
                 auxCardTrain.parentElement.style.rotate = "0deg";
                 auxCardTrain.parentElement.style.scale = "1";
             }
-            menuNoneTrain.style.opacity = 1;
-            menuNoneTrain.style.pointerEvents = "inherit";
+            menuStatsTrain.style.display = "none";
+            menuNoneTrain.style.display = "flex";
 
             menu.style.translate = "0px";
             auxOrder = order;
             auxFunc = func;
             auxMenuPerfil = menu;
-            auxMenuTrain = menuNoneTrain;
             auxCardTrain = null;
         }
     });
@@ -578,9 +625,9 @@ const goPerfilMenu = (idEvent, menu, name, className, order, func = null) => {
 goPerfilMenu(openStats, boxPerfilStats, "Estadísticas", "fi-rr-chart-histogram", 0);
 goPerfilMenu(openTrain, boxPerfilTrain, "Entrenamiento", "fi-rr-bullseye-arrow", 1, inTrainMenu);
 
-const goMenuTrain = (idEvent, menu, className) => {
+const goMenuTrain = (idEvent, statsTitle, iconStats, textColor, boxColor, colorShadow, textDesc) => {
     idEvent.addEventListener("click", () => {
-        if (auxMenuTrain != menu) {
+        /*if (auxMenuTrain != menu) {
             auxMenuTrain.style.opacity = 0;
             auxMenuTrain.style.pointerEvents = "none";
             if (auxCardTrain != null) {
@@ -595,14 +642,45 @@ const goMenuTrain = (idEvent, menu, className) => {
             menu.style.pointerEvents = "inherit";
             auxMenuTrain = menu;
             auxCardTrain = idEvent;
+        }*/
+
+        if (auxCardTrain != idEvent && auxCardTrain != null) {
+            auxCardTrain.parentElement.className = "cardStats";
+            auxCardTrain.parentElement.style.rotate = "0deg";
+            auxCardTrain.parentElement.style.scale = "1";
         }
+        
+        idEvent.parentElement.className = "cardStats " + colorShadow;
+        idEvent.parentElement.style.rotate = "4deg";
+        idEvent.parentElement.style.scale = "0.9";
+        auxCardTrain = idEvent;
+
+        menuStatsTrain.style.display = "flex";
+        menuNoneTrain.style.display = "none";
+        textStats.innerText = statsTitle;
+        textComboMax.innerHTML = "Record: 0";
+        textComboStarsMax.innerHTML = "Record stars: 0";
+        descStats.innerText = textDesc;
+        goPlay.value = statsTitle;
+
+        idIconStats.className = "iconStats " + iconStats;
+        textStats.className = textColor;
+        goPlay.className = "fi-rr-play boxStart center " + boxColor;
     })
 }
 
-goMenuTrain(openPower, menuPower, "redShadow");
-goMenuTrain(openVita, menuVita, "greenShadow");
-goMenuTrain(openRes, menuRes, "blueShadow");
-goMenuTrain(openLea, menuLea, "yellowShadow");
+goMenuTrain(openPower, "Potencia", "statsSvgPower", "redLetter", "red", "redShadow",
+"Toca los discos para sumar el entrenamiento de potencia y alcalza el máximo combo antes de que los discos desaparezcan. Perderás combo si tocas en el espacio por error."
+);
+goMenuTrain(openVita, "Vitalidad", "statsSvgVita", "greenLetter", "green", "greenShadow",
+"Enciende el interruptor del centro para iniciar del juego. Recoge discos para sumar el entrenamiento de vitalidad y alcalza el máximo combo evitando la maldición de los ojos despertado. Apaga las luces usando el interruptor para evitar ser pillado por la maldición."
+);
+goMenuTrain(openRes, "Dureza", "statsSvgRes", "blueLetter", "blue", "blueShadow",
+"Protege el alma bloqueando los objetos arrojados y alcalza el máximo combo sin ser atacado por los objetos. Poseen 8 dirrecciones para bloquear."
+);
+goMenuTrain(openLea, "Lealtad", "statsSvgLea", "yellowLetter", "yellow", "yellowShadow",
+"Memoriza los discos que aparecen iluminados seguidos en orden y alcalza el máximo combo sin equivocarse."
+);
 
 //MENU SYSTEM
 let auxIdEvent = null;
@@ -615,8 +693,8 @@ const closeMenuAnimation = () => {
     auxGoMenu.style.display = "none"
 }
 
-const closeMenu = (idEvent) => {
-    idEvent.addEventListener("mousedown", () => {
+const closeMenu = (idEvent, typeEvent = "mousedown") => {
+    idEvent.addEventListener(typeEvent, () => {
         taskHome.style.borderRadius = "42px";
         home.style.translate = "0px 62px";
         home.style.opacity = 0;
@@ -680,13 +758,10 @@ goOpen(openHome, startMenu);
 goOpen(openProfile, profileMenu);
 goOpen(exiterTrain, profileMenu, true);
 
-closeMenu(goPower);
-closeMenu(goVita);
-closeMenu(goRes);
-closeMenu(goLea);
+closeMenu(goPlay, "click");
 
 const startTrain = (idEvent) => {
-    idEvent.addEventListener("mousedown", () => {
+    idEvent.addEventListener("click", () => {
         taskHome.style.width = "400px";
         openHome.style.display = "none";
         openProfile.style.display = "none";
@@ -697,10 +772,7 @@ const startTrain = (idEvent) => {
     });
 }
 
-startTrain(goPower);
-startTrain(goVita);
-startTrain(goRes);
-startTrain(goLea);
+startTrain(goPlay);
 
 window.addEventListener("resize", () => {
     renderer.setPixelRatio( window.devicePixelRatio * settingResolution.getValue() );
@@ -839,10 +911,12 @@ textSearch.addEventListener("keyup", () => {
     searchIndex();
 })
 
-settingSearch = new SETTINGSTOOGLE(buttonSearch, "search", true,
+settingSearch = new SETTINGSTOOGLE(buttonSearch, "search",
     () => {
         settingSearch.setOnUI();
-        showSearch();
+        if (!firstStartup) {
+            showSearch();
+        }
     },
     () => {
         settingSearch.setOffUI();
@@ -855,7 +929,7 @@ hideSearch();
 
 //TODO SCROLLBARS
 document.getElementsByTagName("head")[0].appendChild(styleScrollBar);
-settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "scrollBar", false,
+settingScrollBar = new SETTINGSTOOGLE(buttonScrollBar, "scrollBar",
     () => {
         settingScrollBar.setOnUI();
         styleScrollBar.appendChild(document.createTextNode(".mainScroller::-webkit-scrollbar {display: block; appearance: none; width: 10px}"));
@@ -877,7 +951,7 @@ settingScrollBar.setChange();
 //TODO GAME
 //
 
-settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "clickSplash", true,
+settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "clickSplash",
     () => {
         settingClickSplash.setOnUI();
     },
@@ -887,7 +961,7 @@ settingClickSplash = new SETTINGSTOOGLE(buttonClickSplash, "clickSplash", true,
 );
 settingClickSplash.setChange();
 
-settingClickText = new SETTINGSTOOGLE(buttonClickText, "clickText", true,
+settingClickText = new SETTINGSTOOGLE(buttonClickText, "clickText",
     () => {
         settingClickText.setOnUI();
     },
@@ -917,7 +991,7 @@ const updateStats = () => {
 
     textTouchPower.innerText = Number(touchPower.toFixed(2));
     textGainEnergy.innerText = Number(gainEnergy.toFixed(2));
-    textLowCost.innerText = "x" + Number(lowCost.toFixed(2));
+    textLowCost.innerText = "×" + Number(lowCost.toFixed(2));
     textProduction.innerText = Number(production.toFixed(2)) + " / 5s";
 
     progressTotal = Number((10 / lowCost + 10 * ((gameSB.data["valueEnergy"] / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
@@ -1022,28 +1096,29 @@ class EXPERIENCIE {
         this.startAmount = startAmount;
         this.sequenceAmount = sequenceAmount;
         this.incrementalAmount = incrementalAmount;    
-        this.idTextLevel.innerText = this.level;
-        this.barProgress.style.width = (this.expActual / this.expRequired) * 100 + "%";
-        this.expRequired = startAmount + sequenceAmount * (level - 1) + incrementalAmount * ((level - 1) ** exponencial);
+        this.exponencial = exponencial;
+        this.idTextLevel.innerText = gameSB.data[level];
+        this.expRequired = startAmount + sequenceAmount * (gameSB.data[level] - 1) + incrementalAmount * ((gameSB.data[level] - 1) ** exponencial);
+        this.barProgress.style.width = (gameSB.data[expActual] / this.expRequired) * 100 + "%";
     }
 
     gain(amount) {
-        this.expActual += amount;
-        if (this.expActual >= this.expRequired) {
-            this.expActual -= this.expRequired;
-            this.level++;
-            this.expRequired = this.startAmount + this.sequenceAmount * (this.level - 1) + this.incrementalAmount * ((this.level - 1) ** this.exponencial);
-            this.idTextLevel.innerText = this.idTextLevel;
+        gameSB.data[this.expActual] += amount;
+        if (gameSB.data[this.expActual] >= this.expRequired) {
+            gameSB.data[this.expActual] -= this.expRequired;
+            gameSB.data[this.level]++;
+            this.expRequired = this.startAmount + this.sequenceAmount * (gameSB.data[this.level] - 1) + this.incrementalAmount * ((gameSB.data[this.level] - 1) ** this.exponencial);
+            this.idTextLevel.innerText = gameSB.data[this.level];
         }
-        this.barProgress.style.width = (this.expActual / this.expRequired) * 100 + "%";
+        this.barProgress.style.width = (gameSB.data[this.expActual] / this.expRequired) * 100 + "%";
     }
 
-    showInfo() {
-        return (Math.floor(this.expActual) + " / " + this.expRequired);
+    showRequired() {
+        return this.expRequired;
     }
 }
 
-mainEXP = new EXPERIENCIE(textLevelMain, barProgressEXP, gameSB.data["lvlMain"], gameSB.data["expMain"], 400, 150, 25, 2)
+mainEXP = new EXPERIENCIE(textLevelMain, barProgressEXP, "lvlMain", "expMain", 400, 150, 25, 2)
 
 let progress = 0;
 infoEnergy.innerText = Number(gameSB.data["valueEnergy"].toFixed(2));
@@ -1126,12 +1201,11 @@ setInterval(() => {
 
 setInterval(() => {
     const number = Math.random() * 100;
-    console.log(number)
     if (number < 50) {
         const createGemSoulRain = document.createElement("div");
         createGemSoulRain.className = "mediumSvg freePos gemSoulSvg";
         createGemSoulRain.style.transition = "15s linear"
-        const pos = 30 + Math.random() * (window.innerWidth - 60);
+        const pos = 30 + Math.random() * (window.innerWidth - 120);
         createGemSoulRain.style.translate = pos + "px -120px";
         setTimeout(() => {
             createGemSoulRain.style.translate = pos + "px " + (window.innerHeight + 120) + "px";
@@ -1169,18 +1243,17 @@ camera.lookAt(0,0,0);
 camera.position.set(0, 100, 400);
 
 //TODO RENDER
-let renderer = new THREE.WebGLRenderer({canvas: worldGame, powerPreference: "high-performance", antialias: false});
-settingAntialias = new SETTINGSTOOGLE(buttonAntialias, "antialias", false,
+settingAntialias = new SETTINGSTOOGLE(buttonAntialias, "antialias",
     () => {
         settingAntialias.setOnUI();
-        renderer["antialias"] = true;
     },
     () => {
         settingAntialias.setOffUI();
-        renderer["antialias"] = false;
     }
 );
 settingAntialias.setChange();
+
+let renderer = new THREE.WebGLRenderer({canvas: worldGame, powerPreference: "high-performance", antialias: settingAntialias.getValue()});
 
 renderer.setClearColor(colour);
 renderer.setSize( window.innerWidth / 1, window.innerHeight / 1 );
@@ -1192,7 +1265,7 @@ let sizes = {
 	height: window.innerHeight
 }
 
-settingResolution = new SETTINGSVALUE(rangeResolution, textResolution, "resolution", 1,
+settingResolution = new SETTINGSVALUE(rangeResolution, textResolution, "resolution",
     (value) => {
         renderer.setPixelRatio( window.devicePixelRatio * value );
         composer.renderer = renderer;
@@ -1204,7 +1277,7 @@ settingResolution.resetRanger(resetResolution);
 
 const stats = new Stats();
 document.body.appendChild(stats.dom);
-settingStatsFPS = new SETTINGSTOOGLE(buttonStatsFPS, "statsFPS", false,
+settingStatsFPS = new SETTINGSTOOGLE(buttonStatsFPS, "statsFPS",
     () => {
         settingStatsFPS.setOnUI();
         document.body.appendChild(stats.dom);
@@ -1219,7 +1292,7 @@ settingStatsFPS.setChange();
 //TODO COMPOSER
 const renderScene = new RenderPass(scene, camera);
 
-settingBloom = new SETTINGSTOOGLE(buttonBloom, "bloom", false,
+settingBloom = new SETTINGSTOOGLE(buttonBloom, "bloom",
     () => {
         settingBloom.setOnUI();
         composer.insertPass(bloomPass, 1);
@@ -1238,7 +1311,7 @@ settingBloom.setChange();
 const afterImagePass = new AfterimagePass();
 afterImagePass.uniforms["damp"].value = 0.8;
 
-settingImage = new SETTINGSTOOGLE(buttonImage, "image", false,
+settingImage = new SETTINGSTOOGLE(buttonImage, "image",
     () => {
         settingImage.setOnUI();
         composer.insertPass(afterImagePass, 2);
@@ -1250,7 +1323,7 @@ settingImage = new SETTINGSTOOGLE(buttonImage, "image", false,
 );
 settingImage.setChange();
 
-settingRender = new SETTINGSTOOGLE(buttonRender, "render", false,
+settingRender = new SETTINGSTOOGLE(buttonRender, "render",
     () => {
         settingRender.setOnUI();
         composer.insertPass(renderScene, 0);
@@ -1330,7 +1403,7 @@ const materialTerrain = new THREE.MeshPhysicalMaterial({ color: 0x6600ff, roughn
 const meshTerrain = new THREE.Mesh( geometryTerrain, materialTerrain );
 scene.add( meshTerrain );
 
-settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "terrain", false,
+settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "terrain",
     (input) => {
         input["svg"].className = "fi-rr-grid-alt subIcon";
         input["text"].innerText = "Alámbrica";
@@ -1344,7 +1417,7 @@ settingTerrain = new SETTINGSTOOGLE(buttonTerrain, "terrain", false,
 );
 settingTerrain.setChange();
 
-settingTerrainAnimation = new SETTINGSTOOGLE(buttonTerrainAnimation, "terrainAnimation", true,
+settingTerrainAnimation = new SETTINGSTOOGLE(buttonTerrainAnimation, "terrainAnimation",
     (input) => {
         input["svg"].className = "fi-rr-water subIcon";
         input["text"].innerText = "Animado";
@@ -1409,7 +1482,7 @@ scene.add( rectLight );
 //const rectLightHelper = new RectAreaLightHelper( rectLight );
 //rectLight.add( rectLightHelper );
 
-settingShadow = new SETTINGSTOOGLE(buttonShadow, "shadow", false,
+settingShadow = new SETTINGSTOOGLE(buttonShadow, "shadow",
     (input) => {
         input["svg"].className = "fi-rr-opacity subIcon";
         settingShadow.setOnUI();
@@ -1427,7 +1500,7 @@ settingShadow.setChange();
 
 //TODO CONTROLS
 const controls = new OrbitControls( camera, renderer.domElement );
-settingControl = new SETTINGSTOOGLE(buttonControl, "control", false,
+settingControl = new SETTINGSTOOGLE(buttonControl, "control",
     () => {
         settingControl.setOnUI();
         controls.mouseButtons = {
@@ -1451,12 +1524,18 @@ controls.autoRotateSpeed = 1;
 controls.rotateSpeed = 1;
 controls.enableDamping = true;
 controls.enablePan = false;
-controls.zoomSpeed = 2;
+controls.enableZoom = false;
 controls.maxPolarAngle = Math.PI / 2;
-controls.minDistance = 300;
-controls.maxDistance = 800;
 
-settingRotation = new SETTINGSTOOGLE(buttonRotation, "rotation", true,
+const controls2 = new TrackballControls( camera, renderer.domElement );
+controls2.noRotate = true;
+controls2.noPan = true;
+controls2.noZoom = false;
+controls2.zoomSpeed = 2;
+controls2.minDistance = 240;
+controls2.maxDistance = 1000;
+
+settingRotation = new SETTINGSTOOGLE(buttonRotation, "rotation",
     () => {
         settingRotation.setOnUI();
         controls.autoRotate = true;
@@ -1468,7 +1547,7 @@ settingRotation = new SETTINGSTOOGLE(buttonRotation, "rotation", true,
 );
 settingRotation.setChange();
 
-settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "rotateDamp", 0.05,
+settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "rotateDamp",
     (value) => {
         controls.dampingFactor = value;
     }
@@ -1476,7 +1555,7 @@ settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "rotateDa
 settingRotateDamp.createRanger();
 settingRotateDamp.resetRanger(resetRotateDamp);
 
-settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotateSpeed", 1,
+settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotateSpeed",
     (value) => {
         controls.rotateSpeed = value;
     }
@@ -1484,7 +1563,7 @@ settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotat
 settingRotateSpeed.createRanger();
 settingRotateSpeed.resetRanger(resetRotateSpeed);
 
-settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeedAuto, "rotateSpeedAuto", 1,
+settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeedAuto, "rotateSpeedAuto",
     (value) => {
         controls.autoRotateSpeed = value;
     }
@@ -1492,9 +1571,9 @@ settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeed
 settingRotateSpeedAuto.createRanger();
 settingRotateSpeedAuto.resetRanger(resetRotateSpeedAuto);
 
-settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "zoomSpeed", 2,
+settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "zoomSpeed",
     (value) => {
-        controls.zoomSpeed = value;
+        controls2.zoomSpeed = value;
     }
 );
 settingZoomSpeed.createRanger();
@@ -1506,7 +1585,11 @@ const animate = () => {
     requestAnimationFrame(animate);
 
     if (playAnimate) {
+        const target = controls.target;
         controls.update();
+        controls2.target.set(target.x, target.y, target.z);
+        controls2.update();
+
         nodeFrame.update();
 
         //Animation
@@ -1594,9 +1677,9 @@ const effectFluent = () => {
     root.style.setProperty("--bgFluentB", themeRgb + (themeOpacity / 2) + ")");
 }
 
-settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
+settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme",
     (input) => {
-        input["svg"].className = "fi-rr-moon subIcon"
+        input["svg"].className = "fi-rr-moon-stars subIcon"
         input["text"].innerText = "Oscuro";
 
         root.style.setProperty("--bgMain", "rgb(0, 0, 0)");
@@ -1664,7 +1747,7 @@ settingTheme = new SETTINGSTOOGLE(buttonTheme, "theme", false,
 );
 settingTheme.setChange();
 
-settingGlass = new SETTINGSTOOGLE(buttonGlass, "glass", false,
+settingGlass = new SETTINGSTOOGLE(buttonGlass, "glass",
     () => {
         settingGlass.setOnUI();
         root.style.setProperty("--filterGlass", "blur(16px)");
@@ -1678,7 +1761,7 @@ settingGlass = new SETTINGSTOOGLE(buttonGlass, "glass", false,
 );
 settingGlass.setChange();
 
-settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "colorSelector", 1,
+settingColorSelector = new SETTINGSVALUE(groupColors, colorText, "colorSelector",
     (value, group, text) => {
         switch (value) {
             case 0:
@@ -1755,7 +1838,7 @@ document.addEventListener("mousemove", (e) => {
 //TODO INFO
 let showContext;
 let showWarning;
-settingTool = new SETTINGSTOOGLE(buttonTool, "valueTool", true,
+settingTool = new SETTINGSTOOGLE(buttonTool, "tool",
     () => {
         settingTool.setOnUI();
         showContext = true;
@@ -1767,7 +1850,7 @@ settingTool = new SETTINGSTOOGLE(buttonTool, "valueTool", true,
 );
 settingTool.setChange();
 
-settingToolWarn = new SETTINGSTOOGLE(buttonToolWarn, "valueToolWarn", true,
+settingToolWarn = new SETTINGSTOOGLE(buttonToolWarn, "toolWarn",
     () => {
         settingToolWarn.setOnUI();
         showWarning = true;
@@ -1823,8 +1906,8 @@ getInformation(textEnergyId, "context", null, "Energía del alma", "Recurso",
 null
 );
 
-getInformation(buttonAntialias, "warning", null, "Aviso", "Se reiniciará la página",
-"Al aplicarlo, se refrescará la página volviendo al inicio.",
+getInformation(buttonAntialias, "warning", null, "Aviso", "Recarga manual",
+"Al aplicarlo, se guardarán datos en tu archivo y debes refrescar la página para surtir cambios.",
 null
 );
 
@@ -1915,7 +1998,7 @@ null
 
 //TOOLTIP
 let showWord;
-settingToolTip = new SETTINGSTOOGLE(buttonToolTip, "valueToolTip", true,
+settingToolTip = new SETTINGSTOOGLE(buttonToolTip, "toolTip",
     () => {
         settingToolTip.setOnUI();
         showWord = true;
@@ -1943,7 +2026,6 @@ const goToolTip = (idEvent, position, words, type = "word") => {
     const showTooltip = () => {
         if (showWord && type == "word" || type == "number") {
             tooltip.style.opacity = 1;
-            console.log("")
             if (typeof words == "string") {
                 tooltip.innerText = words;
             } else {
@@ -1974,7 +2056,7 @@ goToolTip(buttonExitGame, "top", "Salir");
 goToolTip(buttonSaveAs, "top", "Guardar como");
 goToolTip(buttonSave, "top", "Guardar");
 goToolTip(barEnergy, "top", () => {return Number(progress.toFixed(2)) + " / " + progressTotal}, "number");
-goToolTip(barEXP, "right", mainEXP.showInfo(), "number")
+goToolTip(barEXP, "right", () => {return Math.floor(gameSB.data["expMain"]) + " / " + mainEXP.showRequired()} , "number")
 
 updateStats();
 
@@ -2017,52 +2099,50 @@ const quitWelcome = () => {
     }, 310)
 }
 
-const setSettingNewDefaultToogle = (objectSetting) => {
-	objectSetting.isNewDefault();
+const setSettingToogle = (objectSetting) => {
 	objectSetting.setToogle();
 }
 
-const setSettingNewDefaultRanger = (objectSetting) => {
-    objectSetting.isNewDefault();
+const setSettingRanger = (objectSetting) => {
     objectSetting.ranger();
 }
 
-const setSettingNewDefaultDropDown = (objectSetting) => {
-	objectSetting.isNewDefault();
+const setSettingDropDown = (objectSetting) => {
     objectSetting.droper();
 }
 
-const setNewDefault = () => {
-    setSettingNewDefaultRanger(settingSoundAmbient);
-    setSettingNewDefaultRanger(settingSoundInteract);
-    setSettingNewDefaultRanger(settingSoundSystem);
-    setSettingNewDefaultRanger(settingResolution);
-    setSettingNewDefaultRanger(settingRotateDamp);
-    setSettingNewDefaultRanger(settingRotateSpeed);
-    setSettingNewDefaultRanger(settingRotateSpeedAuto);
-    setSettingNewDefaultRanger(settingZoomSpeed);
+const setSettings = () => {
+    setSettingRanger(settingSoundAmbient);
+    setSettingRanger(settingSoundInteract);
+    setSettingRanger(settingSoundSystem);
+    setSettingRanger(settingResolution);
+    setSettingRanger(settingRotateDamp);
+    setSettingRanger(settingRotateSpeed);
+    setSettingRanger(settingRotateSpeedAuto);
+    setSettingRanger(settingZoomSpeed);
 
-    setSettingNewDefaultDropDown(settingColorSelector);
+    setSettingDropDown(settingColorSelector);
 
-    setSettingNewDefaultToogle(settingSearch);
-    setSettingNewDefaultToogle(settingScrollBar);
-    setSettingNewDefaultToogle(settingClickSplash);
-    setSettingNewDefaultToogle(settingClickText);
-    setSettingNewDefaultToogle(settingAntialias);
-    setSettingNewDefaultToogle(settingStatsFPS);
-    setSettingNewDefaultToogle(settingBloom);
-    setSettingNewDefaultToogle(settingImage);
-    setSettingNewDefaultToogle(settingRender);
-    setSettingNewDefaultToogle(settingTerrain);
-    setSettingNewDefaultToogle(settingTerrainAnimation);
-    setSettingNewDefaultToogle(settingShadow);
-    setSettingNewDefaultToogle(settingControl);
-    setSettingNewDefaultToogle(settingRotation);
-    setSettingNewDefaultToogle(settingTool);
-    setSettingNewDefaultToogle(settingToolWarn);
-    setSettingNewDefaultToogle(settingToolTip);
-	setSettingNewDefaultToogle(settingTheme);
-    setSettingNewDefaultToogle(settingGlass);
+    setSettingToogle(settingSearch);
+    setSettingToogle(settingScrollBar);
+    setSettingToogle(settingClickSplash);
+    setSettingToogle(settingClickText);
+    setSettingToogle(settingAntialias);
+    setSettingToogle(settingStatsFPS);
+    setSettingToogle(settingBloom);
+    setSettingToogle(settingImage);
+    setSettingToogle(settingRender);
+    setSettingToogle(settingTerrain);
+    setSettingToogle(settingTerrainAnimation);
+    setSettingToogle(settingShadow);
+    setSettingToogle(settingControl);
+    setSettingToogle(settingRotation);
+    setSettingToogle(settingNotif);
+    setSettingToogle(settingTool);
+    setSettingToogle(settingToolWarn);
+    setSettingToogle(settingToolTip);
+	setSettingToogle(settingTheme);
+    setSettingToogle(settingGlass);
 }
 
 const onBeforeUnload = () => {
@@ -2078,11 +2158,10 @@ buttonNewGame.addEventListener("click", () => {
 	buttonSave.style.pointerEvents = "none";
     buttonSaveAs.children[0].className = "fi-rr-add-document subIcon";
 
-    setNewGame();
-
     init();
+    setSettings();
     playAnimate = true;
-	setNewDefault();
+    firstStartup = false;
 
 	onBeforeUnload();
 })
@@ -2106,8 +2185,9 @@ buttonLoadGame.addEventListener("click", async () => {
 		let text = await fileData.text();
         const mySentenceSB = "Gracias por jugar Soul Breaker"
         const bytes = CryptoJS.AES.decrypt(text, mySentenceSB)
-        let gameSBFile = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-		gameSB = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        let gameSBFile = await JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+		//gameSB = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+        //setNewGame();
 		
 		if (gameSBFile.codeGame == "Soul Breaker") {
 			quitWelcome();
@@ -2115,11 +2195,12 @@ buttonLoadGame.addEventListener("click", async () => {
 			buttonSave.style.pointerEvents = "inherit";
             idTextFile.innerText = fileHandle.name;
 
+            Object.assign(gameSB.settings, gameSBFile.settings);
+            Object.assign(gameSB.data, gameSBFile.data);
             init();
-            gameSB = gameSBFile;
             playAnimate = true;
-            setNewDefault();
-            //init();
+            setSettings();
+            firstStartup = false;
 
             gameSBFile = null;
 			onBeforeUnload();
@@ -2127,6 +2208,10 @@ buttonLoadGame.addEventListener("click", async () => {
 		} else {
             pushNotification("El archivo no es original en este juego", "error");
             setNewGame();
+            init();
+            playAnimate = true;
+            setSettings();
+            onBeforeUnload();
 		}
 	} catch (err) {
         console.log(err.name);
@@ -2202,7 +2287,8 @@ buttonExitGame.addEventListener("click", () => {
 //TODO DATA
 resetConfig.addEventListener("click", () => {
     gameSB.settings = {};
-    setNewDefault();
+    setSettingDefault();
+    setSettings();
 });
 
 localStorage.clear();

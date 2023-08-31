@@ -256,19 +256,19 @@ span {
     text-shadow: 0px 0px 20px var(--bgText);
     -webkit-text-stroke: 1.25px var(--bgThird);
     animation: playWelcome 1.2s alternate infinite;
+    will-change: transform;
+    white-space: nowrap;
 }
 
 @keyframes playWelcome {
     0% {
-        opacity: 1;
-    }
-
-    30% {
-        opacity: 1;
+        letter-spacing: 1px;
+        scale: 0.85;
     }
 
     100% {
-        opacity: 0;
+        letter-spacing: 8px;
+        scale: 1;
     }
 }
 
@@ -1044,8 +1044,6 @@ span {
     flex-direction: column;
     box-sizing: border-box;
     transition: 0.2s;
-    pointer-events: none;
-    opacity: 0;
 }
 
 .boxStart {
@@ -1066,6 +1064,10 @@ span {
     translate: 0px -3px;
 }
 
+.boxStart:active {
+    translate: 0px 0px;
+}
+
 .boxTitle {
     width: fit-content;
     top: -24px;
@@ -1074,7 +1076,7 @@ span {
     box-sizing: border-box;
     color: var(--colorMain);
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     white-space: nowrap;
     display: flex;
     align-items: center;
@@ -1096,6 +1098,7 @@ span {
 
 .boxDesc {
     font-size: 14px;
+    font-weight: 400;
     color: var(--bgText);
     text-align: justify;
     padding-inline: 8px;
@@ -1197,12 +1200,19 @@ span {
     padding: 3px 9px 3px 9px;
     border-radius: 24px;
     display: flex;
+    min-height: 19px;
     justify-content: center;
+    color: var(--bgText);
     align-items: center;
     gap: 2px;
     pointer-events: none;
     box-shadow: 0px 0px 0px 2px var(--colorMain),
                 inset 0px 0px 0px 3px var(--colorMainFill);
+}
+
+.smaller {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .boxReset {

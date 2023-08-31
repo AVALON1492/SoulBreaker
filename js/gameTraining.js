@@ -63,15 +63,14 @@ const calcScore = (amount) => {
     mainEXP.gain(((amount ** 2) + (gameSB.data["lvlMain"] - 1) * 0.1) ** 1.9);
     score += amount;
     scoreTrain += amount;
-    if (gameSB.data["lvlMain"] != 1) {
-        barScore = Math.floor((scoreTrain / 10) * ((gameSB.data["lvlMain"] - 1) * 0.1));
-    } else {
-        barScore = Math.floor((scoreTrain / 10));
+    if (scoreTrain >= 10) {
+        scoreTrain -= 10;
+        barScore += amount + (gameSB.data["lvlMain"] - 1) * 0.1;
+        textTotalTrainSession.innerText = "+" + Math.floor(barScore);
     }
-    inBarTrainer.style.width = (scoreTrain % 10) * 10 + "%";
-    textTotalTrainSession.innerText = "+" + barScore;
+    inBarTrainer.style.width = (scoreTrain / 10) * 100 + "%";
     boxScore.className = "scoreAnimation";
-    boxScore.innerText = "x" + score;
+    boxScore.innerText = "×" + score;
 }
 
 const calcTime = () => {
@@ -356,17 +355,20 @@ const createAtk = (n, dir, type, isInverted) => {
 
 //TODO TIMERS
 const buttonsTraining = (point, opac, text) => {
-    goPower.style.pointerEvents = point;
-    goVita.style.pointerEvents = point;
-    goRes.style.pointerEvents = point;
+    goPlay.style.pointerEvents = point;
+    goPlay.style.opacity = opac;
+    goPlay.children[0].innerText = text;
+    //goPower.style.pointerEvents = point;
+    //goVita.style.pointerEvents = point;
+    //goRes.style.pointerEvents = point;
     //goLea.style.pointerEvents = point;
-    goPower.style.opacity = opac;
-    goVita.style.opacity = opac;
-    goRes.style.opacity = opac;
+    //goPower.style.opacity = opac;
+    //goVita.style.opacity = opac;
+    //goRes.style.opacity = opac;
     //goLea.style.opacity = opac;
-    goPower.children[0].innerText = text;
-    goVita.children[0].innerText = text;
-    goRes.children[0].innerText = text;
+    //goPower.children[0].innerText = text;
+    //goVita.children[0].innerText = text;
+    //goRes.children[0].innerText = text;
     //goLea.children[0].innerText = text;
 }
 
@@ -379,10 +381,10 @@ exiterTrain.addEventListener("click", () => {
     resetTime();
     closeWindow(boxComboScore);
     closeWindow(openedBox);
-    if (openedBox.id == "boxPower") {
+    if (goPlay.value == "Potencia") {
         gameSB.data["valuePower"] += Math.floor(barScore);
         numberPower.innerText = gameSB.data["valuePower"];
-    } else if (openedBox.id == "boxVita") {
+    } else if (goPlay.value == "Vitalidad") {
         gameSB.data["valueHealth"] += Math.floor(barScore);
         numberVita.innerText = gameSB.data["valueHealth"];
         clearInterval(timerVita);
@@ -392,7 +394,7 @@ exiterTrain.addEventListener("click", () => {
         circleVita.innerText = "Iniciar";
         discVita.style.zIndex = "6";
         discVita.style.display = "none";
-    } else if (openedBox.id == "boxRes") {
+    } else if (goPlay.value == "Dureza") {
         gameSB.data["valueDef"] += Math.floor(barScore);
         numberRes.innerText = gameSB.data["valueDef"];
         if (numDirection >= 0) {
@@ -550,32 +552,38 @@ const setColorClassNames = (color) => {
     textTotalTrainSession.className = color + "Letter " + color + "LetterShadow";
 }
 
-const goTrainer = (idEvent, interval, box, color, classSvg, type = "flex") => {
-    idEvent.addEventListener("mousedown", () => {
-        setColorClassNames(color);
-        svgTrain.className = classSvg;
-        timerTraining = setInterval(() => {
-            calcTime();
-        }, 1000)
-        openWindow(boxComboScore, "flex");
-        openWindow(box, type);
-        openedBox = box;
-        buttonsTraining("none", 0.3, "Limpiando...");
-        isTraining = true;
-        let caller = interval;
-        if (caller != null) {
-            caller();
-        }
-        failBox.style.display = "block";
-        failBox.className = "";
-        gameSB.data["totalTrain"] += 1;
-        textTotalTrain.innerText = gameSB.data["totalTrain"];
-    });
+const goTrainer = (interval, box, color, classSvg, type = "flex") => {
+    setColorClassNames(color);
+    svgTrain.className = classSvg;
+    timerTraining = setInterval(() => {
+        calcTime();
+    }, 1000)
+    openWindow(boxComboScore, "flex");
+    openWindow(box, type);
+    openedBox = box;
+    buttonsTraining("none", 0.3, "Limpiando...");
+    isTraining = true;
+    let caller = interval;
+    if (caller != null) {
+        caller();
+    }
+    failBox.style.display = "block";
+    failBox.className = "";
+    gameSB.data["totalTrain"] += 1;
+    textTotalTrain.innerText = gameSB.data["totalTrain"];
+    textTrainUp.innerText = "×" + (1 + (gameSB.data["lvlMain"] - 1) * 0.1);
 }
 
-goTrainer(goPower, createIntervalPower, boxPower, "red", "statsSvgPower", "grid");
-goTrainer(goVita, null, boxVita, "green", "statsSvgVita");
-goTrainer(goRes, createIntervalRes, boxRes, "blue", "statsSvgRes");
+goPlay.addEventListener("click", () => {
+    console.log(goPlay.value)
+    if (goPlay.value == "Potencia") {
+        goTrainer(createIntervalPower, boxPower, "red", "statsSvgPower", "grid");
+    } else if (goPlay.value == "Vitalidad") {
+        goTrainer(null, boxVita, "green", "statsSvgVita");
+    } else if (goPlay.value == "Dureza") {
+        goTrainer(createIntervalRes, boxRes, "blue", "statsSvgRes");
+    }
+});
 
 //TODO GAME OVERS
 const gameOverSimple = () => {

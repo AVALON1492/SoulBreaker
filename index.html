@@ -158,7 +158,7 @@
             </div>
         </div>
     </div>
-    <a class="buttonTask onPoint" style="position: absolute; right: 30px; bottom: 30px;" href="https://github.com/AVALON1492/SoulBreaker/tree/main">
+    <a class="buttonTask onPoint" style="position: absolute; right: 30px; bottom: 30px;" href="https://github.com/AVALON1492/SoulBreaker/tree/main" target="_blank" aria-label="Repositorio del proyecto Github">
         <div class="iconStats" style="background-image: url(css/svg/social/github-mark.svg);"></div>
     </a>
 </div>
@@ -363,7 +363,7 @@
                         </div>
                     </div>
                     <div class="boxButton">
-                        <i class="fi-rr-palette subIcon" style="color: var(--colorMain)"></i>
+                        <i class="fi-rr-brush subIcon" style="color: var(--colorMain)"></i>
                         <div class="textSettings">
                             <div>Colores</div>
                             <div class="textHighlightInfo" id="colorText">Indigo</div>
@@ -585,6 +585,16 @@
                         <div class="textSettings">
                             <div>Búsqueda</div>
                             <div class="textHighlightInfo">Herramienta para buscar ajustes</div>
+                        </div>
+                        <div class="inboxSettings">
+                            <div class="boxText"></div>
+                        </div>
+                    </div>
+                    <div class="boxButton isToogle onPoint" id="buttonNotif">
+                        <i class="fi-rr-bell subIcon"></i>
+                        <div class="textSettings">
+                            <div>Notificaciones</div>
+                            <div class="textHighlightInfo">Se muestran sólo los mensajes de información corriente en tiempo real.</div>
                         </div>
                         <div class="inboxSettings">
                             <div class="boxText"></div>
@@ -921,7 +931,7 @@
                         <i class="fi-rr-link-alt topIcon"></i>
                         <div>Enlaces</div>
                     </div>
-                    <a class="boxButton isToogle onPoint" style="text-decoration: none;" href="https://github.com/AVALON1492/SoulBreaker/tree/main">
+                    <a class="boxButton isToogle onPoint" style="text-decoration: none;" href="https://github.com/AVALON1492/SoulBreaker/tree/main" target="_blank" aria-label="Repositorio del proyecto Github">
                         <i class="fi-rr-link subIcon"></i>
                         <div class="textSettings">
                             <div>Enlace a Github</div>
@@ -1080,7 +1090,7 @@
                             <div>Coste</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig" id="textLowCost">x1</div>
+                            <div class="textInfoConfig" id="textLowCost">×1</div>
                         </div>
                     </div>
                     <div class="boxButton boxSmall" id="textPro">
@@ -1113,40 +1123,18 @@
                 </div>
 
                 <div class="boxContainerSelect" id="boxPerfilTrain" style="translate: calc(100% + 30px);">
-                    <div class="boxCard center" id="menuNoneTrain" style="opacity: 1;">
+                    <div class="boxCard center" id="menuNoneTrain">
                         <div class="boxDesc center" id="boxTrainNope" style="width: 100%; height: 100%; font-weight: 700; opacity: 0.5;">Selecciona un atributo en icono para iniciar el entrenamiento</div>
                     </div>
-                    <div class="boxCard" id="menuPower">
-                        <div class="boxTitle" style="color: var(--red);">
-                            <div class="iconStats" style="background-image: url(css/svg/stats/power.svg);"></div>
-                            <div>Potencia</div>
+                    <div class="boxCard" style="display: none;" id="menuStatsTrain">
+                        <div class="boxTitle">
+                            <div id="idIconStats"></div>
+                            <div id="textStats"></div>
+                            <div class="boxText smaller" id="textComboMax"> Récord: 0</div>
+                            <div class="boxText smaller" id="textComboStarsMax"> Récord stars: 0</div>
                         </div>
-                        <div class="boxDesc">Toca los discos para sumar el entrenamiento de potencia y alcalza el máximo combo antes de que los discos desaparezcan. Perderás combo si tocas en el espacio por error.</div>
-                        <i class="fi-rr-play boxStart center red" id="goPower"><span>Empezar</span></i>
-                    </div>
-                    <div class="boxCard" id="menuVita">
-                        <div class="boxTitle" style="color: var(--green);">
-                            <div class="iconStats" style="background-image: url(css/svg/stats/cruz.svg);"></div>
-                            <div>Vitalidad</div>
-                        </div>
-                        <div class="boxDesc">Enciende el interruptor del centro para iniciar del juego. Recoge discos para sumar el entrenamiento de vitalidad y alcalza el máximo combo evitando la maldición de los ojos despertado. Apaga las luces usando el interruptor para evitar ser pillado por la maldición.</div>
-                        <i class="fi-rr-play boxStart center green" id="goVita"><span>Empezar</span></i>
-                    </div>
-                    <div class="boxCard" id="menuRes">
-                        <div class="boxTitle" style="color: var(--blue);">
-                            <div class="iconStats" style="background-image: url(css/svg/stats/shield.svg);"></div>
-                            <div>Dureza</div>
-                        </div>
-                        <div class="boxDesc">Protege el alma bloqueando los objetos arrojados y alcalza el máximo combo sin ser atacado por los objetos. Poseen 8 dirrecciones para bloquear.</div>
-                        <i class="fi-rr-play boxStart center blue" id="goRes"><span>Empezar</span></i>
-                    </div>
-                    <div class="boxCard" id="menuLea">
-                        <div class="boxTitle" style="color: var(--yellow);">
-                            <div class="iconStats" style="background-image: url(css/svg/stats/belief.svg);"></div>
-                            <div>Lealtad</div>
-                        </div>
-                        <div class="boxDesc">Memoriza los discos que aparecen iluminados seguidos en orden y alcalza el máximo combo sin equivocarse.</div>
-                        <i class="fi-rr-play boxStart center yellow" id="goLea" style="pointer-events: none;"><span>No está disponible aún. Se lanzará en la siguiente versión</span></i>
+                        <div class="boxDesc" id="descStats" style="margin-top: 6px;"></div>
+                        <i class="fi-rr-play boxStart center red" id="goPlay"><span>Empezar</span></i>
                     </div>
                 </div>
             </div>
@@ -1169,11 +1157,11 @@
 <div id="barTrainer">
     <div id="inBarTrainer"></div>
 </div>
-<div id="textTrainUp">+1</div>
+<div id="textTrainUp">×1</div>
 
 <div id="boxComboScore">
     <div class="comboText">Combo</div>
-    <div id="boxScore">x0</div>
+    <div id="boxScore">×0</div>
 </div>
 
 <div id="failBox"></div>

@@ -1,6 +1,6 @@
 :root {
     --red: rgba(255, 1, 77, 1);
-    --green: rgba(1, 255, 100, 1);
+    --green: rgba(1, 240, 90, 1);
     --blue: rgba(0, 117, 253, 1);
     --yellow: rgba(255, 184, 2, 1);
     --redT: rgba(255, 1, 77, 0.15);
@@ -54,6 +54,30 @@
     background-color: var(--yellowT);
     box-shadow: inset 0px 0px 0px 2px var(--yellow),
                 inset 0px 0px 0px 6px var(--yellowT);
+    color: var(--yellow);
+}
+
+.red:active {
+    background-color: transparent;
+    box-shadow: inset 0px 0px 0px 2px var(--red);
+    color: var(--red);
+}
+
+.green:active {
+    background-color: transparent;
+    box-shadow: inset 0px 0px 0px 2px var(--green);
+    color: var(--green);
+}
+
+.blue:active {
+    background-color: transparent;
+    box-shadow: inset 0px 0px 0px 2px var(--blue);
+    color: var(--blue);
+}
+
+.yellow:active {
+    background-color: transparent;
+    box-shadow: inset 0px 0px 0px 2px var(--yellow);
     color: var(--yellow);
 }
 
