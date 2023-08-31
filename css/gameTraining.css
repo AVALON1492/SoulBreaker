@@ -65,18 +65,14 @@
     -webkit-text-stroke: 1.5px var(--bgThird);
 }
 
-#boxComboScore {
+.boxComboScorer {
     position: absolute;
     top: calc(50% - 40px);
     translate: 0% -50%;
     left: 10px;
-    color: var(--colorMain);
-    -webkit-text-stroke: 1.5px var(--bgThird);
-    text-shadow: 0px 0px 12px var(--colorMain);
     padding-inline: 10px;
     width: 140px;
     max-width: 140px;
-    font-size: 32px;
     font-weight: 900;
     display: none;
     flex-direction: column;
@@ -95,6 +91,15 @@
     font-size: 24px;
     color: var(--bgThird);
     -webkit-text-stroke: 1.5px var(--colorMain);
+    text-shadow: 0px 0px 12px var(--colorMain);
+    margin-top: 8px;
+}
+
+.boxScorer {
+    font-size: 32px;
+    color: var(--colorMain);
+    -webkit-text-stroke: 1.5px var(--bgThird);
+    text-shadow: 0px 0px 12px var(--colorMain);
 }
 
 .scoreAnimation {

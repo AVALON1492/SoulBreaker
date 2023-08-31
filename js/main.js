@@ -89,7 +89,13 @@ const setNewGame = () => {
             lvlTotalTrain: 0,
             lvlTotalPower: 0,
             lvlMain: 1,
-            expMain: 0
+            expMain: 0,
+            combo: {
+                power: 0,
+                vita: 0,
+                res: 0,
+                lea: 0
+            }
         }
     }
 }
@@ -362,9 +368,9 @@ class SETTINGSVALUE extends SETTINGS {
         })
     }
 
-    resetRanger(idReset) {
+    resetRanger(idReset, setDefault) {
         idReset.addEventListener("click", () => {
-            this.changeSetting(this.setDefault);
+            this.changeSetting(setDefault);
             this.ranger();
         });
     }
@@ -625,25 +631,8 @@ const goPerfilMenu = (idEvent, menu, name, className, order, func = null) => {
 goPerfilMenu(openStats, boxPerfilStats, "Estadísticas", "fi-rr-chart-histogram", 0);
 goPerfilMenu(openTrain, boxPerfilTrain, "Entrenamiento", "fi-rr-bullseye-arrow", 1, inTrainMenu);
 
-const goMenuTrain = (idEvent, statsTitle, iconStats, textColor, boxColor, colorShadow, textDesc) => {
+const goMenuTrain = (idEvent, statsTitle, valueCombo, iconStats, textColor, boxColor, colorShadow, textDesc) => {
     idEvent.addEventListener("click", () => {
-        /*if (auxMenuTrain != menu) {
-            auxMenuTrain.style.opacity = 0;
-            auxMenuTrain.style.pointerEvents = "none";
-            if (auxCardTrain != null) {
-                auxCardTrain.parentElement.className = "cardStats";
-                auxCardTrain.parentElement.style.rotate = "0deg";
-                auxCardTrain.parentElement.style.scale = "1";
-            }
-            idEvent.parentElement.className = "cardStats " + className;
-            idEvent.parentElement.style.rotate = "4deg";
-            idEvent.parentElement.style.scale = "0.9";
-            menu.style.opacity = 1;
-            menu.style.pointerEvents = "inherit";
-            auxMenuTrain = menu;
-            auxCardTrain = idEvent;
-        }*/
-
         if (auxCardTrain != idEvent && auxCardTrain != null) {
             auxCardTrain.parentElement.className = "cardStats";
             auxCardTrain.parentElement.style.rotate = "0deg";
@@ -658,8 +647,10 @@ const goMenuTrain = (idEvent, statsTitle, iconStats, textColor, boxColor, colorS
         menuStatsTrain.style.display = "flex";
         menuNoneTrain.style.display = "none";
         textStats.innerText = statsTitle;
-        textComboMax.innerHTML = "Record: 0";
+        //textComboMax.innerHTML = "Record: 0";
         textComboStarsMax.innerHTML = "Record stars: 0";
+        infoRecordCombo.innerHTML = "Récord: " + gameSB.data.combo[valueCombo];
+        textComboMax.innerHTML = "Récord: " + gameSB.data.combo[valueCombo];
         descStats.innerText = textDesc;
         goPlay.value = statsTitle;
 
@@ -669,16 +660,16 @@ const goMenuTrain = (idEvent, statsTitle, iconStats, textColor, boxColor, colorS
     })
 }
 
-goMenuTrain(openPower, "Potencia", "statsSvgPower", "redLetter", "red", "redShadow",
+goMenuTrain(openPower, "Potencia", "power", "statsSvgPower", "redLetter", "red", "redShadow",
 "Toca los discos para sumar el entrenamiento de potencia y alcalza el máximo combo antes de que los discos desaparezcan. Perderás combo si tocas en el espacio por error."
 );
-goMenuTrain(openVita, "Vitalidad", "statsSvgVita", "greenLetter", "green", "greenShadow",
+goMenuTrain(openVita, "Vitalidad", "vita", "statsSvgVita", "greenLetter", "green", "greenShadow",
 "Enciende el interruptor del centro para iniciar del juego. Recoge discos para sumar el entrenamiento de vitalidad y alcalza el máximo combo evitando la maldición de los ojos despertado. Apaga las luces usando el interruptor para evitar ser pillado por la maldición."
 );
-goMenuTrain(openRes, "Dureza", "statsSvgRes", "blueLetter", "blue", "blueShadow",
+goMenuTrain(openRes, "Dureza", "res", "statsSvgRes", "blueLetter", "blue", "blueShadow",
 "Protege el alma bloqueando los objetos arrojados y alcalza el máximo combo sin ser atacado por los objetos. Poseen 8 dirrecciones para bloquear."
 );
-goMenuTrain(openLea, "Lealtad", "statsSvgLea", "yellowLetter", "yellow", "yellowShadow",
+goMenuTrain(openLea, "Lealtad", "lea", "statsSvgLea", "yellowLetter", "yellow", "yellowShadow",
 "Memoriza los discos que aparecen iluminados seguidos en orden y alcalza el máximo combo sin equivocarse."
 );
 
@@ -1273,7 +1264,7 @@ settingResolution = new SETTINGSVALUE(rangeResolution, textResolution, "resoluti
 );
 const composer = new EffectComposer(renderer);
 settingResolution.createRanger();
-settingResolution.resetRanger(resetResolution);
+settingResolution.resetRanger(resetResolution, 1);
 
 const stats = new Stats();
 document.body.appendChild(stats.dom);
@@ -1553,7 +1544,7 @@ settingRotateDamp = new SETTINGSVALUE(rangeRotateDamp, textRotateDamp, "rotateDa
     }
 );
 settingRotateDamp.createRanger();
-settingRotateDamp.resetRanger(resetRotateDamp);
+settingRotateDamp.resetRanger(resetRotateDamp, 0.05);
 
 settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotateSpeed",
     (value) => {
@@ -1561,7 +1552,7 @@ settingRotateSpeed = new SETTINGSVALUE(rangeRotateSpeed, textRotateSpeed, "rotat
     }
 );
 settingRotateSpeed.createRanger();
-settingRotateSpeed.resetRanger(resetRotateSpeed);
+settingRotateSpeed.resetRanger(resetRotateSpeed, 1);
 
 settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeedAuto, "rotateSpeedAuto",
     (value) => {
@@ -1569,7 +1560,7 @@ settingRotateSpeedAuto = new SETTINGSVALUE(rangeRotateSpeedAuto, textRotateSpeed
     }
 );
 settingRotateSpeedAuto.createRanger();
-settingRotateSpeedAuto.resetRanger(resetRotateSpeedAuto);
+settingRotateSpeedAuto.resetRanger(resetRotateSpeedAuto, 1);
 
 settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "zoomSpeed",
     (value) => {
@@ -1577,7 +1568,7 @@ settingZoomSpeed = new SETTINGSVALUE(rangeZoomSpeed, textZoomSpeed, "zoomSpeed",
     }
 );
 settingZoomSpeed.createRanger();
-settingZoomSpeed.resetRanger(resetZoomSpeed);
+settingZoomSpeed.resetRanger(resetZoomSpeed, 2);
 
 //TODO ANIMATION
 scene.matrixWorldAutoUpdate = true;
@@ -1866,15 +1857,15 @@ settingToolWarn.setChange();
 const getInformation = (idEvent, typeMessage, svg, title, type, textA, textB) => {
     idEvent.addEventListener("mousemove", (e) => {
         if ((showContext && typeMessage == "context") || (showWarning && typeMessage == "warning") || typeMessage == "important") {
-            toolMove.style.visibility = "visible"
-            displayTool.style.transform = "scale(1)"
-            displayTool.style.opacity = "1"
+            toolMove.style.visibility = "visible";
+            displayTool.style.scale = 1;
+            displayTool.style.opacity = 1;
 
             e.target.addEventListener("mouseout", () => {
 
-                toolMove.style.visibility = "hidden"
-                displayTool.style.transform = "scale(0.8)"
-                displayTool.style.opacity = "0"
+                toolMove.style.visibility = "hidden";
+                displayTool.style.scale = 0.8;
+                displayTool.style.opacity = 0;
 
             });
 
@@ -1907,7 +1898,7 @@ null
 );
 
 getInformation(buttonAntialias, "warning", null, "Aviso", "Recarga manual",
-"Al aplicarlo, se guardarán datos en tu archivo y debes refrescar la página para surtir cambios.",
+"Al aplicarlo, se recomienda refrescar la página para surtir cambios después de guardar manualmente el archivo.",
 null
 );
 
@@ -2026,6 +2017,7 @@ const goToolTip = (idEvent, position, words, type = "word") => {
     const showTooltip = () => {
         if (showWord && type == "word" || type == "number") {
             tooltip.style.opacity = 1;
+            tooltip.style.scale = 1;
             if (typeof words == "string") {
                 tooltip.innerText = words;
             } else {
@@ -2037,6 +2029,7 @@ const goToolTip = (idEvent, position, words, type = "word") => {
     
     const hideTooltip = () => {
         tooltip.style.opacity = 0;
+        tooltip.style.scale = 0.8;
     }
 
     [
@@ -2157,6 +2150,7 @@ buttonNewGame.addEventListener("click", () => {
 	buttonSave.style.opacity = 0.5;
 	buttonSave.style.pointerEvents = "none";
     buttonSaveAs.children[0].className = "fi-rr-add-document subIcon";
+    mainTitle.innerText = "Soul Breaker";
 
     init();
     setSettings();
@@ -2186,14 +2180,14 @@ buttonLoadGame.addEventListener("click", async () => {
         const mySentenceSB = "Gracias por jugar Soul Breaker"
         const bytes = CryptoJS.AES.decrypt(text, mySentenceSB)
         let gameSBFile = await JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-		//gameSB = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        //setNewGame();
 		
 		if (gameSBFile.codeGame == "Soul Breaker") {
 			quitWelcome();
 			buttonSave.style.opacity = 1;
 			buttonSave.style.pointerEvents = "inherit";
-            idTextFile.innerText = fileHandle.name;
+            const fileString = fileHandle.name;
+            idTextFile.innerText = fileString.substring(0, fileString.length - 4);
+            mainTitle.innerText = "Soul Breaker - " + fileString.substring(0, fileString.length - 4);
 
             Object.assign(gameSB.settings, gameSBFile.settings);
             Object.assign(gameSB.data, gameSBFile.data);
@@ -2268,7 +2262,9 @@ buttonSaveAs.addEventListener("click", async () => {
 		save();
 		buttonSave.style.opacity = 1;
 		buttonSave.style.pointerEvents = "all";
-		idTextFile.innerText = fileHandle.name;
+		const fileString = fileHandle.name;
+        idTextFile.innerText = fileString.substring(0, fileString.length - 4);
+        mainTitle.innerText = "Soul Breaker - " + fileString.substring(0, fileString.length - 4);
         pushNotification("Se ha creado el archivo con éxito.", "success");
 	} catch (err) {
         console.log(err.name);

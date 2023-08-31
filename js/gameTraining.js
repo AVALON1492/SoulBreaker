@@ -69,7 +69,7 @@ const calcScore = (amount) => {
         textTotalTrainSession.innerText = "+" + Math.floor(barScore);
     }
     inBarTrainer.style.width = (scoreTrain / 10) * 100 + "%";
-    boxScore.className = "scoreAnimation";
+    boxScore.className = "boxScorer scoreAnimation";
     boxScore.innerText = "×" + score;
 }
 
@@ -84,23 +84,30 @@ const calcTime = () => {
     }
 }
 
+const calcRecordCombo = (valueCombo) => {
+    if (score >= gameSB.data.combo[valueCombo]) {
+        gameSB.data.combo[valueCombo] = score;
+        infoRecordCombo.innerHTML = "Récord: " + gameSB.data.combo[valueCombo];
+        textComboMax.innerHTML = "Récord: " + gameSB.data.combo[valueCombo];
+    }
+}
+
 const resetTime = () => {
     timeTraining = 0;
     timeTextTraining.innerText = "0:00";
 }
 
 //TODO ANIMATION
-boxScore.addEventListener('webkitAnimationEnd', function () {
-    this.className = "";
-});
+const animationEnded = (idEvent, className) => {
+    idEvent.addEventListener('webkitAnimationEnd', function () {
+        this.className = className;
+    });
+}
 
-failBox.addEventListener('webkitAnimationEnd', function () {
-    this.className = "";
-});
-
-boxCards.addEventListener('webkitAnimationEnd', function () {
-    this.className = "gridInline4";
-});
+animationEnded(boxScore, "boxScorer");
+animationEnded(boxStars, "boxScorer");
+animationEnded(failBox, "");
+animationEnded(boxCards, "gridInline4");
 
 boxTrainNope.addEventListener("click", () => {
     boxCards.className = "gridInline4 getAttention"
@@ -147,8 +154,10 @@ const createLine = (n, isInverted, isVertical) => {
         boxRow = boxPower.children[row].querySelectorAll(".inboxPower");
         boxRow[column].appendChild(listDisc[0]);
         setTimeout(() => {
-            const isOver = boxRow[column].children[0].value == 1;
-            isOver ? gameOverSimple() : null;
+            if (boxRow[0][column].children[0].value == 1) {
+                calcRecordCombo("power");
+                gameOverSimple();
+            }
             boxRow[column].removeChild(listDisc[0]);
         }, timerAction());
 
@@ -158,8 +167,10 @@ const createLine = (n, isInverted, isVertical) => {
             }, i * timerAction() / 4);
 
             setTimeout(() => {
-                const isOver = boxRow[column + i * typeNumber].children[0].value == 1;
-                isOver ? gameOverSimple() : null;
+                if (boxRow[0][column].children[0].value == 1) {
+                    calcRecordCombo("power");
+                    gameOverSimple();
+                }
                 boxRow[column + i * typeNumber].removeChild(listDisc[i]);
             }, ((i + 3) * timerAction()) / 3);
         }
@@ -179,8 +190,10 @@ const createLine = (n, isInverted, isVertical) => {
 
         boxRow[0][column].appendChild(listDisc[0]);
         setTimeout(() => {
-            const isOver = boxRow[0][column].children[0].value == 1;
-            isOver ? gameOverSimple() : null;
+            if (boxRow[0][column].children[0].value == 1) {
+                calcRecordCombo("power");
+                gameOverSimple();
+            }
             boxRow[0][column].removeChild(listDisc[0]);
         }, timerAction());
 
@@ -208,6 +221,7 @@ boxPower.addEventListener("mousedown", (event) => {
             splashEffect(event);
         }
     } else {
+        calcRecordCombo("power");
         gameOverSimple();
     }
 });
@@ -346,6 +360,7 @@ const createAtk = (n, dir, type, isInverted) => {
                 calcScore(1);
                 audioScore.load();
             } else {
+                calcRecordCombo("res");
                 gameOverSimple();
             }
             listCubes[i].remove();
@@ -358,18 +373,6 @@ const buttonsTraining = (point, opac, text) => {
     goPlay.style.pointerEvents = point;
     goPlay.style.opacity = opac;
     goPlay.children[0].innerText = text;
-    //goPower.style.pointerEvents = point;
-    //goVita.style.pointerEvents = point;
-    //goRes.style.pointerEvents = point;
-    //goLea.style.pointerEvents = point;
-    //goPower.style.opacity = opac;
-    //goVita.style.opacity = opac;
-    //goRes.style.opacity = opac;
-    //goLea.style.opacity = opac;
-    //goPower.children[0].innerText = text;
-    //goVita.children[0].innerText = text;
-    //goRes.children[0].innerText = text;
-    //goLea.children[0].innerText = text;
 }
 
 let isTraining = false;
@@ -380,10 +383,12 @@ exiterTrain.addEventListener("click", () => {
     }, 14000);
     resetTime();
     closeWindow(boxComboScore);
+    closeWindow(boxComboStars);
     closeWindow(openedBox);
     if (goPlay.value == "Potencia") {
         gameSB.data["valuePower"] += Math.floor(barScore);
         numberPower.innerText = gameSB.data["valuePower"];
+        calcRecordCombo("power");
     } else if (goPlay.value == "Vitalidad") {
         gameSB.data["valueHealth"] += Math.floor(barScore);
         numberVita.innerText = gameSB.data["valueHealth"];
@@ -394,6 +399,7 @@ exiterTrain.addEventListener("click", () => {
         circleVita.innerText = "Iniciar";
         discVita.style.zIndex = "6";
         discVita.style.display = "none";
+        calcRecordCombo("vita");
     } else if (goPlay.value == "Dureza") {
         gameSB.data["valueDef"] += Math.floor(barScore);
         numberRes.innerText = gameSB.data["valueDef"];
@@ -403,10 +409,12 @@ exiterTrain.addEventListener("click", () => {
             boxRes.querySelectorAll(".boxPlate")[numDirection].style.scale = "1";
         }
         numDirection = -1;
-    }/* else if (openedBox.id == "boxLea") {
-        gameSB.data["valueLea"] += Math.floor(scoreTrain / 10);
-        numberLea.innerText = gameSB.data["valueLea"];
-    }*/
+        calcRecordCombo("res");
+    } else if (goPlay.value == "Lealtad") {
+        //gameSB.data["valueLea"] += Math.floor(barScore);
+        //numberLea.innerText = gameSB.data["valueLea"];
+        calcRecordCombo("lea");
+    }
     clearInterval(timerTraining);
     isTraining = false;
     score = 0;
@@ -497,6 +505,7 @@ const createIntervalVita = () => {
                 if (isLightOn) {
                     circleVita.innerText = "Otra vez";
                     discVita.style.display = "flex";
+                    calcRecordCombo("vita");
                     gameOverSimple();
                     playgroundVita.style.display = "block";
                     discVita.style.zIndex = "6";
@@ -559,6 +568,7 @@ const goTrainer = (interval, box, color, classSvg, type = "flex") => {
         calcTime();
     }, 1000)
     openWindow(boxComboScore, "flex");
+    openWindow(boxComboStars, "flex");
     openWindow(box, type);
     openedBox = box;
     buttonsTraining("none", 0.3, "Limpiando...");
@@ -582,6 +592,8 @@ goPlay.addEventListener("click", () => {
         goTrainer(null, boxVita, "green", "statsSvgVita");
     } else if (goPlay.value == "Dureza") {
         goTrainer(createIntervalRes, boxRes, "blue", "statsSvgRes");
+    } else if (goPlay.value == "Lealtad") {
+        goTrainer(null, boxLea, "yellow", "statsSvgLea");
     }
 });
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale = 0.48, maximum-scale = 1, user-scalable = no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes"> 
-    <title>Soul Breaker - Inicio</title>
+    <title id="mainTitle">Soul Breaker - Inicio</title>
     <link rel="shortcut icon" href="public/iconMain.ico">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/svg.css">
@@ -965,7 +965,7 @@
         <div class="secondTaskBar center" id="taskHomeFiles" style="color: var(--colorMain); justify-content: space-between;">
             <div class="pillText center">
                 <i class="fi-rr-document topIcon" style="color: var(--colorMain);"></i>
-                <div id="idTextFile" style="max-width: 150px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">Sin_nombre.txt</div>
+                <div id="idTextFile" style="max-width: 150px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">Nuevo archivo</div>
             </div>
             <div class="center" style="gap: 12px;">
                 <div class="buttonTask onPoint" id="buttonSave">
@@ -1130,8 +1130,8 @@
                         <div class="boxTitle">
                             <div id="idIconStats"></div>
                             <div id="textStats"></div>
-                            <div class="boxText smaller" id="textComboMax"> Récord: 0</div>
-                            <div class="boxText smaller" id="textComboStarsMax"> Récord stars: 0</div>
+                            <div class="boxText smaller" id="textComboMax">Récord: 0</div>
+                            <div class="boxText smaller" id="textComboStarsMax">Récord stars: 0</div>
                         </div>
                         <div class="boxDesc" id="descStats" style="margin-top: 6px;"></div>
                         <i class="fi-rr-play boxStart center red" id="goPlay"><span>Empezar</span></i>
@@ -1159,9 +1159,16 @@
 </div>
 <div id="textTrainUp">×1</div>
 
-<div id="boxComboScore">
+<div class="boxComboScorer" id="boxComboScore">
+    <div class="boxText smaller" id="infoRecordCombo" style="background-color: var(--bgThird);">Récord: 0</div>
     <div class="comboText">Combo</div>
-    <div id="boxScore">×0</div>
+    <div class="boxScorer" id="boxScore">×0</div>
+</div>
+
+<div class="boxComboScorer" id="boxComboStars" style="left: inherit; right: 10px;">
+    <div class="boxText smaller" id="infoRecordStars" style="background-color: var(--bgThird);">Récord: 0</div>
+    <div class="comboText">Estrellas</div>
+    <div class="boxScorer" id="boxStars">×0</div>
 </div>
 
 <div id="failBox"></div>
@@ -1272,6 +1279,9 @@
     <div class="boxPlate" style="rotate: 315deg"></div>
     <div class="boxPlate" style="rotate: 0deg"></div>
     <div class="boxPlate" style="rotate: 45deg"></div>
+</div>
+
+<div class="playground" id="boxLea">
 </div>
 
 <!--TODO TOOLTIPS-->
