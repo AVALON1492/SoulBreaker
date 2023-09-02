@@ -909,6 +909,10 @@ span {
     gap: 12px;
 }
 
+.flexGridPlayGround {
+    grid-template-columns: repeat(10, calc(10%));
+}
+
 .freePos {
     position: absolute;
     top: 0px;

@@ -118,96 +118,47 @@ const timerAction = () => {
 }
 
 //TODO POWER
-const createListOfDisc = (n) => {
-    const listDisc = [];
-    for(let i = 0; i < n; i++) {
-        listDisc[i] = document.createElement("div");
-        listDisc[i].value = 1;
-        listDisc[i].className = "disc";
-        listDisc[i].style.animation = "playDisc " + timerAction() + "ms cubic-bezier(.5,0,.5,1) forwards";
-    }
+for (let i = 0; i < boxPower.querySelectorAll(".inboxPower").length; i++) {
+    const object = boxPower.querySelectorAll(".inboxPower")[i];
+    object.id = "tilePower" + Math.floor(i / 10) + "" + i % 10;
+}
 
-    return listDisc;
+const createDisc = () => {
+    let disc;
+    disc = document.createElement("div");
+    disc.value = 1;
+    disc.className = "disc";
+    disc.style.animation = "playDisc " + timerAction() + "ms cubic-bezier(.5,0,.5,1) forwards";
+    return disc;
 }
 
 const createLine = (n, isInverted, isVertical) => {
-    let column = 0, row = 0, boxRow = [];
-    const jLength = boxPower.querySelectorAll(".boxRowPower");
-    const iLength = boxPower.children[0].querySelectorAll(".inboxPower");
-
-    const listDisc = createListOfDisc(n);
-
+    let start = [0, 0];
+    let long = [5, 10];
+    let idBox;
+    let posInv = 0;
+    let isX = 1 * !isVertical, isY = 1 * isVertical;
     let typeNumber = 1;
-    if (isInverted) {
-        typeNumber = -1;
-    }
 
-    if (!isVertical) {
-        if (!isInverted) {
-            column = Number((Math.random() * (iLength.length - n)).toFixed());
-            row = Number((Math.random() * (jLength.length - 1)).toFixed());
-        } else {
-            column = Number((Math.random() * (iLength.length - n) + n - 1).toFixed());
-            row = Number((Math.random() * (jLength.length - 1)).toFixed());
-        }
+    isInverted ? typeNumber = -1 : null;
+    isInverted ? posInv = n - 1 : posInv = 0;
+    start[isX] = Number((Math.random() * (long[isX] - n) + posInv).toFixed());
+    start[isY] = Number((Math.random() * (long[isY] - 1)).toFixed());
 
-        boxRow = boxPower.children[row].querySelectorAll(".inboxPower");
-        boxRow[column].appendChild(listDisc[0]);
+    for (let i = 0; i < n; i++) {
         setTimeout(() => {
-            if (boxRow[0][column].children[0].value == 1) {
-                calcRecordCombo("power");
-                gameOverSimple();
-            }
-            boxRow[column].removeChild(listDisc[0]);
-        }, timerAction());
-
-        for (let i = 1; i < n; i++) {
-            setTimeout(() => {
-                boxRow[column + i * typeNumber].appendChild(listDisc[i]);
-            }, i * timerAction() / 4);
-
-            setTimeout(() => {
-                if (boxRow[0][column].children[0].value == 1) {
+            const disc = createDisc();
+            idBox = document.getElementById("tilePower" + ((start[0] + i * typeNumber * isY)) + "" + ((start[1] + i * typeNumber * isX)));
+            idBox.appendChild(disc);
+            disc.addEventListener("webkitAnimationEnd", () => {
+                if (disc.value == 1) {
                     calcRecordCombo("power");
                     gameOverSimple();
                 }
-                boxRow[column + i * typeNumber].removeChild(listDisc[i]);
-            }, ((i + 3) * timerAction()) / 3);
-        }
 
-    } else {
-        if (!isInverted) {
-            column = Number((Math.random() * (iLength.length - 1)).toFixed());
-            row = Number((Math.random() * (jLength.length - n)).toFixed());
-        } else {
-            column = Number((Math.random() * (iLength.length - 1)).toFixed());
-            row = Number((Math.random() * (jLength.length - n) + n - 1).toFixed());
-        }
-
-        for(let i = 0; i < n; i++) {
-            boxRow[i] = boxPower.children[row + i * typeNumber].querySelectorAll(".inboxPower");
-        }
-
-        boxRow[0][column].appendChild(listDisc[0]);
-        setTimeout(() => {
-            if (boxRow[0][column].children[0].value == 1) {
-                calcRecordCombo("power");
-                gameOverSimple();
-            }
-            boxRow[0][column].removeChild(listDisc[0]);
-        }, timerAction());
-
-        for (let i = 1; i < n; i++) {
-            setTimeout(() => {
-                boxRow[i][column].appendChild(listDisc[i]);
-            }, i * timerAction() / 4);
-
-            setTimeout(() => {
-                const isOver = boxRow[i][column].children[0].value == 1;
-                isOver ? gameOverSimple() : null;
-                boxRow[i][column].removeChild(listDisc[i]);
-            }, ((i + 3) * timerAction()) / 3);
-        }
+                disc.remove();
+            })
+        }, i * timerAction() / n);
     }
 }
 
@@ -220,9 +171,6 @@ boxPower.addEventListener("mousedown", (event) => {
             calcScore(1);
             splashEffect(event);
         }
-    } else {
-        calcRecordCombo("power");
-        gameOverSimple();
     }
 });
 
@@ -380,7 +328,7 @@ let openedBox = null;
 exiterTrain.addEventListener("click", () => {
     setTimeout(() => {
         buttonsTraining("inherit", 1, "Empezar");
-    }, 14000);
+    }, 7000);
     resetTime();
     closeWindow(boxComboScore);
     closeWindow(boxComboStars);
@@ -449,13 +397,13 @@ const createIntervalPower = () => {
         } else {
             waiter--;
         }
-        
+
         if (isTraining) {
             setTimeout(() => {
                 createIntervalPower();
             }, (timerAction() * num / 4) / 4);
         }
-    }, timerAction() - waiter * 4000);
+    }, timerAction() - waiter * 3000);
 }
 
 const svgOpenEyes = `<svg width="132" height="57" viewBox="0 0 132 57" fill="none" xmlns="http://www.w3.org/2000/svg">
