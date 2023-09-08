@@ -369,10 +369,10 @@ class SIMON {
         this.buttonSimon = buttonSimon;
         //
         this.buttonSounds = [
-            new Audio("public/sound/simon/fa_verde.wav"),
-            new Audio("public/sound/simon/mi_rojo.wav"),
-            new Audio("public/sound/simon/re_amarillo.wav"),
-            new Audio("public/sound/simon/do_azul.wav"),
+            audioFA,
+            audioMI,
+            audioRE,
+            audioDO,
         ]
     }
 
