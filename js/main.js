@@ -983,6 +983,7 @@ textGemSoul.innerText = gameSB.data["gemSoul"];
 numberPower.innerText = gameSB.data["valuePower"];
 numberVita.innerText = gameSB.data["valueHealth"];
 numberRes.innerText = gameSB.data["valueDef"];
+numberLea.innerText = gameSB.data["valueLea"];
 
 let progressTotal;
 let touchPower;
