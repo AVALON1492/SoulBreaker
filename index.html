@@ -27,11 +27,19 @@
     <source src="public/sound/stasis.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="audioClick" autoplay>
+<audio id="audioClick">
     <source src="public/sound/clickSound.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="audioNotif" autoplay>
+<audio id="audioEye">
+    <source src="public/sound/eyeOpen.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audioScore">
+    <source src="public/sound/score.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audioNotif">
     <source src="public/sound/notificationSound.mp3" type="audio/mpeg">
 </audio>
 
@@ -39,15 +47,7 @@
     <source src="public/sound/notificationError.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="audioEye">
-    <source src="public/sound/eyeOpen.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="audioScore" autoplay>
-    <source src="public/sound/score.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="audioGameOver" autoplay>
+<audio id="audioGameOver">
     <source src="public/sound/gameOver.mp3" type="audio/mpeg">
 </audio>
 
@@ -180,18 +180,41 @@
     </div>
 </div>
 
-<div class="boxTopLeft">
-    <div class="boxCircle" id="textLevelMain" style="width: 50px;">1</div>
-    <div class="barProgressTiny" id="barEXP" style="background-color: var(--bgThird); width: 180px; top: 18px; left: 12px;">
-        <div class="inBarProgressTiny" id="barProgressEXP"></div>
-    </div>
-</div>
-
 <div class="bottomTask" id="taskBox">
+    <!--TODO XP-->
+    <div class="xpMenu center">
+        <div class="barMenu">
+            <div class="buttonTask onPoint" style="background-color: transparent;" id="openMoreMenu">
+                <svg class="svgAnimation" width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100" height="28" rx="14" fill="var(--colorMain)"/>
+                    <rect x="4" y="4" width="92" height="20" rx="10" stroke="black" stroke-opacity="0.5" stroke-width="8"/>
+                    <rect y="72" width="100" height="28" rx="14" fill="var(--colorMain)"/>
+                    <rect x="4" y="76" width="92" height="20" rx="10" stroke="black" stroke-opacity="0.5" stroke-width="8"/>
+                    <rect x="20" y="36" width="60" height="28" rx="14" fill="var(--colorMain)"/>
+                    <rect x="24" y="40" width="52" height="20" rx="10" stroke="black" stroke-opacity="0.5" stroke-width="8"/>
+                </svg>
+            </div>
+        </div>
+        <div class="boxCircle" id="textLevelMain" style="padding-left: 12px;">1</div>
+        <div class="barProgressTiny" id="barEXP" style="width: 120px; height: 12px;">
+            <div class="inBarProgressTiny" id="barProgressEXP"></div>
+        </div>
+    </div>
+
     <!--TODO RESOURCES-->
-    <div class="resourceMenu" id="gemSoulBox">
-        <div class="bigText" id="textGemSoul">0</div>
-        <div class="mediumSvg" style="background-image: url(css/svg/gemSoul.svg)"></div>
+    <div class="barMenu">
+        <div class="miniWidget center" id="buttonPeople" style="flex-direction: row; padding-inline: 22px 12px;">
+            <div style="font-weight: 700; color: var(--bgText);">
+                <div id="textActualPeople">0</div>
+                <div style="opacity: 0.4;" id="textMaxPeople">0</div>
+            </div>
+            <div class="mediumSvg" id="iconPeople" style="background-image: url(css/svg/person.svg)"></div>
+        </div>
+        <div class="separatorVert"></div>
+        <div class="miniWidget center" id="gemSoulBox" style="flex-direction: row; padding-inline: 18px 12px;">
+            <div class="bigText" id="textGemSoul">0</div>
+            <div class="mediumSvg" style="background-image: url(css/svg/gemSoul.svg)"></div>
+        </div>
     </div>
 
     <!--TODO TASKBAR-->
@@ -207,22 +230,52 @@
             <div id="svgTrain"></div>
             <div id="textTotalTrainSession">+0</div>
         </div>
-        <div class="statsTask" id="statsInfoTask">
-            <div class="textEnergy" id="textEnergyId">
-                <div id="infoEnergy">0</div>
-                <div class="svgResource">
-                    <svg width="20" height="28" viewBox="0 0 50 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M30.2307 1.21802C30.3188 0.82251 30.4091 0.416992 30.5 0C12.3076 13.5551 3.0224 27.8737 0.647034 39.3245C0.223755 41.1479 0 43.0477 0 45C0 58.8071 11.1929 70 25 70C38.8071 70 50 58.8071 50 45C50 37.3114 46.5292 30.4335 41.069 25.8475C27.5489 13.2605 28.4195 9.35107 30.2307 1.21802Z" fill="var(--colorMain)"/>
-                        <circle cx="25" cy="45" r="16" fill="white"/>
-                        <circle cx="25" cy="45" r="10" fill="var(--colorMainFill)"/>
-                    </svg>
+        <div class="miniWidget" id="statsInfoTask">
+            <div class="barProgressTiny center" id="barEnergy" style="padding-inline: 24px;">
+                <div class="inBarProgressTiny" id="progressEnergy" style="box-shadow: initial;"></div>
+                <div class="textEnergy" id="textEnergyId">
+                    <div id="infoEnergy">0</div>
+                    <div class="svgResource">
+                        <svg width="20" height="25.6" viewBox="0 0 50 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <mask id="path-1-inside-1_361_35" fill="white">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M31.6906 14.9053C27.8464 13.4713 26.4186 12.0707 30 0.5C15.7343 8.36069 6.8933 18.2556 2.786 27.5197C1.0057 30.9576 3.05176e-05 34.8613 3.05176e-05 39C3.05176e-05 52.8071 11.1929 64 25 64C38.8071 64 50 52.8071 50 39C50 27.5102 42.249 17.8308 31.6906 14.9053Z"/>
+                            </mask>
+                            <g filter="url(#filter0_i_361_35)">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M31.6906 14.9053C27.8464 13.4713 26.4186 12.0707 30 0.5C15.7343 8.36069 6.8933 18.2556 2.786 27.5197C1.0057 30.9576 3.05176e-05 34.8613 3.05176e-05 39C3.05176e-05 52.8071 11.1929 64 25 64C38.8071 64 50 52.8071 50 39C50 27.5102 42.249 17.8308 31.6906 14.9053Z" fill="var(--colorMain)"/>
+                            </g>
+                            <path d="M30 0.5L33.8212 1.68274L36.7525 -7.78782L28.0696 -3.00335L30 0.5ZM31.6906 14.9053L30.2925 18.6531L30.4552 18.7137L30.6225 18.7601L31.6906 14.9053ZM2.786 27.5197L6.33798 29.3591L6.39365 29.2516L6.44272 29.141L2.786 27.5197ZM26.1789 -0.682736C25.2619 2.27964 24.6238 4.72153 24.2718 6.74518C23.9266 8.73024 23.8038 10.5927 24.1363 12.2781C24.5026 14.1348 25.3937 15.631 26.7451 16.7535C27.928 17.7361 29.3039 18.2842 30.2925 18.6531L33.0886 11.1576C32.6559 10.9962 32.3614 10.8731 32.143 10.7649C32.0392 10.7135 31.968 10.6729 31.9209 10.6434C31.8745 10.6144 31.8563 10.5992 31.8569 10.5997C31.9713 10.6948 32.0085 10.8488 31.985 10.7297C31.9278 10.4394 31.8793 9.69256 32.1535 8.11594C32.421 6.5779 32.9474 4.50571 33.8212 1.68274L26.1789 -0.682736ZM6.44272 29.141C10.1275 20.8299 18.2685 11.5313 31.9304 4.00335L28.0696 -3.00335C13.2001 5.19005 3.65911 15.6814 -0.870724 25.8985L6.44272 29.141ZM4.00003 39C4.00003 35.5164 4.84511 32.2419 6.33798 29.3591L-0.765989 25.6803C-2.83372 29.6732 -3.99997 34.2063 -3.99997 39H4.00003ZM25 60C13.4021 60 4.00003 50.598 4.00003 39H-3.99997C-3.99997 55.0163 8.98377 68 25 68V60ZM46 39C46 50.598 36.598 60 25 60V68C41.0163 68 54 55.0163 54 39H46ZM30.6225 18.7601C39.4934 21.218 46 29.3543 46 39H54C54 25.6661 45.0046 14.4436 32.7586 11.0505L30.6225 18.7601Z" fill="black" fill-opacity="0.25" mask="url(#path-1-inside-1_361_35)"/>
+                            <circle cx="25" cy="39" r="16" fill="white"/>
+                            <g filter="url(#filter1_i_361_35)">
+                            <circle cx="25" cy="39" r="10" fill="var(--colorMainFill)"/>
+                            </g>
+                            <defs>
+                            <filter id="filter0_i_361_35" x="3.05176e-05" y="-7.5" width="58" height="71.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                            <feOffset dx="8" dy="-8"/>
+                            <feGaussianBlur stdDeviation="4"/>
+                            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0"/>
+                            <feBlend mode="normal" in2="shape" result="effect1_innerShadow_361_35"/>
+                            </filter>
+                            <filter id="filter1_i_361_35" x="15" y="25" width="24" height="24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                            <feOffset dx="4" dy="-4"/>
+                            <feGaussianBlur stdDeviation="2"/>
+                            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+                            <feBlend mode="normal" in2="shape" result="effect1_innerShadow_361_35"/>
+                            </filter>
+                            </defs>
+                        </svg>                        
+                    </div>
                 </div>
             </div>
-            <div class="barProgressTiny" id="barEnergy">
-                <div class="inBarProgressTiny" id="progressEnergy"></div>
-            </div>
         </div>
-        <div class="statsTask" id="timeInfoTask" style="display: none;">
+        <div class="miniWidget" id="timeInfoTask" style="display: none; position: absolute; left: 50%; translate: -50%; background-color: transparent;">
             <div class="boxTimeBig" id="timeTextTraining">0:00</div>
         </div>
         <div class="buttonTask onPoint" style="background-color: transparent;" id="openProfile">
@@ -236,8 +289,6 @@
         </div>
         <i class="fi-rr-sign-out-alt buttonTask onPoint" id="exiterTrain" style="display: none; background-color: transparent;"></i>
     </div>
-
-    <div></div>
 </div>
 
 <div class="startMenu" id="home">
@@ -1102,22 +1153,22 @@
                             <div class="textInfoConfig" id="textProduction">0 / 5s</div>
                         </div>
                     </div>
-                    <div class="boxButton boxSmall" id="textLeaP">
+                    <div class="boxButton boxSmall" id="textMaxP">
                         <i class="fi-rr-users-alt subIconSmall"></i>
                         <div class="textSettings">
-                            <div>Lealtad permanente</div>
+                            <div>Máxima población</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">0</div>
+                            <div class="textInfoConfig" id="textMaximumPeople">0</div>
                         </div>
                     </div>
-                    <div class="boxButton boxSmall" id="textLeaC">
+                    <div class="boxButton boxSmall" id="textPeopleRate">
                         <i class="fi-rr-up subIconSmall"></i>
                         <div class="textSettings">
                             <div>Crecimiento</div>
                         </div>
                         <div class="inboxSettings">
-                            <div class="textInfoConfig">0 / 10s</div>
+                            <div class="textInfoConfig" id="textPeopleGrow">0 / 10s</div>
                         </div>
                     </div>
                 </div>
@@ -1254,24 +1305,26 @@
         </div>
     </div>
     <i class="fi-rr-triangle-warning" id="warningEyes"></i>
-    <div id="circleVita">Iniciar</div>
+    <div class="circleButton" id="circleVita">Iniciar</div>
     <div class="discCoin" id="discVita" style="display: none; z-index: 6;"></div>
     <div id="playgroundVita"></div>
 </div>
 
-<div class="playground" id="boxRes">
+<div class="playground" id="boxRes" style="overflow: inherit;">
     <div class="basePlate"></div>
-    <div class="boxPlate" style="rotate: 90deg"></div>
-    <div class="boxPlate" style="rotate: 135deg"></div>
-    <div class="boxPlate" style="rotate: 180deg"></div>
-    <div class="boxPlate" style="rotate: 225deg"></div>
-    <div class="boxPlate" style="rotate: 270deg"></div>
-    <div class="boxPlate" style="rotate: 315deg"></div>
-    <div class="boxPlate" style="rotate: 0deg"></div>
-    <div class="boxPlate" style="rotate: 45deg"></div>
+    <div class="boxPlate" id="shieldPlate" style="rotate: 0deg"></div>
 </div>
 
-<div class="playground" id="boxLea">
+<div class="playground center" id="boxLea">
+    <div class="basePlate gridSimonDice" id="boxSimon" style="width: initial; height: 90%; aspect-ratio: 1/1; overflow: hidden; padding: 40px; pointer-events: none;">
+        <div class="pieceSimonDice" style="background-color: var(--green); rotate: 0deg;"></div>
+        <div class="pieceSimonDice" style="background-color: var(--red); rotate: 90deg;"></div>
+        <div class="pieceSimonDice" style="background-color: var(--yellow); rotate: 270deg;"></div>
+        <div class="pieceSimonDice" style="background-color: var(--blue); rotate: 180deg;"></div>
+    </div>
+    <div class="circleButton" id="circleLea">Iniciar</div>
+    <i class="fi-rr-volume buttonTask onPoint" id="soundGameLea" style="position: absolute; left: 30px; bottom: 30px;"></i>
+    <div class="textDescLeaChallenge" id="textPointChallenge">+5 puntos por ronda</div>
 </div>
 
 <!--TODO TOOLTIPS-->

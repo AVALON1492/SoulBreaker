@@ -355,7 +355,7 @@ span {
     }
 }
 
-.resourceMenu {
+.barMenu {
     position: relative;
     height: 84px;
     background-color: var(--bgFluent);
@@ -370,7 +370,7 @@ span {
                 0px 0px 0px 5px var(--colorMain),
                 inset 0px 0px 0px 6px var(--colorMainOpac);
     transition: 0.4s;
-    padding: 12px 24px 12px 24px;
+    padding: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -378,7 +378,10 @@ span {
 }
 
 .bigText {
-    font-size: 42px;
+    font-size: 36px;
+    color: var(--colorMain);
+    -webkit-text-stroke: 1.5px var(--bgThird);
+    text-shadow: 0px 0px 12px var(--colorMain);
     font-weight: 900;
 }
 
@@ -401,7 +404,7 @@ span {
     translate: 0px 62px;
     opacity: 0;
     pointer-events: none;
-    transition: 0.3s cubic-bezier(.4,0,.15,1);
+    transition: 0.5s cubic-bezier(0,1.5,.3,1);
     will-change: transform;
 }
 
@@ -600,32 +603,21 @@ span {
     transform: scale(0.9);
 }
 
-.boxTopLeft {
-    position: absolute;
-    padding-left: 30px;
-    box-sizing: border-box;
-    top: 30px;
-    left: 30px;
+.xpMenu {
+    gap: 24px;
     z-index: 900;
 }
 
 .boxCircle {
-    position: absolute;
-    left: 0px;
-    aspect-ratio: 1/1;
-    background-color: var(--bgThird);
-    border-radius: 100px;
     z-index: 2;
-    box-shadow: 0px 0px 0px 2px var(--colorMain),
-                inset 0px 0px 0px 4px var(--colorMainFill);
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 900;
-    font-size: 24px;
+    font-size: 32px;
     color: var(--colorMain);
-    -webkit-text-stroke: 1px var(--bgThird);
-    text-shadow: 0px 0px 8px var(--colorMain);
+    -webkit-text-stroke: 1.5px var(--bgThird);
+    text-shadow: 0px 0px 16px var(--colorMain);
 }
 
 .bottomTask {
@@ -657,7 +649,7 @@ span {
                 0px 0px 0px 5px var(--colorMain),
                 inset 0px 0px 0px 6px var(--colorMainOpac);
     box-sizing: border-box;
-    transition: 0.3s cubic-bezier(.4,0,.15,1);
+    transition: 0.3s cubic-bezier(.4,0,.15,1), 0.5s cubic-bezier(.3,1.5,.6,1) width;
     overflow: hidden;
     display: flex;
     justify-content: space-between;
@@ -717,11 +709,13 @@ span {
     scale: 0.9;
 }
 
-.statsTask {
+.miniWidget {
     position: relative;
-    padding-inline: 16px;
+    padding: 12px;
     box-sizing: border-box;
     height: 60px;
+    background-color: var(--colorMainOpac);
+    border-radius: 100px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -738,7 +732,11 @@ span {
 }
 
 .textEnergy {
-    font-size: 28px;
+    height: 80%;
+    background-color: var(--bgSecond);
+    padding-inline: 8px;
+    border-radius: 100px;
+    font-size: 22px;
     font-weight: 900;
     color: var(--colorMain);
     -webkit-text-stroke: 1.5px var(--bgThird);
@@ -747,6 +745,8 @@ span {
     align-items: center;
     justify-content: center;
     gap: 6px;
+    box-sizing: border-box;
+    z-index: 10;
 }
 
 .barBox {
@@ -769,10 +769,9 @@ span {
 
 .barProgressTiny {
     position: relative;
-    width: 120px;
-    min-height: 14px;
-    border-radius: 7px;
-    margin-bottom: 6px;
+    background-color: var(--bgThird);
+    height: 100%;
+    border-radius: 100px;
     box-shadow: 0px 0px 0px 3px var(--bgSecond),
                 0px 0px 9px 3px var(--colorMain);
     overflow: hidden;
@@ -780,9 +779,10 @@ span {
 
 .inBarProgressTiny {
     position: absolute;
+    top: 0px;
     left: 0px;
     height: 100%;
-    border-radius: 12px;
+    border-radius: 100px;
     background-color: var(--colorMain);
     box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.3);
     transition: 0.1s;
@@ -880,6 +880,13 @@ span {
     grid-template-columns: repeat(auto-fill, calc(50% - 5px));
     grid-template-rows: repeat(2, 180px);
     gap: 10px;
+}
+
+.gridSimonDice {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, calc(50% - 8px));
+    grid-template-rows: repeat(2, calc(50% - 8px));
+    gap: 16px;
 }
 
 .grid2Row {
@@ -1377,6 +1384,13 @@ span {
     margin-left: 10%;
     min-height: 8px;
     margin-block: 16px;
+    background-color: var(--colorMain);
+    border-radius: 4px;
+}
+
+.separatorVert {
+    min-width: 8px;
+    height: 40%;
     background-color: var(--colorMain);
     border-radius: 4px;
 }

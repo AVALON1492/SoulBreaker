@@ -13,7 +13,7 @@ import CryptoJS from "crypto-js"
 
 //
 
-import {computePosition, offset} from '@floating-ui/dom';
+import {computePosition, offset, shift} from '@floating-ui/dom';
 
 import Stats from 'three/addons/libs/stats.module'
 
@@ -77,12 +77,14 @@ const setNewGame = () => {
             valuePower: 0,
             valueHealth: 0,
             valueDef: 0,
+            valueLea: 0,
             totalPower: 0,
             totalTime: 0,
             totalClicks: 0,
             totalEnergy: 0,
             totalTrain: 0,
             valueEnergy: 0,
+            actualPeople: 0,
             lvlTotalClicks: 0,
             lvlTotalTime: 0,
             lvlTotalEnergy: 0,
@@ -91,6 +93,12 @@ const setNewGame = () => {
             lvlMain: 1,
             expMain: 0,
             combo: {
+                power: 0,
+                vita: 0,
+                res: 0,
+                lea: 0
+            },
+            comboStar: {
                 power: 0,
                 vita: 0,
                 res: 0,
@@ -113,6 +121,7 @@ const openWindow = (idWindow) => {
     tapeWindow.style.display = "block";
     idWindow.style.display = "flex";
     setTimeout(() => {
+        audioNotif.autoplay = true;
         audioNotif.load();
         tapeWindow.style.opacity = "0.5";
         idWindow.style.scale = "1";
@@ -137,17 +146,19 @@ const pushNotification = (desc, type = "normal") => {
     const createNotif = document.createElement("div");
     if (type == "normal" && gameSB.settings["notif"]) {
         createNotif.className = "popUpNotification";
+        audioNotif.autoplay = true;
         audioNotif.load();
     }
 
     if (type == "error") {
         createNotif.className = "popUpNotification errorNotif";
+        audioNotifError.autoplay = true;
         audioNotifError.load();
-        audioNotifError.play();
     }
 
     if (type == "success" && gameSB.settings["notif"]) {
         createNotif.className = "popUpNotification successNotif";
+        audioNotif.autoplay = true;
         audioNotif.load();
     }
 
@@ -163,6 +174,7 @@ const pushNotification = (desc, type = "normal") => {
             document.querySelectorAll(".popUpNotification")[i].style.translate = "-50% calc(" + (countNotif * 72) + "px)";
             countNotif++;
         }
+        countNotif = 0;
     }, 10);
 
     setTimeout(() => {
@@ -444,6 +456,7 @@ settingNotif.setChange();
 //TODO AUDIO
 document.addEventListener("click", () => {
     audioAmbient.play();
+    audioClick.autoplay = true;
     audioClick.load();
 });
 
@@ -647,11 +660,11 @@ const goMenuTrain = (idEvent, statsTitle, valueCombo, iconStats, textColor, boxC
         menuStatsTrain.style.display = "flex";
         menuNoneTrain.style.display = "none";
         textStats.innerText = statsTitle;
-        //textComboMax.innerHTML = "Record: 0";
-        textComboStarsMax.innerHTML = "Record stars: 0";
-        infoRecordCombo.innerHTML = "Récord: " + gameSB.data.combo[valueCombo];
-        textComboMax.innerHTML = "Récord: " + gameSB.data.combo[valueCombo];
-        descStats.innerText = textDesc;
+        infoRecordCombo.innerText = "Récord: " + gameSB.data.combo[valueCombo];
+        textComboMax.innerText = "Récord: " + gameSB.data.combo[valueCombo];
+        infoRecordStars.innerText = "Récord: " + gameSB.data.comboStar[valueCombo];
+        textComboStarsMax.innerText = "Récord stars: " + gameSB.data.comboStar[valueCombo];
+        descStats.innerHTML = textDesc;
         goPlay.value = statsTitle;
 
         idIconStats.className = "iconStats " + iconStats;
@@ -661,32 +674,32 @@ const goMenuTrain = (idEvent, statsTitle, valueCombo, iconStats, textColor, boxC
 }
 
 goMenuTrain(openPower, "Potencia", "power", "statsSvgPower", "redLetter", "red", "redShadow",
-"Toca los discos para sumar el entrenamiento de potencia y alcalza el máximo combo antes de que los discos desaparezcan. Perderás combo si tocas en el espacio por error."
+"<b>Toca discos:</b> Pulsa los discos y las estrellas para ganar puntos. Los combos se resetean cuando el disco o estrella desaparece sin tocar."
 );
 goMenuTrain(openVita, "Vitalidad", "vita", "statsSvgVita", "greenLetter", "green", "greenShadow",
-"Enciende el interruptor del centro para iniciar del juego. Recoge discos para sumar el entrenamiento de vitalidad y alcalza el máximo combo evitando la maldición de los ojos despertado. Apaga las luces usando el interruptor para evitar ser pillado por la maldición."
+"<b>La habitación nocturna:</b> Usa la linterna pulsando el gran círculo para encender y apagar. Cuando está iluminado y sus ojos están dormidos, puedes recoger los discos y las estrellas. En caso de que los ojos preparan para despertar, apaga las luces para evitar ser pillado. Una vez pillado, pierdes la partida."
 );
 goMenuTrain(openRes, "Dureza", "res", "statsSvgRes", "blueLetter", "blue", "blueShadow",
-"Protege el alma bloqueando los objetos arrojados y alcalza el máximo combo sin ser atacado por los objetos. Poseen 8 dirrecciones para bloquear."
+"<b>Invasión circular:</b> Protege el alma bloqueando los objetos arrojados y recoge las estrellas sin distraer. De lo contrario, los combos se resetean."
 );
 goMenuTrain(openLea, "Lealtad", "lea", "statsSvgLea", "yellowLetter", "yellow", "yellowShadow",
-"Memoriza los discos que aparecen iluminados seguidos en orden y alcalza el máximo combo sin equivocarse."
+"<b>Simón Dice (Juego creado por Ralph Baer y Howard J. Morrison en 1978):</b> Memoriza los cuadrantes que aparecen iluminados seguidos en orden. Si aciertas la ronda, consigues una estrella con 5 puntos de combo (7 si no tiene sonido) y se responderá con una secuencia más larga. Para salir del juego (El botón de salida no está mientras dure el juego), pulsa una cuadrante errónea."
 );
 
 //MENU SYSTEM
 let auxIdEvent = null;
 let auxGoMenu = null;
-let auxTask = null;
 let isOpenMenu = false;
 const closeMenuAnimation = () => {
     auxIdEvent.style.opacity = 1;
     auxIdEvent.style.pointerEvents = "inherit";
-    auxGoMenu.style.display = "none"
+    auxGoMenu.style.display = "none";
 }
 
 const closeMenu = (idEvent, typeEvent = "mousedown") => {
     idEvent.addEventListener(typeEvent, () => {
         taskHome.style.borderRadius = "42px";
+        home.style.transition = "0.3s"
         home.style.translate = "0px 62px";
         home.style.opacity = 0;
         home.style.pointerEvents = "none";
@@ -707,6 +720,7 @@ closeMenu(blockTask);
 const goOpen = (idEvent, menu, hasExit = false) => {
     idEvent.addEventListener("click", () => {
         taskHome.style.borderRadius = "16px 16px 42px 42px";
+        home.style.transition = "0.5s cubic-bezier(0,1.5,.3,1)"
         home.style.translate = "0px 0px";
         home.style.opacity = 1;
         home.style.pointerEvents = "inherit";
@@ -718,6 +732,8 @@ const goOpen = (idEvent, menu, hasExit = false) => {
             taskHome.style.width = "640px";
             openHome.style.display = "flex";
             openProfile.style.display = "flex";
+            openProfile.style.opacity = 0;
+            openProfile.style.pointerEvents = "none";
             exiterTrain.style.display = "none";
             statsTrain.style.display = "none";
             statsInfoTask.style.display = "flex";
@@ -727,7 +743,7 @@ const goOpen = (idEvent, menu, hasExit = false) => {
             }, 500)
         }
         
-        menu.style.display = "flex"
+        menu.style.display = "flex";
         blockContent.style.display = "block";
         isOpenMenu = true;
 
@@ -973,20 +989,29 @@ let touchPower;
 let gainEnergy;
 let lowCost;
 let production;
+let maxPeople;
+let peopleRate;
 
+let progressMultiplierPeople = 1 + 0.05 * Number((gameSB.data["actualPeople"] ** 0.5).toFixed(2));
+let energyMultiplierPeople = 1 + 0.01 * Number((gameSB.data["actualPeople"] ** 0.5).toFixed(2));
 const updateStats = () => {
-    touchPower = 1 + Math.floor(gameSB.data["valuePower"]) / 10 * 0.1;
-    gainEnergy = 1 + Math.floor(gameSB.data["valueDef"]) / 20 * 0.05;
-    lowCost = 1 + Math.floor(gameSB.data["valueHealth"]) / 100 * 0.01;
-    production = 0 + Math.floor(gameSB.data["valuePower"]) / 10 * 0.05 + Math.floor(gameSB.data["valueHealth"]) / 10 * 0.15;
+    touchPower = (1 + Math.floor(gameSB.data["valuePower"] / 5) * 0.1) * progressMultiplierPeople;
+    gainEnergy = (1 + Math.floor(gameSB.data["valueDef"] / 15) * 0.05) * energyMultiplierPeople;
+    lowCost = 1 + Math.floor(gameSB.data["valueHealth"] / 100) * 0.01;
+    production = (0 + Math.floor(gameSB.data["valuePower"] / 5) * 0.05 + Math.floor(gameSB.data["valueHealth"] / 5) * 0.15) * progressMultiplierPeople;
+    maxPeople = 0 + Math.floor(gameSB.data["valueLea"] / 5);
+    peopleRate = 0 + Math.floor(maxPeople ** 0.5);
 
     textTouchPower.innerText = Number(touchPower.toFixed(2));
     textGainEnergy.innerText = Number(gainEnergy.toFixed(2));
     textLowCost.innerText = "×" + Number(lowCost.toFixed(2));
     textProduction.innerText = Number(production.toFixed(2)) + " / 5s";
+    textMaximumPeople.innerText = maxPeople;
+    textMaxPeople.innerText = maxPeople;
+    textPeopleGrow.innerText = peopleRate;
 
     progressTotal = Number((10 / lowCost + 10 * ((gameSB.data["valueEnergy"] / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
-    gameSB.data["totalPower"] = gameSB.data["valuePower"] + gameSB.data["valueHealth"] + gameSB.data["valueDef"];
+    gameSB.data["totalPower"] = gameSB.data["valuePower"] + gameSB.data["valueHealth"] + gameSB.data["valueDef"] + gameSB.data["valueLea"];
     totalPower.innerText = gameSB.data["totalPower"];
 }
 
@@ -999,10 +1024,10 @@ const upClick = () => {
     textTotalClicks.innerText = gameSB.data["totalClicks"];
 }
 
-textTotalEnergy.innerText = gameSB.data["totalEnergy"];
+textTotalEnergy.innerText = Math.floor(gameSB.data["totalEnergy"]);
 const upEnergy = (amount) => {
     gameSB.data["totalEnergy"] = gameSB.data["totalEnergy"] + amount;
-    textTotalEnergy.innerText = gameSB.data["totalEnergy"];
+    textTotalEnergy.innerText = Math.floor(gameSB.data["totalEnergy"]);
 }
 
 //TODO AWARDS
@@ -1109,10 +1134,27 @@ class EXPERIENCIE {
     }
 }
 
-mainEXP = new EXPERIENCIE(textLevelMain, barProgressEXP, "lvlMain", "expMain", 400, 150, 25, 2)
+mainEXP = new EXPERIENCIE(textLevelMain, barProgressEXP, "lvlMain", "expMain", 400, 150, 25, 2);
+
+//PEOPLE BENEFITS
+setInterval(() => {
+    if (gameSB.data["actualPeople"] == maxPeople) {
+        if (Math.random() * 10 < 5) {
+            gameSB.data["actualPeople"] = Math.floor(gameSB.data["actualPeople"] / 2);
+        }
+    } else {
+        gameSB.data["actualPeople"] = Math.min(gameSB.data["actualPeople"] + peopleRate, maxPeople);
+    }
+
+    textActualPeople.innerText = gameSB.data["actualPeople"];
+    mainEXP.gain(gameSB.data["actualPeople"]);
+    progressMultiplierPeople = Number((1 + 0.05 * (gameSB.data["actualPeople"] ** 0.5)).toFixed(2));
+    energyMultiplierPeople = Number((1 + 0.01 * (gameSB.data["actualPeople"] ** 0.5)).toFixed(2));
+    updateStats();
+}, 10000);
 
 let progress = 0;
-infoEnergy.innerText = Number(gameSB.data["valueEnergy"].toFixed(2));
+infoEnergy.innerText = Math.floor(gameSB.data["valueEnergy"]);
 progressEnergy.style.width = (progress / progressTotal) * 100 + "%";
 
 const splashEffect = (e) => {
@@ -1159,20 +1201,50 @@ const createTextNumberSvg = (e, amount, svgType, type = "paster") => {
 const gainProgress = (gain, e, isManually = false) => {
     progress += gain;
     if (progress >= progressTotal) {
-        progress = 0;
+        progress -= progressTotal;
         const amount = gainEnergy;
         upEnergy(Number(amount.toFixed(2)));
         gameSB.data["valueEnergy"] += Number(amount.toFixed(2));
-        infoEnergy.innerText = Number(gameSB.data["valueEnergy"].toFixed(2));
+        infoEnergy.innerText = Math.floor(gameSB.data["valueEnergy"]);
         progressTotal = Number((10 / lowCost + 10 * ((gameSB.data["valueEnergy"] / lowCost ** (1 / 1.5)) ** 1.5)).toFixed(0));
         energyAchieve.update();
 
         if (isManually) {
-            createTextNumberSvg(e, gainEnergy, `<svg width="20" height="28" viewBox="0 0 50 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M30.2307 1.21802C30.3188 0.82251 30.4091 0.416992 30.5 0C12.3076 13.5551 3.0224 27.8737 0.647034 39.3245C0.223755 41.1479 0 43.0477 0 45C0 58.8071 11.1929 70 25 70C38.8071 70 50 58.8071 50 45C50 37.3114 46.5292 30.4335 41.069 25.8475C27.5489 13.2605 28.4195 9.35107 30.2307 1.21802Z" fill="var(--colorMain)"/>
-            <circle cx="25" cy="45" r="16" fill="white"/>
-            <circle cx="25" cy="45" r="10" fill="var(--colorMainFill)"/>
-            </svg>`);
+            createTextNumberSvg(e, gainEnergy, `<svg width="20" height="25.6" viewBox="0 0 50 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <mask id="path-1-inside-1_361_35" fill="white">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M31.6906 14.9053C27.8464 13.4713 26.4186 12.0707 30 0.5C15.7343 8.36069 6.8933 18.2556 2.786 27.5197C1.0057 30.9576 3.05176e-05 34.8613 3.05176e-05 39C3.05176e-05 52.8071 11.1929 64 25 64C38.8071 64 50 52.8071 50 39C50 27.5102 42.249 17.8308 31.6906 14.9053Z"/>
+            </mask>
+            <g filter="url(#filter0_i_361_35)">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M31.6906 14.9053C27.8464 13.4713 26.4186 12.0707 30 0.5C15.7343 8.36069 6.8933 18.2556 2.786 27.5197C1.0057 30.9576 3.05176e-05 34.8613 3.05176e-05 39C3.05176e-05 52.8071 11.1929 64 25 64C38.8071 64 50 52.8071 50 39C50 27.5102 42.249 17.8308 31.6906 14.9053Z" fill="var(--colorMain)"/>
+            </g>
+            <path d="M30 0.5L33.8212 1.68274L36.7525 -7.78782L28.0696 -3.00335L30 0.5ZM31.6906 14.9053L30.2925 18.6531L30.4552 18.7137L30.6225 18.7601L31.6906 14.9053ZM2.786 27.5197L6.33798 29.3591L6.39365 29.2516L6.44272 29.141L2.786 27.5197ZM26.1789 -0.682736C25.2619 2.27964 24.6238 4.72153 24.2718 6.74518C23.9266 8.73024 23.8038 10.5927 24.1363 12.2781C24.5026 14.1348 25.3937 15.631 26.7451 16.7535C27.928 17.7361 29.3039 18.2842 30.2925 18.6531L33.0886 11.1576C32.6559 10.9962 32.3614 10.8731 32.143 10.7649C32.0392 10.7135 31.968 10.6729 31.9209 10.6434C31.8745 10.6144 31.8563 10.5992 31.8569 10.5997C31.9713 10.6948 32.0085 10.8488 31.985 10.7297C31.9278 10.4394 31.8793 9.69256 32.1535 8.11594C32.421 6.5779 32.9474 4.50571 33.8212 1.68274L26.1789 -0.682736ZM6.44272 29.141C10.1275 20.8299 18.2685 11.5313 31.9304 4.00335L28.0696 -3.00335C13.2001 5.19005 3.65911 15.6814 -0.870724 25.8985L6.44272 29.141ZM4.00003 39C4.00003 35.5164 4.84511 32.2419 6.33798 29.3591L-0.765989 25.6803C-2.83372 29.6732 -3.99997 34.2063 -3.99997 39H4.00003ZM25 60C13.4021 60 4.00003 50.598 4.00003 39H-3.99997C-3.99997 55.0163 8.98377 68 25 68V60ZM46 39C46 50.598 36.598 60 25 60V68C41.0163 68 54 55.0163 54 39H46ZM30.6225 18.7601C39.4934 21.218 46 29.3543 46 39H54C54 25.6661 45.0046 14.4436 32.7586 11.0505L30.6225 18.7601Z" fill="black" fill-opacity="0.25" mask="url(#path-1-inside-1_361_35)"/>
+            <circle cx="25" cy="39" r="16" fill="white"/>
+            <g filter="url(#filter1_i_361_35)">
+            <circle cx="25" cy="39" r="10" fill="var(--colorMainFill)"/>
+            </g>
+            <defs>
+            <filter id="filter0_i_361_35" x="3.05176e-05" y="-7.5" width="58" height="71.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+            <feOffset dx="8" dy="-8"/>
+            <feGaussianBlur stdDeviation="4"/>
+            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0"/>
+            <feBlend mode="normal" in2="shape" result="effect1_innerShadow_361_35"/>
+            </filter>
+            <filter id="filter1_i_361_35" x="15" y="25" width="24" height="24" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+            <feOffset dx="4" dy="-4"/>
+            <feGaussianBlur stdDeviation="2"/>
+            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+            <feBlend mode="normal" in2="shape" result="effect1_innerShadow_361_35"/>
+            </filter>
+            </defs>
+            </svg> `);
         }
     }
 
@@ -1204,7 +1276,8 @@ setInterval(() => {
 
         document.body.appendChild(createGemSoulRain);
 
-        createGemSoulRain.addEventListener("mousedown", (e) => {
+        createGemSoulRain.addEventListener("click", (e) => {
+            audioScore.autoplay = true;
             audioScore.load();
             const amount = Math.floor(Math.random() * 3 + 1);
             gameSB.data["gemSoul"] += amount;
@@ -1818,11 +1891,15 @@ const screenType = (yTool, logScreenY, valueX) => {
 }
 
 document.addEventListener("mousemove", (e) => {
-    const logScreenX = (e.pageX / window.outerWidth) * 100;
-    const logScreenY = (e.pageY / window.outerHeight) * 100;
-    const isLessX = logScreenX < 50;
-    let positionWay;
-    isLessX ? positionWay = e.pageX + 10 : positionWay = (e.pageX - 10) - displayTool.clientWidth
+    const logScreenY = (e.pageY / window.innerHeight) * 100;
+    let positionWay = e.pageX - displayTool.clientWidth / 2;
+    if (e.pageX <= 180) {
+        positionWay = e.pageX + 10
+    }
+
+    if (e.pageX >= window.innerWidth - 180) {
+        positionWay = (e.pageX - 10) - displayTool.clientWidth
+    }
     screenType(e.pageY, logScreenY, positionWay);
 });
 
@@ -1855,6 +1932,14 @@ settingToolWarn.setChange();
 
 //TODO INFORMACIÓN
 const getInformation = (idEvent, typeMessage, svg, title, type, textA, textB) => {
+    idEvent.addEventListener("mouseenter", () => {
+        idEvent.style.cursor = "none";
+    });
+
+    idEvent.addEventListener("mouseleave", () => {
+        idEvent.style.cursor = "default";
+    });
+
     idEvent.addEventListener("mousemove", (e) => {
         if ((showContext && typeMessage == "context") || (showWarning && typeMessage == "warning") || typeMessage == "important") {
             toolMove.style.visibility = "visible";
@@ -1914,32 +1999,32 @@ null
 
 getInformation(textPower, "context", null, "Potencia", "Atributo",
 "Atributo que aumenta el ataque, la potencia del toque y la producción baja.",
-"Cada 25 puntos, +ataque; Cada 10 puntos, +toque y +producción."
+"Cada 15 puntos, +ataque; Cada 5 puntos, +toque y +producción."
 );
 
 getInformation(textVita, "context", null, "Vitalidad", "Atributo",
 "Atributo que aumenta la salud, el coste de la energía y la producción alta.",
-"Cada 10 puntos, +salud y ++producción; Cada 100 puntos, -coste."
+"Cada 5 puntos, +salud y ++producción; Cada 100 puntos, -coste."
 );
 
 getInformation(textRes, "context", null, "Dureza", "Atributo",
 "Atributo que aumenta el aguante, la defensa y el impulso de energía.",
-"Cada 300 puntos, +aguante; Cada 20 puntos, +energía; La defensa depende de los puntos."
+"Cada 50 puntos, +aguante; Cada 15 puntos, +energía; La defensa depende de los puntos."
 );
 
 getInformation(textLea, "context", null, "Lealtad", "Atributo",
 "Atributo que aumenta el crecimiento de la lealtad y la lealtad permanente.",
-"Cada 15 puntos, +lealtad permanente; Cada 5 puntos; +crecimiento de la lealtad."
+"Cada 5 puntos, +lealtad permanente. El crecimiento de los creyentes depende de la lealtad permanente."
 );
 
 getInformation(textHealth, "context", null, "Salud", "Atributo de vitalidad",
 "Atributo que indica cúanta vida tiene el alma.",
-"Si su vida es 0, se reiniciará las creencias hasta su lealtad permanente y se perderá la mitad de energía y el progreso."
+"Si la vida es 0, se reiniciará los creyentes hasta 0 y se perderá la mitad de energía y el progreso."
 );
 
 getInformation(textStamina, "context", null, "Aguante", "Atributo de dureza",
 "Atributo que indica cúanta resistencia tiene el alma",
-"Si su aguante es inferior a 50%, el crecimiento de la lealtad se detendrá; Si su aguante es inferior a 10%, el crecimiento de la lealtad lo declarará como pérdida hasta 5x."
+"El aguante se expresa como porcentaje del crecimiento de los creyentes; Si el aguante es 0, el crecimiento de éste se detiene."
 );
 
 getInformation(textDefen, "context", null, "Defensa", "Atributo de dureza",
@@ -1972,20 +2057,30 @@ getInformation(textPro, "context", null, "Producción", "Atributo de vitalidad o
 null
 );
 
-getInformation(textLeaP, "context", null, "Lealtad permanente", "Atributo de lealtad",
-"Atributo que fija la cantidad de las creencias sin sufrir pérdidas.",
+getInformation(textMaxP, "context", null, "Máxima población", "Atributo de lealtad",
+"Atributo que maximiza la población de los creyentes.",
 null
 );
 
-getInformation(textLeaC, "context", null, "Crecimiento", "Atributo de lealtad",
-"Atributo que crece las creencias por 10 segundos.",
-null
+getInformation(textPeopleRate, "context", null, "Crecimiento", "Atributo de lealtad",
+"Atributo que crece los creyentes por 10 segundos.",
+"Cada dicho tiempo, si alcalza la máxima población, tiene una probabilidad de 50% de abandonar el 50% de creyentes respecto a la máxima población."
 );
 
 getInformation(gemSoulBox, "context", null, "Alma gema", "Recurso valioso",
 "Útil para compras de mejoras permanentes y potenciadores de tiempo.",
 null
 );
+
+getInformation(iconPeople, "context", null, "Creyentes", "Recurso especial",
+"Los creyentes apoyan al alma y benefician los recursos que aceleran el proceso del alma.",
+"Además, también pueden adquirir experiencia por persona cada 10 segundos."
+)
+
+getInformation(textLevelMain, "context", null, "Nivel del alma", "XP",
+"Subir nivel hará que los entrenamientos progrese rápido.",
+"Cada nivel, +puntos de entrenamiento."
+)
 
 //TOOLTIP
 let showWord;
@@ -2005,7 +2100,7 @@ const goToolTip = (idEvent, position, words, type = "word") => {
     const updateToolTip = () => {
         computePosition(idEvent, tooltip, {
             placement: position,
-            middleware: [offset(12)]
+            middleware: [offset(12), shift({padding: 18})]
         }).then(({x, y}) => {
             Object.assign(tooltip.style, {
                 left: `${x}px`,
@@ -2042,14 +2137,16 @@ const goToolTip = (idEvent, position, words, type = "word") => {
 
 goToolTip(openHome, "right", "Inicio");
 goToolTip(openProfile, "left", "Perfil");
+goToolTip(openMoreMenu, "top", "No está disponible aún")
 goToolTip(exiterTrain, "left", "Salir");
+goToolTip(buttonPeople, "left", () => progressMultiplierPeople + "× progreso, " + energyMultiplierPeople + "× energía");
 goToolTip(openStats, "top", "Estadísticas");
 goToolTip(openTrain, "top", "Entrenamiento");
 goToolTip(buttonExitGame, "top", "Salir");
 goToolTip(buttonSaveAs, "top", "Guardar como");
 goToolTip(buttonSave, "top", "Guardar");
-goToolTip(barEnergy, "top", () => {return Number(progress.toFixed(2)) + " / " + progressTotal}, "number");
-goToolTip(barEXP, "right", () => {return Math.floor(gameSB.data["expMain"]) + " / " + mainEXP.showRequired()} , "number")
+goToolTip(barEnergy, "top", () => Number(progress.toFixed(2)) + " / " + progressTotal, "number");
+goToolTip(barEXP, "right", () => Math.floor(gameSB.data["expMain"]) + " / " + mainEXP.showRequired(), "number");
 
 updateStats();
 
@@ -2219,6 +2316,10 @@ buttonLoadGame.addEventListener("click", async () => {
             pushNotification("El tipo de archivo del texto es inválido. Inténtalo de nuevo.", "error");
         }
 
+        if (err.name == "TypeError") {
+            pushNotification("Parece que esta función no está disponible. ¿Estás en un navegador diferente de los Chromium o usas en el móvil?", "error");
+        }
+
         if (err.message == "Malformed UTF-8 data") {
             pushNotification("Los datos UTF-8 de este archivo está mal formados o su formato del texto es inválido. Inténtalo de nuevo.", "error");
         }
@@ -2239,6 +2340,10 @@ const save = async () => {
         console.error(err);
         if (err.name == "InvalidStateError") {
             pushNotification("EL disco duro está ocupado escribiendo el archivo.", "error");
+        }
+
+        if (err.name == "NotAllowedError") {
+            pushNotification("No se ha podido guardar el juego por los permisos bloqueados del navegador.", "error");
         }
     }
 }
@@ -2272,6 +2377,10 @@ buttonSaveAs.addEventListener("click", async () => {
         console.error(err);
         if (err.name == "AbortError") {
             pushNotification("Se ha cancelado solicitar guardar como archivo.", "error");
+        }
+
+        if (err.name == "TypeError") {
+            pushNotification("Parece que esta función no está disponible. ¿Estás en un navegador diferente de los Chromium o usas en el móvil?", "error");
         }
     }
 })

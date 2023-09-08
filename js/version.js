@@ -51,13 +51,56 @@ class VERSION {
     }
 
     hide() {
-        listVersions.removeChild(this.faxVersion);
-        this.listNotes.innerText = "";
-        listVersions.removeChild(this.listNotes);
+        setTimeout(() => {
+            listVersions.removeChild(this.faxVersion);
+            this.listNotes.innerText = "";
+            listVersions.removeChild(this.listNotes);
+        }, 300);
     }
 }
 
 const listParches = [
+    new VERSION("Alpha 8 - Gran actualización 🎉", true, false,
+    ["Nueva gestión de archivos, que se encarga de controlar los datos en los archivos. Gracias esta función, este juego ya permite compartir datos en los múltiples dispositivos.",
+    "Los datos locales almacenados en el caché del navegador han sido borrados. No obstante, la gestión de archivos facilitará la detección de los archivos de las versiones antiguas sin perder datos.",
+    "La gestión de archivos tiene tecnología de cifrado, que permite encriptar los archivos y los descifra para cargar el juego. Además, también verifica si los archivos son originales para un único juego.",
+    "La gestión de archivos no funcionan en los móviles ni los navegadores que no sean Chromium, pero se implementará la próxima versión que viene.",
+    "Nueva mejora de API de notificaciones: colas de notificaciones y avisos en la gestión de archivos",
+    "Nuevo ajuste: Activar notificaciones comunes.",
+    "Nuevo API del tiempo, que mide en segundos, minutos, horas y días",
+    "La velocidad del carga (En pruebas de Chrome) se incrementa a un 20% más rápido.",
+    "API de sonidos mejorado, que evita carga de sonidos desde la bienvenida.",
+    "Nueva bienvenida del juego, con título renovado y un enlace de Github",
+    "Nueva mejoras de links, con mejoras de accesibilidad",
+    "Mejoras de UNICODE, de carácter x a ×.",
+    "Se han mejorado las dependencias del servidor, que garantiza al juego que sea eficiente, ligero y rápido.",
+    "Gran cambio de la interfaz del usuario y nuevas animaciones de la interfaz con optimizaciones mejoradas",
+    "Nuevos iconos de la interfaz",
+    "Nueva UX más renovada",
+    "Nuevas mejoras de renderización que evita las diferencias del rendimiento, permitiendo reducir la brecha de los FPS.",
+    "Nuevas gráficas del juego 3D.",
+    "Nuevo control de zoom y animación suave de zoom.",
+    "Se ha ampliado la capacidad de zoom de distancia mínima de 300 a 240; y de distancia máxima de 800 a 1000.",
+    "Nuevos efectos de los materiales 3D y texturas.",
+    "Nuevos efectos de luz.",
+    "Nueva animación del alma.",
+    "Nuevo efecto de vidrio.",
+    "Nuevo color sustituto: De cielo azul a mar azul, un color azul más fuerte e intenso.",
+    "Nuevo sistema del juego: Nivel y experiencia",
+    "Se han agregado los records de combos máximos.",
+    "Nuevo combo en todos los mecanismos del juego: Estrellas.",
+    "Cada mecanismo del juego, ya tienen los nombres en la descripción renovada, sencilla y fácil de entender.",
+    "Se ha mejorado el algoritmo de la potencia, reduciendo un 60% más ligero.",
+    "En el mecanismo de la potencia, se ha eliminado el espacio vacío para facilitar mucho mejor en el entrenamiento.",
+    "En el mecanismo de la defensa, se ha mejorado la interfaz del juego y se ha ampliado de 8 a 360 direcciones.",
+    "Nuevo mecanismo del juego acerca de la lealtad: SIMÓN DICE.",
+    "Simón Dice permitirá tener 2 dificultades: Con o sin sonido.",
+    "Nuevo recurso del juego: Creyentes basados en el atributo de la lealtad.",
+    "Ahora ya se pueden recoger almas gemas GRATIS que caen desde la pantalla.",
+    "Mejoras del contexto y tooltips.",
+    "Se han mejorado la política de la protección de datos."],
+    []
+    ),
     new VERSION("Alpha 7", true, true,
     ["Nuevo rediseño de la sección tutorial para los móviles sobre UX y nuevos tutoriales.",
     "Nueva accesibilidad para ajustes: Barras de desplazamientos, ideal para los móviles que tienen poco espacio. Por defecto, está deshabilitado.",

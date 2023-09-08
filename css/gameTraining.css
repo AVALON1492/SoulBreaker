@@ -250,13 +250,13 @@
     z-index: 11;
 }
 
-#circleVita {
+.circleButton {
     position: absolute;
     top: 50%;
     left: 50%;
     translate: -50% -50%;
-    width: 180px;
-    height: 180px;
+    width: calc(8% + 60px);
+    aspect-ratio: 1/1;
     border-radius: 50%;
     background: var(--bgThird);
     box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, 0.5),
@@ -266,7 +266,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 28px;
+    font-size: calc(1vw + 12px);
     font-weight: 900;
     color: var(--bgText);
     transition: 0.1s;
@@ -274,13 +274,13 @@
     z-index: 11;
 }
 
-#circleVita:hover {
+.circleButton:hover {
     border-radius: 30%;
     background: var(--colorMain);
     color: var(--bgThird);
 }
 
-#circleVita:active {
+.circleButton:active {
     scale: 0.9;
 }
 
@@ -305,23 +305,73 @@
                 0px 0px 16px 5px var(--colorMain),
                 0px 0px 0px 5px var(--colorMain);
     background: var(--bgThird);
+    box-sizing: border-box;
 }
 
 .boxPlate {
     position: absolute;
-    top: calc(50% + 20px);
-    left: calc(50% - 40px);
-    width: 80px;
-    height: 80px;
+    top: calc(50% - 120px);
+    left: calc(50% - 120px);
+    width: 240px;
+    height: 240px;
     border: 12px solid transparent;
-    border-bottom: 12px double var(--bgOpacSoftest);
-    box-shadow: 0px 3px 0px var(--colorMainFill);
-    border-radius: 8px;
-    transform-origin: 50% -20px;
+    border-bottom: 12px double var(--colorMain);
+    border-radius: 50%;
+    transform-origin: 50% 120px;
     box-sizing: border-box;
-    z-index: 10;
-    transition: 0.08s scale;
+    z-index: 2;
     will-change: transform;
+}
+
+.boxPlateAnimation {
+    animation: playPopPlate 0.3s;
+}
+
+@keyframes playPopPlate {
+    0% {
+        border-bottom: 12px double var(--colorMain);
+        box-shadow: 0px 0px 0px var(--colorMainFill);
+    }
+
+    50% {
+        border-bottom: 20px double var(--colorMain);
+        box-shadow: 0px 8px 4px 0px var(--colorMainFill);
+    }
+
+    100% {
+        border-bottom: 12px double var(--colorMain);
+        box-shadow: 0px 0px 0px var(--colorMainFill);
+    }
+}
+
+.pieceSimonDice {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    border-radius: 100% 10% 0% 10%;
+    box-shadow: inset 0px 0px 0px 6px var(--bgSecond);
+    transition: 0.1s;
+    will-change: transform;
+}
+
+.pieceSimonDice:active, .active {
+    filter: brightness(140%);
+    scale: 1.05;
+}
+
+.textDescLeaChallenge {
+    position: absolute;
+    width: 20%;
+    bottom: 30px;
+    left: 110px;
+    height: 60px;
+    font-size: 28px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    color: var(--colorMain);
+    -webkit-text-stroke: 1.5px var(--bgThird);
+    text-shadow: 0px 0px 12px var(--colorMain);
 }
 
 .cube {
@@ -337,89 +387,16 @@
                 0px 0px 0px 5px var(--colorMain);
     border-radius: 12px;
     will-change: transform;
+    animation: playRotate 2s infinite linear;
 }
 
-.rot45 {
-    rotate: 45deg;
-}
-
-@keyframes playCube0 {
+@keyframes playRotate {
     0% {
-        translate: calc(0px - var(--x)) 0px;
+        rotate: 0deg;
     }
 
     100% {
-        translate: calc(0px - var(--s)) 0px;
-    }
-}
-
-@keyframes playCube1 {
-    0% {
-        translate: calc(0px - var(--x) * sin(45deg)) calc(0px - var(--x) * sin(45deg));
-    }
-
-    100% {
-        translate: calc(0px - var(--s) * sin(45deg)) calc(0px - var(--s) * sin(45deg));
-    }
-}
-
-@keyframes playCube2 {
-    0% {
-        translate: 0px calc(0px - var(--x));
-    }
-
-    100% {
-        translate: 0px calc(0px - var(--s));
-    }
-}
-
-@keyframes playCube3 {
-    0% {
-        translate: calc(var(--x) * sin(45deg)) calc(0px - var(--x) * sin(45deg));
-    }
-
-    100% {
-        translate: calc(var(--s) * sin(45deg)) calc(0px - var(--s) * sin(45deg));
-    }
-}
-
-@keyframes playCube4 {
-    0% {
-        translate: calc(var(--x)) 0px;
-    }
-
-    100% {
-        translate: var(--s) 0px;
-    }
-}
-
-@keyframes playCube5 {
-    0% {
-        translate: calc(var(--x) * sin(45deg)) calc(var(--x) * sin(45deg));
-    }
-
-    100% {
-        translate: calc(var(--s) * sin(45deg)) calc(var(--s) * sin(45deg));
-    }
-}
-
-@keyframes playCube6 {
-    0% {
-        translate: 0px calc(var(--x));
-    }
-
-    100% {
-        translate: 0px var(--s);
-    }
-}
-
-@keyframes playCube7 {
-    0% {
-        translate: calc(0px - var(--x) * sin(45deg)) calc(var(--x) * sin(45deg));
-    }
-
-    100% {
-        translate: calc(0px - var(--s) * sin(45deg)) calc(var(--s) * sin(45deg));
+        rotate: 360deg;
     }
 }
 
